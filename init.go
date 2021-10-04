@@ -4,7 +4,10 @@ import (
 	"flag"
 	"github.com/Sapomie/wayne_data/global"
 	"github.com/Sapomie/wayne_data/internal/model"
+	"github.com/Sapomie/wayne_data/pkg/logger"
 	"github.com/Sapomie/wayne_data/pkg/setting"
+	"gopkg.in/natefinch/lumberjack.v2"
+	"log"
 	"time"
 )
 
@@ -14,31 +17,35 @@ var (
 	config  string
 )
 
-func BeforeStarting() error {
+func beforeStarting() error {
 
-	SetupFlag()
+	setupFlag()
 
 	//加载配置文件
-	err := SetupSetting()
+	err := setupSetting()
 	if err != nil {
 		return err
 	}
 	//启动数据库
-	err = SetupDBEngine()
+	err = setupDBEngine()
 	if err != nil {
 		return err
 	}
-
+	//日志
+	err = setupLogger()
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
-func SetupFlag() {
+func setupFlag() {
 	flag.StringVar(&config, "config", "configs/", "配置文件路径")
 	flag.StringVar(&runMode, "mode", "", "启动模式")
 	flag.StringVar(&port, "port", "", "启动端口")
 }
 
-func SetupSetting() error {
+func setupSetting() error {
 	s, err := setting.NewSetting(config)
 	if err != nil {
 		return err
@@ -69,11 +76,26 @@ func SetupSetting() error {
 	return nil
 }
 
-func SetupDBEngine() error {
+func setupDBEngine() error {
 	var err error
 	global.DBEngine, err = model.NewDBEngine(global.DatabaseSetting)
 	if err != nil {
 		return err
 	}
+	return nil
+}
+
+func setupLogger() error {
+	fileName := global.AppSetting.LogSavePath + "/" + global.AppSetting.LogFileName + global.AppSetting.LogFileExt
+	global.Logger = logger.NewLogger(
+		&lumberjack.Logger{
+			Filename:  fileName,
+			MaxSize:   500,
+			MaxAge:    10,
+			LocalTime: true,
+		},
+		"",
+		log.LstdFlags,
+	).WithCaller(1)
 	return nil
 }

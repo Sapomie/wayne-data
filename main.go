@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	err := BeforeStarting()
+	err := beforeStarting()
 	if err != nil {
 		panic(err)
 	}
@@ -19,9 +19,9 @@ func main() {
 	s := &http.Server{
 		Addr:           ":" + global.ServerSetting.HttpPort,
 		Handler:        r,
-		ReadTimeout:    0,
-		WriteTimeout:   0,
-		MaxHeaderBytes: 0,
+		ReadTimeout:    global.ServerSetting.ReadTimeout,
+		WriteTimeout:   global.ServerSetting.WriteTimeout,
+		MaxHeaderBytes: 1 << 20,
 	}
 
 	err = s.ListenAndServe()
