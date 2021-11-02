@@ -1,8 +1,8 @@
 package global
 
 import (
-	"github.com/Sapomie/wayne_data/pkg/logger"
-	"github.com/Sapomie/wayne_data/pkg/setting"
+	"github.com/Sapomie/wayne-data/pkg/logger"
+	"github.com/Sapomie/wayne-data/pkg/setting"
 )
 
 var (

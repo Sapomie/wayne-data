@@ -1,7 +1,7 @@
 package app
 
 import (
-	"github.com/Sapomie/wayne_data/pkg/errcode"
+	"github.com/Sapomie/wayne-data/pkg/errcode"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )

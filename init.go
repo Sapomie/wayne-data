@@ -2,10 +2,10 @@ package main
 
 import (
 	"flag"
-	"github.com/Sapomie/wayne_data/global"
-	"github.com/Sapomie/wayne_data/internal/model"
-	"github.com/Sapomie/wayne_data/pkg/logger"
-	"github.com/Sapomie/wayne_data/pkg/setting"
+	"github.com/Sapomie/wayne-data/global"
+	"github.com/Sapomie/wayne-data/internal/model"
+	"github.com/Sapomie/wayne-data/pkg/logger"
+	"github.com/Sapomie/wayne-data/pkg/setting"
 	"gopkg.in/natefinch/lumberjack.v2"
 	"log"
 	"time"

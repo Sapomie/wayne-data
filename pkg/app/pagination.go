@@ -1,8 +1,8 @@
 package app
 
 import (
-	"github.com/Sapomie/wayne_data/global"
-	"github.com/Sapomie/wayne_data/pkg/convert"
+	"github.com/Sapomie/wayne-data/global"
+	"github.com/Sapomie/wayne-data/pkg/convert"
 	"github.com/gin-gonic/gin"
 )
 

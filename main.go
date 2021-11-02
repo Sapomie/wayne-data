@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/Sapomie/wayne_data/global"
-	"github.com/Sapomie/wayne_data/internal/routers"
+	"github.com/Sapomie/wayne-data/global"
+	"github.com/Sapomie/wayne-data/internal/routers"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
