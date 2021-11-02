@@ -1,18 +1,43 @@
 package service
 
 import (
-	"github.com/Sapomie/wayne-data/pkg/app"
+	"context"
+	"github.com/Sapomie/wayne-data/global"
+	"github.com/Sapomie/wayne-data/internal/model"
+	"github.com/Sapomie/wayne-data/internal/service/resp"
 )
 
-type EventListRequest struct {
-	TaskId   int `form:"tag_id" binding:"gte=1"`
-	ParentId int `form:"state,default=1" binding:"oneof=0 1"`
+type EventService struct {
+	ctx context.Context
+	*model.EventModel
 }
 
-type EventResponse struct {
+func NewEventService(c context.Context) EventService {
+	return EventService{
+		ctx:        c,
+		EventModel: model.NewEventModel(global.DBEngine),
+	}
 }
 
-func (svc *Service) GetEventList(param *EventListRequest, pager *app.Pager) ([]*EventResponse, int, error) {
+func (svc *EventService) GetEventList(param *resp.EventListRequest, limit, offset int) ([]*resp.EventResponse, int, error) {
+	events, num, err := svc.ListEvents(param.ParentId, param.TaskId, limit, offset)
+	if err != nil {
+		return nil, 0, err
+	}
+	eventsResp := makeEventListResponse(events)
+	return eventsResp, num, nil
+}
 
-	return nil, 0, nil
+func makeEventListResponse(events model.Events) resp.EventsResponse {
+
+	var eventsResp resp.EventsResponse
+	for _, event := range events {
+		eventResp := &resp.EventResponse{
+			Date:    event.Date,
+			Comment: event.Comment,
+		}
+		eventsResp = append(eventsResp, eventResp)
+	}
+
+	return eventsResp
 }

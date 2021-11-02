@@ -35,3 +35,9 @@ func GetPageOffset(page, pageSize int) int {
 
 	return result
 }
+
+func GetLimitOffset(c *gin.Context) (limit, offset int) {
+	limit = GetPageSize(c)
+	offset = GetPageOffset(GetPage(c), limit)
+	return
+}

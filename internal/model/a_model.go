@@ -13,6 +13,14 @@ type Model struct {
 	UpdatedOn int64 `json:"updated_on"`
 }
 
+type BaseModel struct {
+	*gorm.DB
+}
+
+func NewBaseModel(model interface{}, db *gorm.DB) *BaseModel {
+	return &BaseModel{DB: db.Model(model)}
+}
+
 func NewDBEngine(setting *setting.DatabaseSettingS) (*gorm.DB, error) {
 	dns := fmt.Sprintf(`%v:%v@(%v)/%v?charset=%v`,
 		setting.UserName,
