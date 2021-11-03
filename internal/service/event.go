@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/Sapomie/wayne-data/global"
 	"github.com/Sapomie/wayne-data/internal/model"
-	"github.com/Sapomie/wayne-data/internal/service/resp"
+	"github.com/Sapomie/wayne-data/internal/resp"
 )
 
 type EventService struct {

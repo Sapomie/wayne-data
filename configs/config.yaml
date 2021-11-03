@@ -2,7 +2,7 @@ Database:
   UserName: root
   Password: 12345678
   Host: 127.0.0.1:3306
-  DBName: nowthen2021v3
+  DBName: wayne_data
   Charset: utf8
   MaxIdleConns: 10
   MaxOpenConns: 30
@@ -18,6 +18,8 @@ App:
   MaxPageSize: 100
   DefaultContextTimeout: 60
   LogSavePath: storage/logs
+  CsvSavePath: storage/csv
+  DoneCsvSavePath: storage/csv/done
   LogFileName: app
   LogFileExt: .log
   UploadSavePath: storage/uploads
@@ -27,3 +29,5 @@ App:
     - .jpg
     - .jpeg
     - .png
+
+

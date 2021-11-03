@@ -1,7 +1,9 @@
 package routers
 
 import (
+	"fmt"
 	"github.com/Sapomie/wayne-data/internal/routers/v1"
+	"github.com/Sapomie/wayne-data/internal/service/procession"
 	"github.com/gin-gonic/gin"
 )
 
@@ -11,7 +13,12 @@ func NewRouter() *gin.Engine {
 	r.Use(gin.Recovery())
 
 	r.GET("/test", func(c *gin.Context) {
-		c.JSON(200, "ok")
+		_, info, err := procession.ImportCsvData()
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		c.JSON(200, info)
 	})
 
 	apiv1 := r.Group("/api/v1")

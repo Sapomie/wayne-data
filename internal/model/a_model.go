@@ -40,6 +40,11 @@ func NewDBEngine(setting *setting.DatabaseSettingS) (*gorm.DB, error) {
 	db.SingularTable(true)
 	db.DB().SetMaxIdleConns(setting.MaxIdleConns)
 	db.DB().SetMaxOpenConns(setting.MaxOpenConns)
+	db.AutoMigrate(
+		new(Event),
+		new(Task),
+		new(Parent),
+	)
 
 	return db, nil
 }

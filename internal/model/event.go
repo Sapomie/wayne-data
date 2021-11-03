@@ -32,6 +32,17 @@ func NewEventModel(db *gorm.DB) *EventModel {
 	return &EventModel{NewBaseModel(new(Event), db)}
 }
 
+func (em *EventModel) Exists(startTime int64) (bool, error) {
+	db := em.Base
+	var count int
+	err := db.Where("start_time = ?", startTime).Count(&count).Error
+	if err != nil {
+		return false, err
+	}
+	exists := count != 0
+	return exists, nil
+}
+
 func (em *EventModel) ListEvents(parentId, taskId, limit, offset int) (Events, int, error) {
 	var events Events
 	var count int
