@@ -17,6 +17,10 @@ type Stuff struct {
 	*Model
 }
 
+func (e *Stuff) TableName() string {
+	return "b_stuff"
+}
+
 type Stuffs []*Stuff
 
 type StuffModel struct {

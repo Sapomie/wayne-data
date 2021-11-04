@@ -25,6 +25,10 @@ type Event struct {
 	*Model
 }
 
+func (e *Event) TableName() string {
+	return "b_event"
+}
+
 func (e *Event) Start() time.Time {
 	return time.Unix(e.StartTime, 0)
 }

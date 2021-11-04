@@ -17,6 +17,10 @@ type Tag struct {
 	*Model
 }
 
+func (e *Tag) TableName() string {
+	return "b_tag"
+}
+
 type Tags []*Tag
 
 type TagModel struct {

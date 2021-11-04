@@ -18,6 +18,10 @@ type Parent struct {
 	*Model
 }
 
+func (p *Parent) TableName() string {
+	return "b_parent"
+}
+
 type Parents []*Parent
 
 type ParentModel struct {

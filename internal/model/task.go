@@ -21,6 +21,10 @@ type Task struct {
 	*Model
 }
 
+func (e *Task) TableName() string {
+	return "b_task"
+}
+
 type Tasks []*Task
 
 type TaskModel struct {

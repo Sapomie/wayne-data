@@ -21,22 +21,21 @@ type propertyPair struct {
 }
 
 //从comment中获取自定义property的信息，并且添加到event的property id中
-func processCommentProperty(event *model.Event) (updateInfos []string, err error) {
+func processCommentProperty(rawEventComment string) (stuffIds, tagIds, remark string, projectId int, updateInfos []string, err error) {
 
-	pairs, remark, err := unpackEventComment(event.Comment)
+	pairs, remark, err := unpackEventComment(rawEventComment)
 	if err != nil {
-		info := fmt.Sprintf("unpack tag info error,event start time: %v,coment: %v", event.Start(), event.Comment)
+		info := fmt.Sprintf("unpack tag info error coment: %v", rawEventComment)
 		err = errors.New(info)
 		return
 	}
 
-	var stuffIds, tagIds string
 	for _, pair := range pairs {
 		switch pair.Key {
 		case Stuff:
 			stuff, addingInfo, err := model.NewStuffModel(global.DBEngine).InsertAndGetStuff(pair.Value)
 			if err != nil {
-				return nil, err
+				return "", "", "", 0, nil, err
 			}
 			if addingInfo != "" {
 				updateInfos = append(updateInfos, addingInfo)
@@ -49,7 +48,7 @@ func processCommentProperty(event *model.Event) (updateInfos []string, err error
 		case Tag:
 			tag, addingInfo, err := model.NewTagModel(global.DBEngine).InsertAndGetTag(pair.Value)
 			if err != nil {
-				return nil, err
+				return "", "", "", 0, nil, err
 			}
 			if addingInfo != "" {
 				updateInfos = append(updateInfos, addingInfo)
@@ -59,6 +58,15 @@ func processCommentProperty(event *model.Event) (updateInfos []string, err error
 			} else {
 				tagIds = tagIds + "," + fmt.Sprint(tag.Id)
 			}
+		case Project:
+			project, addingInfo, err := model.NewProjectModel(global.DBEngine).InsertAndGetProject(pair.Value)
+			if err != nil {
+				return "", "", "", 0, nil, err
+			}
+			if addingInfo != "" {
+				updateInfos = append(updateInfos, addingInfo)
+			}
+			projectId = project.Id
 
 			//default:
 			//	info := fmt.Sprintf("unhandled type %v", pair.Key)
@@ -66,9 +74,6 @@ func processCommentProperty(event *model.Event) (updateInfos []string, err error
 			//	return
 		}
 	}
-	event.StuffId = stuffIds
-	event.TagId = tagIds
-	event.Remark = remark
 
 	return
 }

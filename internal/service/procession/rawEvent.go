@@ -97,6 +97,13 @@ func (raw *RawEvent) toEvent() (event *model.Event, info []string, err error) {
 	if parentAddingInfo != "" {
 		info = append(info, parentAddingInfo)
 	}
+	stuffIds, tagIds, remark, projectId, commentPropertyInfo, err := processCommentProperty(raw.Comment)
+	if err != nil {
+		return nil, nil, err
+	}
+	if commentPropertyInfo != nil {
+		info = append(info, commentPropertyInfo...)
+	}
 
 	event = &model.Event{
 		Date:      start.Format(mtime.TimeTemplate5),
@@ -106,16 +113,10 @@ func (raw *RawEvent) toEvent() (event *model.Event, info []string, err error) {
 		Comment:   raw.Comment,
 		StartTime: start.Unix(),
 		EndTime:   end.Unix(),
-		//ProjectId: 0,
-		//Remark:    "",
-	}
-
-	commentPropertyInfo, err := processCommentProperty(event)
-	if err != nil {
-		return nil, nil, err
-	}
-	if commentPropertyInfo != nil {
-		info = append(info, commentPropertyInfo...)
+		StuffId:   stuffIds,
+		TagId:     tagIds,
+		ProjectId: projectId,
+		Remark:    remark,
 	}
 
 	return
