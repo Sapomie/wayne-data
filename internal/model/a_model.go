@@ -44,6 +44,8 @@ func NewDBEngine(setting *setting.DatabaseSettingS) (*gorm.DB, error) {
 		new(Event),
 		new(Task),
 		new(Parent),
+		new(Stuff),
+		new(Tag),
 	)
 
 	return db, nil

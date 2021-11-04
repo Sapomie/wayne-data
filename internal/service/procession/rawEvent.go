@@ -106,10 +106,16 @@ func (raw *RawEvent) toEvent() (event *model.Event, info []string, err error) {
 		Comment:   raw.Comment,
 		StartTime: start.Unix(),
 		EndTime:   end.Unix(),
-		StuffId:   "",
-		TagId:     "",
-		ProjectId: 0,
-		Remark:    "",
+		//ProjectId: 0,
+		//Remark:    "",
+	}
+
+	commentPropertyInfo, err := processCommentProperty(event)
+	if err != nil {
+		return nil, nil, err
+	}
+	if commentPropertyInfo != nil {
+		info = append(info, commentPropertyInfo...)
 	}
 
 	return

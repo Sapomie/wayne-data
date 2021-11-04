@@ -1,6 +1,9 @@
 package model
 
-import "github.com/jinzhu/gorm"
+import (
+	"github.com/jinzhu/gorm"
+	"time"
+)
 
 type Event struct {
 	//原有属性
@@ -20,6 +23,14 @@ type Event struct {
 	Remark    string `json:"remark"` //comment 除去自定义属性的部分
 
 	*Model
+}
+
+func (e *Event) Start() time.Time {
+	return time.Unix(e.StartTime, 0)
+}
+
+func (e *Event) End() time.Time {
+	return time.Unix(e.EndTime, 0)
 }
 
 type Events []*Event
