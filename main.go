@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	err := beforeStarting()
+	err := BeforeStarting()
 	if err != nil {
 		panic(err)
 	}

@@ -39,6 +39,22 @@ func (e *Event) End() time.Time {
 
 type Events []*Event
 
+func (ets Events) Between(start, end time.Time) (events Events) {
+	for _, event := range ets {
+		if event.StartTime >= start.Unix() && event.EndTime <= end.Unix() {
+			events = append(events, event)
+		}
+	}
+	return
+}
+
+func (ets Events) Duration() (duration float64) {
+	for _, event := range ets {
+		duration += event.Duration
+	}
+	return
+}
+
 type EventModel struct {
 	Base *BaseModel
 }

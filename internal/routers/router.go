@@ -3,7 +3,7 @@ package routers
 import (
 	"fmt"
 	"github.com/Sapomie/wayne-data/internal/routers/v1"
-	"github.com/Sapomie/wayne-data/internal/service/procession"
+	"github.com/Sapomie/wayne-data/internal/service/rawEvent"
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,7 +13,7 @@ func NewRouter() *gin.Engine {
 	r.Use(gin.Recovery())
 
 	r.GET("/test", func(c *gin.Context) {
-		_, info, err := procession.ImportCsvData()
+		_, info, err := rawEvent.ImportCsvData()
 		if err != nil {
 			fmt.Println(err)
 		}

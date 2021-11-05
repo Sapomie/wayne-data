@@ -17,10 +17,8 @@ var (
 	config  string
 )
 
-func beforeStarting() error {
-
+func BeforeStarting() error {
 	setupFlag()
-
 	//加载配置文件
 	err := setupSetting()
 	if err != nil {
@@ -36,6 +34,7 @@ func beforeStarting() error {
 	if err != nil {
 		return err
 	}
+	//数据库 data
 	return nil
 }
 

@@ -1,4 +1,4 @@
-package procession
+package rawEvent
 
 import (
 	"errors"
