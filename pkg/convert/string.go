@@ -1,6 +1,8 @@
 package convert
 
-import "strconv"
+import (
+	"strconv"
+)
 
 type StrTo string
 

@@ -2,6 +2,7 @@ package model
 
 import (
 	"fmt"
+	"github.com/Sapomie/wayne-data/global"
 	"github.com/jinzhu/gorm"
 )
 
@@ -93,4 +94,31 @@ func (em *ProjectModel) InsertAndGetProject(name string) (project *Project, info
 		return nil, "", err
 	}
 	return
+}
+
+var ProjectInfoById = make(map[int]struct {
+	Name string
+})
+
+var ProjectInfoByName = make(map[string]struct {
+	Id int
+})
+
+func updateProjectVariables() error {
+
+	projects, err := NewProjectModel(global.DBEngine).GetAll()
+	if err != nil {
+		return err
+	}
+	for _, project := range projects {
+		ProjectInfoById[project.Id] = struct {
+			Name string
+		}{Name: project.Name}
+
+		ProjectInfoByName[project.Name] = struct {
+			Id int
+		}{Id: project.Id}
+	}
+
+	return nil
 }

@@ -125,10 +125,10 @@ func (mt *MTime) Day() (day int) {
 	return mt.Time.YearDay()
 }
 
-func (mt *MTime) Ten() (week int) {
+func (mt *MTime) Ten() (ten int) {
 	beginningOfTheYear, _ := NewTimeZone(TypeYear, mt.Time.Year(), 1).BeginAndEnd()
 	days := (mt.Time.Sub(beginningOfTheYear).Hours()) / 24
-	week = int(days)/10 + 1
+	ten = int(days)/10 + 1
 	return
 }
 

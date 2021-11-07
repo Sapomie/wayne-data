@@ -4,6 +4,7 @@ import (
 	"flag"
 	"github.com/Sapomie/wayne-data/global"
 	"github.com/Sapomie/wayne-data/internal/model"
+	"github.com/Sapomie/wayne-data/internal/service/rawEvent"
 	"github.com/Sapomie/wayne-data/pkg/logger"
 	"github.com/Sapomie/wayne-data/pkg/setting"
 	"gopkg.in/natefinch/lumberjack.v2"
@@ -34,7 +35,12 @@ func BeforeStarting() error {
 	if err != nil {
 		return err
 	}
-	//数据库 data
+	//
+	rawEvent.ImportCsvData()
+	err = model.UpdateFieldVariables()
+	if err != nil {
+		return err
+	}
 	return nil
 }
 

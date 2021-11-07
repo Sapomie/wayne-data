@@ -2,13 +2,14 @@ package model
 
 import (
 	"fmt"
+	"github.com/Sapomie/wayne-data/global"
 	"github.com/jinzhu/gorm"
 )
 
 type Parent struct {
 	Id            int     `gorm:"primary_key"`
 	Name          string  `gorm:"not null;unique"`
-	WeekGoal      float64 `gorm:"not null"`
+	TenGoal       float64 `gorm:"not null"`
 	EventNum      int64   `gorm:"not null" json:"tag_num"`
 	TotalDuration float64 `gorm:"not null" json:"total_duration"`
 	FirstTime     int64   `gorm:"not null"`
@@ -94,4 +95,35 @@ func (em *ParentModel) InsertAndGetParent(name string) (parent *Parent, info str
 		return nil, "", err
 	}
 	return
+}
+
+var ParentInfoById = make(map[int]struct {
+	Name    string
+	TenGoal float64
+})
+
+var ParentInfoByName = make(map[string]struct {
+	Id      int
+	TenGoal float64
+})
+
+func updateParentVariables() error {
+
+	parents, err := NewParentModel(global.DBEngine).GetAll()
+	if err != nil {
+		return err
+	}
+	for _, parent := range parents {
+		ParentInfoById[parent.Id] = struct {
+			Name    string
+			TenGoal float64
+		}{Name: parent.Name, TenGoal: parent.TenGoal}
+
+		ParentInfoByName[parent.Name] = struct {
+			Id      int
+			TenGoal float64
+		}{Id: parent.Id, TenGoal: parent.TenGoal}
+	}
+
+	return nil
 }

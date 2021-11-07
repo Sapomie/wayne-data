@@ -1,7 +1,11 @@
 package model
 
 import (
+	"github.com/Sapomie/wayne-data/global"
+	"github.com/Sapomie/wayne-data/internal/model/cons"
+	"github.com/Sapomie/wayne-data/pkg/convert"
 	"github.com/jinzhu/gorm"
+	"strings"
 	"time"
 )
 
@@ -35,6 +39,22 @@ func (e *Event) Start() time.Time {
 
 func (e *Event) End() time.Time {
 	return time.Unix(e.EndTime, 0)
+}
+
+func (e *Event) StuffIds() (stuffIds []int) {
+	ids := strings.Split(e.StuffId, ",")
+	for _, stuffId := range ids {
+		stuffIds = append(stuffIds, convert.StrTo(stuffId).MustInt())
+	}
+	return
+}
+
+func (e *Event) TagIds() (tagIds []int) {
+	ids := strings.Split(e.TagId, ",")
+	for _, tagId := range ids {
+		tagIds = append(tagIds, convert.StrTo(tagId).MustInt())
+	}
+	return
 }
 
 type Events []*Event
@@ -74,6 +94,17 @@ func (em *EventModel) Exists(startTime int64) (bool, error) {
 	return exists, nil
 }
 
+func (em *EventModel) GetAll() (Events, int, error) {
+	var events Events
+	var count int
+	err := em.Base.Scan(&events).Error
+	if err != nil {
+		return nil, 0, err
+	}
+	count = len(events)
+	return events, count, nil
+}
+
 func (em *EventModel) ListEvents(parentId, taskId, limit, offset int) (Events, int, error) {
 	var events Events
 	var count int
@@ -94,4 +125,24 @@ func (em *EventModel) ListEvents(parentId, taskId, limit, offset int) (Events, i
 		return nil, 0, err
 	}
 	return events, count, nil
+}
+
+func (em *EventModel) Newest() (*Event, error) {
+	db := em.Base
+	event := new(Event)
+	err := db.Order("end_time desc").First(event).Error
+	if err != nil {
+		return nil, err
+	}
+	return event, nil
+}
+
+func updateNewest() error {
+	em := NewEventModel(global.DBEngine)
+	evt, err := em.Newest()
+	if err != nil {
+		return err
+	}
+	cons.Newest = time.Unix(evt.EndTime, 0)
+	return nil
 }

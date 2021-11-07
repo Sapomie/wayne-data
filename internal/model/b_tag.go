@@ -2,6 +2,7 @@ package model
 
 import (
 	"fmt"
+	"github.com/Sapomie/wayne-data/global"
 	"github.com/jinzhu/gorm"
 )
 
@@ -93,4 +94,31 @@ func (em *TagModel) InsertAndGetTag(name string) (tag *Tag, info string, err err
 		return nil, "", err
 	}
 	return
+}
+
+var TagInfoById = make(map[int]struct {
+	Name string
+})
+
+var TagInfoByName = make(map[string]struct {
+	Id int
+})
+
+func updateTagVariables() error {
+
+	tags, err := NewTagModel(global.DBEngine).GetAll()
+	if err != nil {
+		return err
+	}
+	for _, tag := range tags {
+		TagInfoById[tag.Id] = struct {
+			Name string
+		}{Name: tag.Name}
+
+		TagInfoByName[tag.Name] = struct {
+			Id int
+		}{Id: tag.Id}
+	}
+
+	return nil
 }

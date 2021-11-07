@@ -51,3 +51,31 @@ func NewDBEngine(setting *setting.DatabaseSettingS) (*gorm.DB, error) {
 
 	return db, nil
 }
+
+func UpdateFieldVariables() error {
+	err := updateParentVariables()
+	if err != nil {
+		return err
+	}
+	err = updateProjectVariables()
+	if err != nil {
+		return err
+	}
+	err = updateStuffVariables()
+	if err != nil {
+		return err
+	}
+	err = updateTagVariables()
+	if err != nil {
+		return err
+	}
+	err = updateTaskVariables()
+	if err != nil {
+		return err
+	}
+	err = updateNewest()
+	if err != nil {
+		return err
+	}
+	return nil
+}

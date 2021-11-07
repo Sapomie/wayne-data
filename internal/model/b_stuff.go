@@ -2,6 +2,7 @@ package model
 
 import (
 	"fmt"
+	"github.com/Sapomie/wayne-data/global"
 	"github.com/jinzhu/gorm"
 )
 
@@ -9,6 +10,7 @@ type Stuff struct {
 	Id            int     `gorm:"primary_key"`
 	Name          string  `gorm:"not null;unique"`
 	EventNum      int64   `gorm:"not null" json:"tag_num"`
+	TenGoal       float64 `gorm:"not null"`
 	TotalDuration float64 `gorm:"not null" json:"total_duration"`
 	FirstTime     int64   `gorm:"not null"`
 	LastTime      int64   `gorm:"not null"`
@@ -93,4 +95,35 @@ func (em *StuffModel) InsertAndGetStuff(name string) (stuff *Stuff, info string,
 		return nil, "", err
 	}
 	return
+}
+
+var StuffInfoById = make(map[int]struct {
+	Name    string
+	TenGoal float64
+})
+
+var StuffInfoByName = make(map[string]struct {
+	Id      int
+	TenGoal float64
+})
+
+func updateStuffVariables() error {
+
+	stuffs, err := NewStuffModel(global.DBEngine).GetAll()
+	if err != nil {
+		return err
+	}
+	for _, stuff := range stuffs {
+		StuffInfoById[stuff.Id] = struct {
+			Name    string
+			TenGoal float64
+		}{Name: stuff.Name, TenGoal: stuff.TenGoal}
+
+		StuffInfoByName[stuff.Name] = struct {
+			Id      int
+			TenGoal float64
+		}{Id: stuff.Id, TenGoal: stuff.TenGoal}
+	}
+
+	return nil
 }

@@ -2,13 +2,15 @@ package model
 
 import (
 	"fmt"
+	"github.com/Sapomie/wayne-data/global"
+	"github.com/Sapomie/wayne-data/internal/model/cons"
 	"github.com/jinzhu/gorm"
 )
 
 type Task struct {
 	Id            int     `gorm:"primary_key"`
 	Name          string  `gorm:"not null;unique"`
-	WeekGoal      float64 `gorm:"not null"`
+	TenGoal       float64 `gorm:"not null"`
 	Point         float64 `gorm:"not null"`
 	DayHourType   int     `gorm:"not null"`
 	ParentTaskId  int     `gorm:"not null"`
@@ -97,4 +99,43 @@ func (em *TaskModel) InsertAndGetTask(name string) (task *Task, info string, err
 		return nil, "", err
 	}
 	return
+}
+
+var TaskInfoById = make(map[int]struct {
+	Name        string
+	TenGoal     float64
+	DayHourType int
+})
+
+var TaskInfoByName = make(map[string]struct {
+	Id          int
+	TenGoal     float64
+	DayHourType int
+})
+
+func updateTaskVariables() error {
+
+	tasks, err := NewTaskModel(global.DBEngine).GetAll()
+	if err != nil {
+		return err
+	}
+	cons.DailyFull = 0
+	for _, task := range tasks {
+		TaskInfoById[task.Id] = struct {
+			Name        string
+			TenGoal     float64
+			DayHourType int
+		}{Name: task.Name, TenGoal: task.TenGoal, DayHourType: task.DayHourType}
+
+		TaskInfoByName[task.Name] = struct {
+			Id          int
+			TenGoal     float64
+			DayHourType int
+		}{Id: task.Id, TenGoal: task.TenGoal, DayHourType: task.DayHourType}
+		if task.DayHourType == cons.DayHourDaily {
+			cons.DailyFull += task.TenGoal / 10
+		}
+	}
+
+	return nil
 }
