@@ -15,7 +15,7 @@ type Tag struct {
 	LastTime      int64   `gorm:"not null"`
 	Longest       int64   `gorm:"not null"`
 
-	*Model
+	*Base
 }
 
 func (e *Tag) TableName() string {
@@ -25,7 +25,7 @@ func (e *Tag) TableName() string {
 type Tags []*Tag
 
 type TagModel struct {
-	Base *BaseModel
+	Base *BaseDbModel
 }
 
 func NewTagModel(db *gorm.DB) *TagModel {

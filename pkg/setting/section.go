@@ -12,6 +12,12 @@ type DatabaseSettingS struct {
 	MaxOpenConns int
 }
 
+type RedisSettingS struct {
+	Network string
+	Address string
+	Port    string
+}
+
 type ServerSettingS struct {
 	RunMode      string
 	HttpPort     string
@@ -28,6 +34,8 @@ type AppSettingS struct {
 	LogFileExt            string
 	CsvSavePath           string
 	DoneCsvSavePath       string
+	LogV2SavePath         string
+	LogV2FileName         string
 	UploadSavePath        string
 	UploadServerUrl       string
 	UploadImageMaxSize    int

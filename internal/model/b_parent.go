@@ -16,7 +16,7 @@ type Parent struct {
 	LastTime      int64   `gorm:"not null"`
 	Longest       int64   `gorm:"not null"`
 
-	*Model
+	*Base
 }
 
 func (p *Parent) TableName() string {
@@ -26,7 +26,7 @@ func (p *Parent) TableName() string {
 type Parents []*Parent
 
 type ParentModel struct {
-	Base *BaseModel
+	Base *BaseDbModel
 }
 
 func NewParentModel(db *gorm.DB) *ParentModel {

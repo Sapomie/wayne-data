@@ -43,6 +43,10 @@ func (r *Response) ToResponseList(list interface{}, totalRows int) {
 	})
 }
 
+func (r *Response) ToResponseHtml(temp string, data gin.H) {
+	r.Ctx.HTML(http.StatusOK, temp, data)
+}
+
 func (r *Response) ToErrorResponse(err *errcode.Error) {
 	response := gin.H{"code": err.Code(), "msg": err.Msg()}
 	details := err.Details()

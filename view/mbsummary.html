@@ -1,0 +1,783 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <title>Wayne_Gao | Progress Cellphone</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="Premium Multipurpose Admin & Dashboard Template" name="description">
+    <meta content="Themesbrand" name="author">
+
+    <!-- Bootstrap Css -->
+    <link href="static/css/bootstrap.min.css" id="bootstrap-style" rel="stylesheet" type="text/css">
+    <!-- Icons Css -->
+    <link href="static/css/icons.min.css" rel="stylesheet" type="text/css">
+    <!-- App Css-->
+    <link href="static/css/app.min.css" id="app-style" rel="stylesheet" type="text/css">
+
+    <!-- DataTables -->
+    <link href="static/css/dataTables.bootstrap4.min.css" rel="stylesheet" type="text/css">
+    <link href="static/css/buttons.bootstrap4.min.css" rel="stylesheet" type="text/css">
+    <!-- Responsive datatable examples -->
+    <link href="static/css/responsive.bootstrap4.min.css" rel="stylesheet" type="text/css">
+
+    <!-- Dropzone css -->
+    <link href="static/css/dropzone.min.css" rel="stylesheet" type="text/css">
+
+</head>
+
+
+<body data-sidebar="dark">
+
+
+<!-- Begin page -->
+<div id="layout-wrapper">
+
+    <!-- ========== Header ========== -->
+    <header id="page-topbar">
+        <div class="navbar-header">
+            <div class="d-flex">
+                <!-- LOGO -->
+                <div class="navbar-brand-box">
+
+                    <a href="" class="logo logo-light">
+                        <span class="logo-lg">
+                                    <img src="static/picture/logo-blank.png" alt="" height="18">
+                                </span>
+                    </a>
+                </div>
+
+                <button type="button" class="btn btn-sm px-3 font-size-24 header-item waves-effect vertical-menu-btn">
+                    <i class="mdi mdi-menu"></i>
+                </button>
+
+
+            </div>
+
+            <div class="d-flex">
+
+                <div class="dropdown d-none d-lg-inline-block">
+                    <button type="button" class="btn header-item noti-icon waves-effect" data-toggle="fullscreen">
+                        <i class="mdi mdi-fullscreen font-size-24"></i>
+                    </button>
+                </div>
+
+
+                <div class="dropdown d-inline-block">
+                    <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
+                            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <img class="rounded-circle header-profile-user" src="static/picture/gao.jpg"
+                             alt="Header Avatar">
+                    </button>
+
+                    <div class="dropdown-menu dropdown-menu-end">
+                        <!-- item-->
+                        <a class="dropdown-item" href="login"><i
+                                    class="mdi mdi-lock-open-outline font-size-17 text-muted align-middle me-1"></i>
+                            Login</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item text-danger" href="logout"><i
+                                    class="mdi mdi-power font-size-17 text-muted align-middle me-1 text-danger"></i>
+                            Logout</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </header>
+
+    <!-- ========== Left Sidebar Start ========== -->
+    <div class="vertical-menu">
+
+        <div data-simplebar="" class="h-100">
+
+            <!--- Sidemenu -->
+            <div id="sidebar-menu">
+                <!-- Left Menu Start -->
+                <ul class="metismenu list-unstyled" id="side-menu">
+                    <li class="menu-title">Main</li>
+
+                    <!-- Essential -->
+                    <li>
+                        <a href="javascript: void(0);" class="has-arrow waves-effect">
+                            <i class="mdi mdi-book-open-outline"></i>
+                            <span>Essential</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            <li><a href="essday">Day</a></li>
+                            <li><a href="essweek">Ten</a></li>
+                            <li><a href="essmonth">Month</a></li>
+                            <li><a href="essquarter">Quarter</a></li>
+                            <li><a href="essyear">Year</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- Summary -->
+                    <li>
+                        <a href="javascript: void(0);" class="has-arrow waves-effect">
+                            <i class="mdi mdi-calendar-check"></i>
+                            <span>Progress</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            <li><a href="weeksummarynow">Ten</a></li>
+                            <li><a href="monthsummarynow">Month</a></li>
+                            <li><a href="quartersummarynow">Quarter</a></li>
+                            <li><a href="yearsummarynow">Year</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="menu-title">Components</li>
+
+                    <!--  -->
+                    <li>
+                        <a href="javascript: void(0);" class="has-arrow waves-effect">
+                            <i class="mdi mdi-run-fast"></i>
+                            <span>Running</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            <li><a href="run">Run</a></li>
+                            <li><a href="runweek">Ten</a></li>
+                            <li><a href="runmonth">Month</a></li>
+                            <li><a href="runquarter">Quarter</a></li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a href="javascript: void(0);" class="has-arrow waves-effect">
+                            <i class="mdi mdi-dumbbell"></i>
+                            <span>Anaerobic</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            <li><a href="anaerobic">Anaerobic</a></li>
+                            <li><a href="anaerobicweek">Ten</a></li>
+                            <li><a href="anaerobicmonth">Month</a></li>
+                            <li><a href="anaerobicquarter">Quarter</a></li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a href="javascript: void(0);" class="has-arrow waves-effect">
+                            <i class="mdi mdi-movie-outline"></i>
+                            <span>Movie&Book</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            <li><a href="movie">Movie</a></li>
+                            <li><a href="book">Book</a></li>
+                            <li><a href="series">Series</a></li>
+                        </ul>
+                    </li>
+                    <!-- form -->
+                    <li class="menu-title">Other</li>
+                    <li>
+                        <a href="javascript: void(0);" class="has-arrow waves-effect">
+                            <i class="mdi mdi-upload"></i>
+                            <span>Other</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            <li><a href="event">Event</a></li>
+                            <li><a href="stuff">Stuff</a></li>
+                            <li><a href="project">Project</a></li>
+                            <li><a href="taskname">Taskname</a></li>
+                            <li><a href="parenttask">Parenttask</a></li>
+                            <li><a href="category">Category</a></li>
+                            <li><a href="tag">Tag</a></li>
+                            <li><a href="upload">Upload</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="menu-title">Mobile</li>
+                    <li>
+                        <a href="javascript: void(0);" class="has-arrow waves-effect">
+                            <i class="mdi mdi-cellphone"></i>
+                            <span>Progress-phone</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            <li><a href="mbsummaryweek">Ten</a></li>
+                            <li><a href="mbsummarymonth">Month</a></li>
+                            <li><a href="mbsummaryquarter">Quarter</a></li>
+                            <li><a href="mbsummaryyear">Year</a></li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <a href="javascript: void(0);" class="has-arrow waves-effect">
+                            <i class="mdi mdi-cellphone"></i>
+                            <span>Essential-phone</span>
+                        </a>
+                        <ul class="sub-menu" aria-expanded="false">
+                            <li><a href="mbessday">Day</a></li>
+                            <li><a href="mbessweek">Ten</a></li>
+                            <li><a href="mbessmonth">Month</a></li>
+                            <li><a href="mbessquarter">Quarter</a></li>
+                            <li><a href="mbessyear">Year</a></li>
+
+                        </ul>
+                    </li>
+
+                </ul>
+            </div>
+            <!-- Sidebar -->
+        </div>
+    </div>
+
+    <!-- Start right Content here -->
+    <div class="main-content">
+        <div class="page-content">
+            <div class="container-fluid">
+
+
+                <!--  summary -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+
+                                <h4 class="card-title col-12 mb-3">{{.resp.Date}} <span
+                                            class="bg-badge rounded-pill bg-gao1"> {{.resp.Days}} </span>
+                                    <span
+                                            class="bg-badge rounded-pill bg-gao2"> {{.resp.DateProgress}}% </span>
+                                    <span
+                                            class="bg-badge rounded-pill bg-gao3"> {{.resp.Primary}} </span>
+
+                                </h4>
+
+
+                                <!-- progress bar -->
+                                <div class="row">
+
+
+                                    <div class="col-xl-4">
+                                        <div class="card">
+                                            <div class="card-body">
+
+                                                {{/*                                                    <h4 class="card-title">Ten Progress</h4>*/}}
+
+                                                <!-- Daily -->
+                                                <div class="">
+                                                    Daily : {{.resp.DailyLimit.PercentAbs}}%
+
+                                                    <div class="progress mb-1" style="height: 4px;">
+                                                        <div class="progress-bar" role="progressbar"
+                                                             style="width: {{.resp.DateProgress}}%;"
+                                                             aria-valuenow="25" aria-valuemin="0"
+                                                             aria-valuemax="100"></div>
+                                                    </div>
+                                                    <div class="progress mb-3" style="height: 10px;">
+                                                        <div class="progress-bar" role="progressbar"
+                                                             style="width: {{.resp.DailyLimit.PercentAbs}}%;"
+                                                             aria-valuenow="25" aria-valuemin="0"
+                                                             aria-valuemax="100">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- cr -->
+                                                <div class="">
+                                                    Cr : {{.resp.Parent.code.PercentAbs}}%
+
+                                                    <div class="progress mb-1" style="height: 4px;">
+                                                        <div class="progress-bar" role="progressbar"
+                                                             style="width: {{.resp.DateProgress}}%;"
+                                                             aria-valuenow="25" aria-valuemin="0"
+                                                             aria-valuemax="100"></div>
+                                                    </div>
+                                                    <div class="progress mb-3" style="height: 10px;">
+                                                        <div class="progress-bar bgs-code" role="progressbar"
+                                                             style="width: {{.resp.Parent.code.PercentAbs}}%;"
+                                                             aria-valuenow="25" aria-valuemin="0"
+                                                             aria-valuemax="100">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- cri -->
+                                                <div class="">
+                                                    Cri : {{.resp.Task.codeInput.PercentAbs}}%
+                                                    <div class="progress mb-1" style="height: 4px;">
+                                                        <div class="progress-bar" role="progressbar"
+                                                             style="width: {{.resp.DateProgress}}%;"
+                                                             aria-valuenow="25" aria-valuemin="0"
+                                                             aria-valuemax="100"></div>
+                                                    </div>
+                                                    <div class="progress mb-3" style="height: 10px;">
+                                                        <div class="progress-bar bgs-codeInput" role="progressbar"
+                                                             style="width: {{.resp.Task.codeInput.PercentAbs}}%;"
+                                                             aria-valuenow="25" aria-valuemin="0"
+                                                             aria-valuemax="100">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- cn -->
+                                                <div class="">
+                                                    Cn : {{.resp.Task.nonfiction.PercentAbs}}%
+                                                    <div class="progress mb-1" style="height: 4px;">
+                                                        <div class="progress-bar" role="progressbar"
+                                                             style="width: {{.resp.DateProgress}}%;"
+                                                             aria-valuenow="25" aria-valuemin="0"
+                                                             aria-valuemax="100"></div>
+                                                    </div>
+                                                    <div class="progress mb-3" style="height: 10px;">
+                                                        <div class="progress-bar bgs-nonfiction" role="progressbar"
+                                                             style="width: {{.resp.Task.nonfiction.PercentAbs}}%;"
+                                                             aria-valuenow="25" aria-valuemin="0"
+                                                             aria-valuemax="100">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- cei -->
+                                                <div class="">
+                                                    Cei : {{.resp.Task.englishInput.PercentAbs}}%
+                                                    <div class="progress mb-1" style="height: 4px;">
+                                                        <div class="progress-bar" role="progressbar"
+                                                             style="width: {{.resp.DateProgress}}%;"
+                                                             aria-valuenow="25" aria-valuemin="0"
+                                                             aria-valuemax="100"></div>
+                                                    </div>
+                                                    <div class="progress mb-1" style="height: 10px;">
+                                                        <div class="progress-bar bgs-englishInput"
+                                                             role="progressbar"
+                                                             style="width: {{.resp.Task.englishInput.PercentAbs}}%;"
+                                                             aria-valuenow="25" aria-valuemin="0"
+                                                             aria-valuemax="100">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- end col -->
+                                    <div class="col-xl-4">
+                                        <div class="card">
+                                            <div class="card-body">
+
+                                                {{/*                                                    <h4 class="card-title">Height</h4>*/}}
+                                                <!-- fn -->
+                                                <div class="">
+                                                    Fn : {{.resp.Task.running.PercentAbs}}%
+                                                    <div class="progress mb-1" style="height: 4px;">
+                                                        <div class="progress-bar " role="progressbar"
+                                                             style="width: {{.resp.DateProgress}}%;"
+                                                             aria-valuenow="25" aria-valuemin="0"
+                                                             aria-valuemax="100"></div>
+                                                    </div>
+                                                    <div class="progress mb-3" style="height: 10px;">
+                                                        <div class="progress-bar bgs-running" role="progressbar"
+                                                             style="width: {{.resp.Task.running.PercentAbs}}%;"
+                                                             aria-valuenow="25" aria-valuemin="0"
+                                                             aria-valuemax="100">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- fa -->
+                                                <div class="">
+                                                    Fa : {{.resp.Task.anaerobic.PercentAbs}}%
+                                                    <div class="progress mb-1" style="height: 4px;">
+                                                        <div class="progress-bar" role="progressbar"
+                                                             style="width: {{.resp.DateProgress}}%;"
+                                                             aria-valuenow="25" aria-valuemin="0"
+                                                             aria-valuemax="100"></div>
+                                                    </div>
+                                                    <div class="progress mb-3" style="height: 10px;">
+                                                        <div class="progress-bar bgs-anaerobic" role="progressbar"
+                                                             style="width: {{.resp.Task.anaerobic.PercentAbs}}%;"
+                                                             aria-valuenow="25" aria-valuemin="0"
+                                                             aria-valuemax="100">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- mv -->
+                                                <div class="">
+                                                    Mv : {{.resp.Stuff.mv.PercentAbs}}%
+                                                    <div class="progress mb-1" style="height: 4px;">
+                                                        <div class="progress-bar " role="progressbar"
+                                                             style="width: {{.resp.DateProgress}}%;"
+                                                             aria-valuenow="25" aria-valuemin="0"
+                                                             aria-valuemax="100"></div>
+                                                    </div>
+                                                    <div class="progress mb-3" style="height: 10px;">
+                                                        <div class="progress-bar bgs-mv" role="progressbar"
+                                                             style="width: {{.resp.Stuff.mv.PercentAbs}}%;"
+                                                             aria-valuenow="25" aria-valuemin="0"
+                                                             aria-valuemax="100">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- msk -->
+                                                <div class="">
+                                                    Mask : {{.resp.Stuff.mask.PercentAbs}}%
+                                                    <div class="progress mb-1" style="height: 4px;">
+                                                        <div class="progress-bar" role="progressbar"
+                                                             style="width: {{.resp.DateProgress}}%;"
+                                                             aria-valuenow="25" aria-valuemin="0"
+                                                             aria-valuemax="100"></div>
+                                                    </div>
+                                                    <div class="progress mb-3" style="height: 10px;">
+                                                        <div class="progress-bar bg-gao1" role="progressbar"
+                                                             style="width: {{.resp.Stuff.mask.PercentAbs}}%;"
+                                                             aria-valuenow="25" aria-valuemin="0"
+                                                             aria-valuemax="100">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- protein1 -->
+                                                <div class="">
+                                                    Protein1 : {{.resp.Stuff.protein1.PercentAbs}}%
+                                                    <div class="progress mb-1" style="height: 4px;">
+                                                        <div class="progress-bar" role="progressbar"
+                                                             style="width: {{.resp.DateProgress}}%;"
+                                                             aria-valuenow="25" aria-valuemin="0"
+                                                             aria-valuemax="100"></div>
+                                                    </div>
+                                                    <div class="progress mb-1" style="height: 10px;">
+                                                        <div class="progress-bar bg-secondary" role="progressbar"
+                                                             style="width: {{.resp.Stuff.protein1.PercentAbs}}%;"
+                                                             aria-valuenow="25" aria-valuemin="0"
+                                                             aria-valuemax="100">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- gcRunning  -->
+                                    <div class="col-xl-4">
+                                        <table id="" class="table table-bordered dt-responsive nowrap"
+                                               style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                            <thead>
+
+                                            <tr>
+                                                <th>Fn</th>
+                                                <th>GcAcc</th>
+                                                <th>GcUsed</th>
+                                                <th>GcLeft</th>
+
+                                            </tr>
+
+                                            </thead>
+
+                                            <tbody>
+                                            <tr>
+                                                <td>{{.resp.GcRunning.RunningDistance}}</td>
+                                                <td>{{.resp.GcRunning.GcAccumulation}}</td>
+                                                <td>{{.resp.GcRunning.GcUsed}}</td>
+                                                <td>{{.resp.GcRunning.GcLeft}}</td>
+
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <!-- end col -->
+                                </div>
+
+                                <!-- table  -->
+                                <table class="table table-bordered dt-responsive nowrap"
+                                       style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+
+
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>{{.resp.Date}}</th>
+                                        <th>{{.now.Name}}</th>
+                                        <th>{{.max.Name}}</th>
+                                    </tr>
+
+                                    <tr>
+                                        <th>Dly</th>
+                                        {{if ge .resp.DailyLimit.AheadLevel 1}}
+                                            <td class="table-success">{{.resp.DailyLimit.Percent}}
+                                                %/{{.resp.DailyLimit.DonePerDay}}/{{.resp.DailyLimit.Done}}</td>
+                                        {{else}}
+                                            <td>{{.resp.DailyLimit.Percent}}%/{{.resp.DailyLimit.DonePerDay}}
+                                                /{{.resp.DailyLimit.Done}}</td>
+                                        {{end}}
+
+                                        {{if ge .now.DailyLimit.Finish 1}}
+                                            <td class="table-success">{{.now.DailyLimit.Left}}</td>
+                                        {{else}}
+                                            <td>{{.now.DailyLimit.Left}}</td>
+                                        {{end}}
+
+                                        {{if ge .max.DailyLimit.Finish 1}}
+                                            <td class="table-success">{{.max.DailyLimit.Left}}</td>
+                                        {{else}}
+                                            <td>{{.max.DailyLimit.Left}}</td>
+                                        {{end}}
+                                    </tr>
+
+                                    <tr>
+                                        <th>Cr</th>
+                                        {{if ge .resp.Parent.code.AheadLevel 1}}
+                                            <td class="table-success">{{.resp.Parent.code.Percent}}
+                                                %/{{.resp.Parent.code.DonePerDay}}/{{.resp.Parent.code.Done}}</td>
+                                        {{else}}
+                                            <td>{{.resp.Parent.code.Percent}}%/{{.resp.Parent.code.DonePerDay}}
+                                                /{{.resp.Parent.code.Done}}</td>
+                                        {{end}}
+
+                                        {{if ge .now.ParentInfo.code.Finish 1}}
+                                            <td class="table-success">{{.now.ParentInfo.code.Left}}</td>
+                                        {{else}}
+                                            <td>{{.now.ParentInfo.code.Left}}</td>
+                                        {{end}}
+
+                                        {{if ge .max.ParentInfo.code.Finish 1}}
+                                            <td class="table-success">{{.max.ParentInfo.code.Left}}</td>
+                                        {{else}}
+                                            <td>{{.max.ParentInfo.code.Left}}</td>
+                                        {{end}}
+                                    </tr>
+
+                                    <tr>
+                                        <th>Cri</th>
+                                        {{if ge .resp.Task.codeInput.AheadLevel 1}}
+                                            <td class="table-success">{{.resp.Task.codeInput.Percent}}
+                                                %/{{.resp.Task.codeInput.DonePerDay}}/{{.resp.Task.codeInput.Done}}</td>
+                                        {{else}}
+                                            <td>  {{.resp.Task.codeInput.Percent}}%/{{.resp.Task.codeInput.DonePerDay}}
+                                                /{{.resp.Task.codeInput.Done}}</td>
+                                        {{end}}
+
+                                        {{if ge .now.TaskInfo.codeInput.Finish 1}}
+                                            <td class="table-success">{{.now.TaskInfo.codeInput.Left}}</td>
+                                        {{else}}
+                                            <td>{{.now.TaskInfo.codeInput.Left}}</td>
+                                        {{end}}
+
+                                        {{if ge .max.TaskInfo.codeInput.Finish 1}}
+                                            <td class="table-success">{{.max.TaskInfo.codeInput.Left}}</td>
+                                        {{else}}
+                                            <td>{{.max.TaskInfo.codeInput.Left}}</td>
+                                        {{end}}
+                                    </tr>
+
+                                    <tr>
+                                        <th>Cn</th>
+                                        {{if ge .resp.Task.nonfiction.AheadLevel 1}}
+                                            <td class="table-success">{{.resp.Task.nonfiction.Percent}}
+                                                %/{{.resp.Task.nonfiction.DonePerDay}}
+                                                /{{.resp.Task.nonfiction.Done}}</td>
+                                        {{else}}
+                                            <td>  {{.resp.Task.nonfiction.Percent}}
+                                                %/{{.resp.Task.nonfiction.DonePerDay}}
+                                                /{{.resp.Task.nonfiction.Done}}</td>
+                                        {{end}}
+
+                                        {{if ge .now.TaskInfo.nonfiction.Finish 1}}
+                                            <td class="table-success">{{.now.TaskInfo.nonfiction.Left}}</td>
+                                        {{else}}
+                                            <td>{{.now.TaskInfo.nonfiction.Left}}</td>
+                                        {{end}}
+
+                                        {{if ge .max.TaskInfo.nonfiction.Finish 1}}
+                                            <td class="table-success">{{.max.TaskInfo.nonfiction.Left}}</td>
+                                        {{else}}
+                                            <td>{{.max.TaskInfo.nonfiction.Left}}</td>
+                                        {{end}}
+                                    </tr>
+
+                                    <tr>
+                                        <th>Cei</th>
+                                        {{if ge .resp.Task.englishInput.AheadLevel 1}}
+                                            <td class="table-success">{{.resp.Task.englishInput.Percent}}
+                                                %/{{.resp.Task.englishInput.DonePerDay}}
+                                                /{{.resp.Task.englishInput.Done}}</td>
+                                        {{else}}
+                                            <td>  {{.resp.Task.englishInput.Percent}}
+                                                %/{{.resp.Task.englishInput.DonePerDay}}
+                                                /{{.resp.Task.englishInput.Done}}</td>
+                                        {{end}}
+
+                                        {{if ge .now.TaskInfo.englishInput.Finish 1}}
+                                            <td class="table-success">{{.now.TaskInfo.englishInput.Left}}</td>
+                                        {{else}}
+                                            <td>{{.now.TaskInfo.englishInput.Left}}</td>
+                                        {{end}}
+
+                                        {{if ge .max.TaskInfo.englishInput.Finish 1}}
+                                            <td class="table-success">{{.max.TaskInfo.englishInput.Left}}</td>
+                                        {{else}}
+                                            <td>{{.max.TaskInfo.englishInput.Left}}</td>
+                                        {{end}}
+                                    </tr>
+
+                                    <tr>
+                                        <th>Fn</th>
+                                        {{if ge .resp.Task.running.AheadLevel 1}}
+                                            <td class="table-success">{{.resp.Task.running.Percent}}
+                                                %/{{.resp.Task.running.DonePerDay}}/{{.resp.Task.running.Done}}</td>
+                                        {{else}}
+                                            <td>  {{.resp.Task.running.Percent}}%/{{.resp.Task.running.DonePerDay}}
+                                                /{{.resp.Task.running.Done}}</td>
+                                        {{end}}
+
+                                        {{if ge .now.TaskInfo.running.Finish 1}}
+                                            <td class="table-success">{{.now.TaskInfo.running.Left}}</td>
+                                        {{else}}
+                                            <td>{{.now.TaskInfo.running.Left}}</td>
+                                        {{end}}
+
+                                        {{if ge .max.TaskInfo.running.Finish 1}}
+                                            <td class="table-success">{{.max.TaskInfo.running.Left}}</td>
+                                        {{else}}
+                                            <td>{{.max.TaskInfo.running.Left}}</td>
+                                        {{end}}
+                                    </tr>
+                                    <tr>
+                                        <th>Fa</th>
+                                        {{if ge .resp.Task.anaerobic.AheadLevel 1}}
+                                            <td class="table-success">{{.resp.Task.anaerobic.Percent}}
+                                                %/{{.resp.Task.anaerobic.DonePerDay}}/{{.resp.Task.anaerobic.Done}}</td>
+                                        {{else}}
+                                            <td>  {{.resp.Task.anaerobic.Percent}}%/{{.resp.Task.anaerobic.DonePerDay}}
+                                                /{{.resp.Task.anaerobic.Done}}</td>
+                                        {{end}}
+
+                                        {{if ge .now.TaskInfo.anaerobic.Finish 1}}
+                                            <td class="table-success">{{.now.TaskInfo.anaerobic.Left}}</td>
+                                        {{else}}
+                                            <td>{{.now.TaskInfo.anaerobic.Left}}</td>
+                                        {{end}}
+
+                                        {{if ge .max.TaskInfo.anaerobic.Finish 1}}
+                                            <td class="table-success">{{.max.TaskInfo.anaerobic.Left}}</td>
+                                        {{else}}
+                                            <td>{{.max.TaskInfo.anaerobic.Left}}</td>
+                                        {{end}}
+                                    </tr>
+                                    <tr>
+                                        <th>Mv</th>
+                                        {{if ge .resp.Stuff.mv.AheadLevel 1}}
+                                            <td class="table-success">{{.resp.Stuff.mv.Percent}}
+                                                %/{{.resp.Stuff.mv.DonePerDay}}/{{.resp.Stuff.mv.Done}}</td>
+                                        {{else}}
+                                            <td>  {{.resp.Stuff.mv.Percent}}%/{{.resp.Stuff.mv.DonePerDay}}
+                                                /{{.resp.Stuff.mv.Done}}</td>
+                                        {{end}}
+                                        {{if ge .now.StuffInfo.mv.Finish 1}}
+                                            <td class="table-success">{{.now.StuffInfo.mv.Left}}</td>
+                                        {{else}}
+                                            <td>{{.now.StuffInfo.mv.Left}}</td>
+                                        {{end}}
+                                        {{if ge .max.StuffInfo.mv.Finish 1}}
+                                            <td class="table-success">{{.max.StuffInfo.mv.Left}}</td>
+                                        {{else}}
+                                            <td>{{.max.StuffInfo.mv.Left}}</td>
+                                        {{end}}
+                                    </tr>
+
+
+                                    <tr>
+                                        <th>Msk</th>
+                                        {{if ge .resp.Stuff.mask.AheadLevel 1}}
+                                            <td class="table-success">{{.resp.Stuff.mask.Percent}}
+                                                %/{{.resp.Stuff.mask.DonePerDay}}/{{.resp.Stuff.mask.Done}}</td>
+                                        {{else}}
+                                            <td>  {{.resp.Stuff.mask.Percent}}%/{{.resp.Stuff.mask.DonePerDay}}
+                                                /{{.resp.Stuff.mask.Done}}</td>
+                                        {{end}}
+
+
+                                        {{if ge .now.StuffInfo.mask.Finish 1}}
+                                            <td class="table-success">{{.now.StuffInfo.mask.Left}}</td>
+                                        {{else}}
+                                            <td>{{.now.StuffInfo.mask.Left}}</td>
+                                        {{end}}
+
+                                        {{if ge .max.StuffInfo.mask.Finish 1}}
+                                            <td class="table-success">{{.max.StuffInfo.mask.Left}}</td>
+                                        {{else}}
+                                            <td>{{.max.StuffInfo.mask.Left}}</td>
+                                        {{end}}
+                                    </tr>
+                                    <tr>
+                                        <th>Pro</th>
+                                        {{if ge .resp.Stuff.protein1.AheadLevel 1}}
+                                            <td class="table-success">{{.resp.Stuff.protein1.Percent}}
+                                                %/{{.resp.Stuff.protein1.DonePerDay}}/{{.resp.Stuff.protein1.Done}}</td>
+                                        {{else}}
+                                            <td>  {{.resp.Stuff.protein1.Percent}}%/{{.resp.Stuff.protein1.DonePerDay}}
+                                                /{{.resp.Stuff.protein1.Done}}</td>
+                                        {{end}}
+
+                                        {{if ge .now.StuffInfo.protein1.Finish 1}}
+                                            <td class="table-success">{{.now.StuffInfo.protein1.Left}}</td>
+                                        {{else}}
+                                            <td>{{.now.StuffInfo.protein1.Left}}</td>
+                                        {{end}}
+
+                                        {{if ge .max.StuffInfo.protein1.Finish 1}}
+                                            <td class="table-success">{{.max.StuffInfo.protein1.Left}}</td>
+                                        {{else}}
+                                            <td>{{.max.StuffInfo.protein1.Left}}</td>
+                                        {{end}}
+
+                                    </tr>
+
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end col -->
+                </div>
+
+
+                <footer class="footer">
+                    <div class="container-fluid">
+                        <div class="row">
+
+                        </div>
+                    </div>
+                </footer>
+            </div>
+
+
+        </div>
+        <!-- container-fluid -->
+    </div>
+
+</div>
+
+
+<!-- JAVASCRIPT -->
+<script src="static/js/jquery.min.js"></script>
+<script src="static/js/bootstrap.bundle.min.js"></script>
+<script src="static/js/metisMenu.min.js"></script>
+<script src="static/js/simplebar.min.js"></script>
+<script src="static/js/waves.min.js"></script>
+<script src="static/js/jquery.sparkline.min.js"></script>
+
+
+<script src="static/js/dashboard.init.js"></script>
+
+<script src="static/js/app.js"></script>
+
+
+<!-- Required datatable js -->
+<script src="static/js/jquery.dataTables.min.js"></script>
+<script src="static/js/dataTables.bootstrap4.min.js"></script>
+<!-- Datatable init js -->
+<script src="static/js/datatables.init.js"></script>
+
+<!-- Responsive examples -->
+<script src="static/js/dataTables.responsive.min.js"></script>
+<script src="static/js/responsive.bootstrap4.min.js"></script>
+
+<!-- Plugins js -->
+<script src="static/js/dropzone.min.js"></script>
+
+</body>
+
+</html>

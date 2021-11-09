@@ -15,7 +15,7 @@ type Project struct {
 	LastTime      int64   `gorm:"not null"`
 	Longest       int64   `gorm:"not null"`
 
-	*Model
+	*Base
 }
 
 func (e *Project) TableName() string {
@@ -25,7 +25,7 @@ func (e *Project) TableName() string {
 type Projects []*Project
 
 type ProjectModel struct {
-	Base *BaseModel
+	Base *BaseDbModel
 }
 
 func NewProjectModel(db *gorm.DB) *ProjectModel {

@@ -2,8 +2,8 @@ package v1
 
 import (
 	"github.com/Sapomie/wayne-data/global"
-	"github.com/Sapomie/wayne-data/internal/resp"
-	"github.com/Sapomie/wayne-data/internal/service"
+	"github.com/Sapomie/wayne-data/internal/model/resp"
+	"github.com/Sapomie/wayne-data/internal/service/event"
 	"github.com/Sapomie/wayne-data/pkg/app"
 	"github.com/Sapomie/wayne-data/pkg/errcode"
 	"github.com/gin-gonic/gin"
@@ -19,7 +19,7 @@ func ListEvents(c *gin.Context) {
 		return
 	}
 
-	svc := service.NewEventService(c)
+	svc := event.NewEventService(c)
 	limit, offset := app.GetLimitOffset(c)
 	casts, num, err := svc.GetEventList(&param, limit, offset)
 	if err != nil {

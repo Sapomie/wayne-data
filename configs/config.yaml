@@ -7,8 +7,13 @@ Database:
   MaxIdleConns: 10
   MaxOpenConns: 30
 
+Redis:
+  Network: tcp
+  Address: 127.0.0.1
+  Port: 6379
+
 Server:
-  RunMode: debug
+  RunMode: release
   HttpPort: 1002
   ReadTimeout: 60
   WriteTimeout: 60
@@ -17,11 +22,17 @@ App:
   DefaultPageSize: 10
   MaxPageSize: 100
   DefaultContextTimeout: 60
-  LogSavePath: storage/logs
-  CsvSavePath: storage/csv
-  DoneCsvSavePath: storage/csv/done
+
+  LogSavePath: storage/log
   LogFileName: app
   LogFileExt: .log
+
+  CsvSavePath: storage/csv
+  DoneCsvSavePath: storage/csv/done
+
+  LogV2SavePath: storage/logv2
+  LogV2FileName: default.log
+
   UploadSavePath: storage/uploads
   UploadServerUrl: http://127.0.0.1:8000/static
   UploadImageMaxSize: 5  # MB

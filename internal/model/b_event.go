@@ -2,7 +2,7 @@ package model
 
 import (
 	"github.com/Sapomie/wayne-data/global"
-	"github.com/Sapomie/wayne-data/internal/model/cons"
+	"github.com/Sapomie/wayne-data/internal/model/constant"
 	"github.com/Sapomie/wayne-data/pkg/convert"
 	"github.com/jinzhu/gorm"
 	"strings"
@@ -26,7 +26,7 @@ type Event struct {
 	ProjectId int    `json:"project_id"`
 	Remark    string `json:"remark"` //comment 除去自定义属性的部分
 
-	*Model
+	*Base
 }
 
 func (e *Event) TableName() string {
@@ -75,15 +75,15 @@ func (ets Events) Duration() (duration float64) {
 	return
 }
 
-type EventModel struct {
-	Base *BaseModel
+type EventDbModel struct {
+	Base *BaseDbModel
 }
 
-func NewEventModel(db *gorm.DB) *EventModel {
-	return &EventModel{NewBaseModel(new(Event), db)}
+func NewEventModel(db *gorm.DB) *EventDbModel {
+	return &EventDbModel{NewBaseModel(new(Event), db)}
 }
 
-func (em *EventModel) Exists(startTime int64) (bool, error) {
+func (em *EventDbModel) Exists(startTime int64) (bool, error) {
 	db := em.Base
 	var count int
 	err := db.Where("start_time = ?", startTime).Count(&count).Error
@@ -94,7 +94,7 @@ func (em *EventModel) Exists(startTime int64) (bool, error) {
 	return exists, nil
 }
 
-func (em *EventModel) GetAll() (Events, int, error) {
+func (em *EventDbModel) GetAll() (Events, int, error) {
 	var events Events
 	var count int
 	err := em.Base.Scan(&events).Error
@@ -105,7 +105,7 @@ func (em *EventModel) GetAll() (Events, int, error) {
 	return events, count, nil
 }
 
-func (em *EventModel) ListEvents(parentId, taskId, limit, offset int) (Events, int, error) {
+func (em *EventDbModel) ListEvents(parentId, taskId, limit, offset int) (Events, int, error) {
 	var events Events
 	var count int
 	db := em.Base.DB
@@ -127,7 +127,7 @@ func (em *EventModel) ListEvents(parentId, taskId, limit, offset int) (Events, i
 	return events, count, nil
 }
 
-func (em *EventModel) Newest() (*Event, error) {
+func (em *EventDbModel) Newest() (*Event, error) {
 	db := em.Base
 	event := new(Event)
 	err := db.Order("end_time desc").First(event).Error
@@ -143,6 +143,6 @@ func updateNewest() error {
 	if err != nil {
 		return err
 	}
-	cons.Newest = time.Unix(evt.EndTime, 0)
+	constant.Newest = time.Unix(evt.EndTime, 0)
 	return nil
 }

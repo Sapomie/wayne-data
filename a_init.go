@@ -4,11 +4,13 @@ import (
 	"flag"
 	"github.com/Sapomie/wayne-data/global"
 	"github.com/Sapomie/wayne-data/internal/model"
-	"github.com/Sapomie/wayne-data/internal/service/rawEvent"
-	"github.com/Sapomie/wayne-data/pkg/logger"
+	"github.com/Sapomie/wayne-data/pkg/log"
+	"github.com/Sapomie/wayne-data/pkg/loggerV0"
 	"github.com/Sapomie/wayne-data/pkg/setting"
 	"gopkg.in/natefinch/lumberjack.v2"
-	"log"
+	"io"
+	log2 "log"
+	"os"
 	"time"
 )
 
@@ -30,17 +32,45 @@ func BeforeStarting() error {
 	if err != nil {
 		return err
 	}
+	//启动redis
+	err = setupRedisEngine()
+	if err != nil {
+		return err
+	}
 	//日志
 	err = setupLogger()
 	if err != nil {
 		return err
 	}
-	//
-	rawEvent.ImportCsvData()
+	//日志V2
+	err = setupLoggerV2()
+	if err != nil {
+		return err
+	}
+
+	//field 全局变量
 	err = model.UpdateFieldVariables()
 	if err != nil {
 		return err
 	}
+	//rawEvent.ImportCsvData()
+
+	return nil
+}
+
+func setupLoggerV2() error {
+	//
+	var w io.Writer = os.Stdout
+	if err := os.MkdirAll(global.AppSetting.LogV2SavePath, 0755); err != nil {
+		log.Fatal("initLogger", "mkdir log path failed")
+	}
+	if fp, err := os.OpenFile(global.AppSetting.LogV2SavePath+"/"+global.AppSetting.LogV2FileName, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0755); err != nil {
+		log.Fatal("initLogger", "log path not exists")
+	} else {
+		w = io.Writer(fp)
+	}
+	log.SetDefaultFileLogger(log.NewFileLogger(w, "info", 0))
+
 	return nil
 }
 
@@ -56,6 +86,10 @@ func setupSetting() error {
 		return err
 	}
 	err = s.ReadSection("Database", &global.DatabaseSetting)
+	if err != nil {
+		return err
+	}
+	err = s.ReadSection("Redis", &global.RedisSetting)
 	if err != nil {
 		return err
 	}
@@ -90,9 +124,14 @@ func setupDBEngine() error {
 	return nil
 }
 
+func setupRedisEngine() error {
+	global.CacheEngine = model.NewCacheEngine(global.RedisSetting)
+	return nil
+}
+
 func setupLogger() error {
 	fileName := global.AppSetting.LogSavePath + "/" + global.AppSetting.LogFileName + global.AppSetting.LogFileExt
-	global.Logger = logger.NewLogger(
+	global.Logger = loggerV0.NewLogger(
 		&lumberjack.Logger{
 			Filename:  fileName,
 			MaxSize:   500,
@@ -100,7 +139,7 @@ func setupLogger() error {
 			LocalTime: true,
 		},
 		"",
-		log.LstdFlags,
+		log2.LstdFlags,
 	).WithCaller(1)
 	return nil
 }
