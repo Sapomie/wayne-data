@@ -19,7 +19,7 @@ type RawEvent struct {
 	ParentTask string  `csv:"母任务"`
 }
 
-func makeEventsByRaws(raws []*RawEvent) (model.Events, []string, error) {
+func makeEventsByRawEvents(raws []*RawEvent) (model.Events, []string, error) {
 	var events model.Events
 	var info []string
 	for _, raw := range raws {
@@ -97,7 +97,7 @@ func (raw *RawEvent) toEvent() (event *model.Event, info []string, err error) {
 	if parentAddingInfo != "" {
 		info = append(info, parentAddingInfo)
 	}
-	stuffIds, tagIds, remark, projectId, commentPropertyInfo, err := processCommentProperty(raw.Comment)
+	stuffIds, tagIds, remark, projectId, commentPropertyInfo, err := processCommentProperty(raw)
 	if err != nil {
 		return nil, nil, err
 	}

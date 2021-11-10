@@ -1,4 +1,4 @@
-package constant
+package cons
 
 //main stuff
 var MainStuffs = []string{
@@ -27,7 +27,7 @@ var RestrainStuff = []string{
 	StuWine,
 }
 
-func IsRestrain(stuffName string) bool {
+func IsRestrainStuff(stuffName string) bool {
 	for _, v := range RestrainStuff {
 		if v == stuffName {
 			return true

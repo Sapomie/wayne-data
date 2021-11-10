@@ -2,7 +2,7 @@ package essential
 
 import (
 	"github.com/Sapomie/wayne-data/internal/model"
-	"github.com/Sapomie/wayne-data/internal/model/constant"
+	"github.com/Sapomie/wayne-data/internal/model/cons"
 	"github.com/Sapomie/wayne-data/pkg/convert"
 	"github.com/Sapomie/wayne-data/pkg/mtime"
 	"time"
@@ -17,7 +17,10 @@ func MakeEssentials(events model.Events, start, end time.Time, typ mtime.TimeTyp
 
 	var essentials Essentials
 	for i := startNumber; i <= endNumber; i++ {
-		essential, err := makeEssential(events, start, year, i, typ)
+		essential, err := MakeEssential(events, start, typ, year, i)
+		if essential != nil {
+			essential.giveMainColumnMapKey()
+		}
 		if err != nil {
 			return nil, err
 		}
@@ -29,8 +32,8 @@ func MakeEssentials(events model.Events, start, end time.Time, typ mtime.TimeTyp
 	return essentials, nil
 }
 
-//start 为自定开始日期，默认应该为初始年第一天
-func makeEssential(events model.Events, start time.Time, year, num int, typ mtime.TimeType) (ess *Essential, err error) {
+//start 为progress自定开始日期，默认为初始年第一天
+func MakeEssential(events model.Events, start time.Time, typ mtime.TimeType, year, num int) (ess *Essential, err error) {
 	zone := mtime.NewTimeZone(typ, year, num)
 	zoneStart, zoneEnd := zone.BeginAndEnd()
 	eventsZone := events.Between(zoneStart, zoneEnd)
@@ -47,9 +50,9 @@ func makeEssential(events model.Events, start time.Time, year, num int, typ mtim
 
 	dayHour := dayHourInfos(taskInfo, dur)
 	primary := getPrimary(dayHour)
-	goalPct := countGoal(dayHour[constant.DHOther], dayHour[constant.DHSelfEntertain], typ) * 100
-	goalMaxPct := countGoal(dayHour[constant.DHOther]*dur/durTotal, dayHour[constant.DHSelfEntertain]*dur/durTotal, typ) * 100
-	dailyPct := dayHour[constant.DHDaily] / constant.DailyFull * 100
+	goalPct := countGoal(dayHour[cons.DHOther], dayHour[cons.DHSelfEntertain], typ) * 100
+	goalMaxPct := countGoal(dayHour[cons.DHOther]*dur/durTotal, dayHour[cons.DHSelfEntertain]*dur/durTotal, typ) * 100
+	dailyPct := dayHour[cons.DHDaily] / cons.DailyFull * 100
 
 	essential := &Essential{
 		Date:           zone.DateString(),
@@ -160,7 +163,7 @@ func columnInfo(events model.Events, dur, durTotal float64) (taskInfo, parentInf
 	}
 
 	//make sure main field not nil
-	for _, task := range constant.MainTasks {
+	for _, task := range cons.MainTasks {
 		_, ok := taskInfo[task]
 		if !ok {
 			taskInfo[task] = &FieldInfo{
@@ -169,7 +172,7 @@ func columnInfo(events model.Events, dur, durTotal float64) (taskInfo, parentInf
 		}
 	}
 
-	for _, parent := range constant.MainParents {
+	for _, parent := range cons.MainParents {
 		_, ok := parentInfo[parent]
 		if !ok {
 			parentInfo[parent] = &FieldInfo{
@@ -178,7 +181,7 @@ func columnInfo(events model.Events, dur, durTotal float64) (taskInfo, parentInf
 		}
 	}
 
-	for _, stuff := range constant.MainStuffs {
+	for _, stuff := range cons.MainStuffs {
 		_, ok := stuffInfo[stuff]
 		if !ok {
 			stuffInfo[stuff] = &FieldInfo{
@@ -192,7 +195,7 @@ func columnInfo(events model.Events, dur, durTotal float64) (taskInfo, parentInf
 
 func getPrimary(dayHour map[string]float64) float64 {
 
-	return dayHour[constant.DHDaily] + dayHour[constant.DHOther]*(constant.DailyFull*constant.CountGoalBase/constant.OtherFull) + dayHour[constant.DHSelfEntertain]*(constant.DailyFull*constant.CountGoalBase/constant.SelfFull)
+	return dayHour[cons.DHDaily] + dayHour[cons.DHOther]*(cons.DailyFull*cons.CountGoalBase/cons.OtherFull) + dayHour[cons.DHSelfEntertain]*(cons.DailyFull*cons.CountGoalBase/cons.SelfFull)
 }
 
 func dayHourInfos(taskInfo map[string]*FieldInfo, dur float64) map[string]float64 {
@@ -202,18 +205,18 @@ func dayHourInfos(taskInfo map[string]*FieldInfo, dur float64) map[string]float6
 
 	for _, info := range taskInfo {
 		switch info.DayHourType {
-		case constant.DayHourOther:
-			dayHour[constant.DHOther] += info.Done / dur
-		case constant.DayHourDaily:
-			dayHour[constant.DHDaily] += info.Done / dur
-		case constant.DayHourSelfEntertain:
-			dayHour[constant.DHSelfEntertain] += info.Done / dur
-		case constant.DayHourSleep:
-			dayHour[constant.DHSleep] += info.Done / dur
-		case constant.DayHourRoutine:
-			dayHour[constant.DHRoutine] += info.Done / dur
-		case constant.DayHourBlank:
-			dayHour[constant.DHBlank] += info.Done / dur
+		case cons.DayHourOther:
+			dayHour[cons.DHOther] += info.Done / dur
+		case cons.DayHourDaily:
+			dayHour[cons.DHDaily] += info.Done / dur
+		case cons.DayHourSelfEntertain:
+			dayHour[cons.DHSelfEntertain] += info.Done / dur
+		case cons.DayHourSleep:
+			dayHour[cons.DHSleep] += info.Done / dur
+		case cons.DayHourRoutine:
+			dayHour[cons.DHRoutine] += info.Done / dur
+		case cons.DayHourBlank:
+			dayHour[cons.DHBlank] += info.Done / dur
 		}
 	}
 
@@ -221,7 +224,7 @@ func dayHourInfos(taskInfo map[string]*FieldInfo, dur float64) map[string]float6
 		dayHourDecimal[k] = convert.FloatTo(v).Decimal(2)
 	}
 
-	for _, dayHourName := range constant.DayHourNames {
+	for _, dayHourName := range cons.DayHourNames {
 		_, ok := dayHour[dayHourName]
 		if !ok {
 			dayHourDecimal[dayHourName] = 0.0
@@ -234,7 +237,7 @@ func dayHourInfos(taskInfo map[string]*FieldInfo, dur float64) map[string]float6
 func countGoal(dayHourOther, dayHourSelf float64, typ mtime.TimeType) (goalPct float64) {
 
 	var addition float64
-	baseDaily := constant.CountGoalBase * constant.DailyFull
+	baseDaily := cons.CountGoalBase * cons.DailyFull
 
 	switch typ {
 	case mtime.TypeTen:
@@ -245,10 +248,10 @@ func countGoal(dayHourOther, dayHourSelf float64, typ mtime.TimeType) (goalPct f
 		addition = 0.15
 	}
 
-	dayOtherPct := dayHourOther / constant.OtherFull
-	daySelfPct := dayHourSelf / constant.SelfFull
+	dayOtherPct := dayHourOther / cons.OtherFull
+	daySelfPct := dayHourSelf / cons.SelfFull
 
-	goalPct = (baseDaily-baseDaily*dayOtherPct-baseDaily*daySelfPct)/baseDaily*constant.CountGoalBase + addition
+	goalPct = (baseDaily-baseDaily*dayOtherPct-baseDaily*daySelfPct)/baseDaily*cons.CountGoalBase + addition
 	if goalPct < addition {
 		goalPct = addition
 	}

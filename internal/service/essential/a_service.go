@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/Sapomie/wayne-data/global"
 	"github.com/Sapomie/wayne-data/internal/model"
-	"github.com/Sapomie/wayne-data/internal/model/constant"
+	"github.com/Sapomie/wayne-data/internal/model/cons"
 	"github.com/Sapomie/wayne-data/pkg/mtime"
 )
 
@@ -57,7 +57,7 @@ func (svc *ServiceEssential) GetEssentialList(typ mtime.TimeType) (Essentials, i
 	if !exists {
 		start, _ := mtime.NewTimeZone(mtime.TypeYear, 2021, 1).BeginAndEnd()
 		events, _, err := svc.eventDb.GetAll()
-		ess, err = MakeEssentials(events, start, constant.Newest, typ)
+		ess, err = MakeEssentials(events, start, cons.Newest, typ)
 		if err != nil {
 			return nil, 0, err
 		}

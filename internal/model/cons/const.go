@@ -1,4 +1,4 @@
-package constant
+package cons
 
 import "time"
 
@@ -17,8 +17,8 @@ const (
 	RestrainFull    = "☯"
 	RestrainNotFull = "☺"
 	None            = "-----"
-	LevelMark       = "(↥)"
-	LevelMinMark    = "(↧)"
+	LevelUpMark     = "(↥)"
+	LevelDownMark   = "(↧)"
 )
 
 const (
@@ -27,4 +27,5 @@ const (
 	DumbbellPress = "dumbbellPress"
 )
 
+//数据库中最新event的start time
 var Newest time.Time

@@ -2,6 +2,7 @@ package v1
 
 import (
 	"github.com/Sapomie/wayne-data/global"
+	"github.com/Sapomie/wayne-data/internal/model/resp"
 	"github.com/Sapomie/wayne-data/internal/service/essential"
 	"github.com/Sapomie/wayne-data/pkg/app"
 	"github.com/Sapomie/wayne-data/pkg/errcode"
@@ -11,6 +12,14 @@ import (
 
 func ListEssentialsDay(c *gin.Context) {
 	response := app.NewResponse(c)
+	param := resp.EssentialDayListRequest{}
+	valid, errs := app.BindAndValid(c, &param)
+	if !valid {
+		global.Logger.Errorf(c, "app.BindAndValid errs: %v", errs)
+		response.ToErrorResponse(errcode.InvalidParams.WithDetails(errs.Errors()...))
+		return
+	}
+
 	svc := essential.NewEssentialService(c)
 	ess, _, err := svc.GetEssentialList(mtime.TypeDay)
 	if err != nil {
@@ -18,8 +27,13 @@ func ListEssentialsDay(c *gin.Context) {
 		response.ToErrorResponse(errcode.ErrorGetEssentialListFail)
 		return
 	}
+
+	if param.Limit > len(ess) {
+		param.Limit = len(ess)
+	}
+
 	response.ToResponseHtml("essential.html", gin.H{
-		"resp":      ess,
+		"resp":      ess[:param.Limit],
 		"type":      "day",
 		"tableName": "datatableDay",
 	})

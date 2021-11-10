@@ -1,4 +1,4 @@
-package constant
+package cons
 
 //task name
 const (

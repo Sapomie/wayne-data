@@ -181,7 +181,6 @@ func (mt *MTime) TimeZone(typ TimeType) TimeZoneInterface {
 
 func (mt *MTime) WeekDayShort() string {
 	return mt.Time.Weekday().String()[:3]
-
 }
 
 //保证start time 是一天的开始，end time 是一天的结尾

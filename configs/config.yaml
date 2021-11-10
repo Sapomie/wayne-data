@@ -13,7 +13,7 @@ Redis:
   Port: 6379
 
 Server:
-  RunMode: release
+  RunMode: debug
   HttpPort: 1002
   ReadTimeout: 60
   WriteTimeout: 60

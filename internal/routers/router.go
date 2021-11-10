@@ -1,7 +1,9 @@
 package routers
 
 import (
+	"fmt"
 	"github.com/Sapomie/wayne-data/internal/routers/v1"
+	"github.com/Sapomie/wayne-data/internal/service/rawEvent"
 	"github.com/gin-gonic/gin"
 )
 
@@ -12,12 +14,12 @@ func NewRouter() *gin.Engine {
 	r.LoadHTMLGlob("view/*.html")
 
 	r.GET("/test", func(c *gin.Context) {
-		//_, info, err := rawEvent.ImportCsvData()
-		//if err != nil {
-		//	fmt.Println(err)
-		//}
+		_, info, err := rawEvent.ImportCsvData()
+		if err != nil {
+			fmt.Println(err)
+		}
 
-		c.JSON(200, nil)
+		c.JSON(200, info)
 	})
 
 	apiv1 := r.Group("/api/v1")
@@ -31,6 +33,7 @@ func NewRouter() *gin.Engine {
 		apiv1.GET("essmonth", v1.ListEssentialsMonth)
 		apiv1.GET("essquarter", v1.ListEssentialsQuarter)
 		apiv1.GET("essyear", v1.ListEssentialsYear)
+		apiv1.GET("progress", v1.GetProgress)
 	}
 
 	return r

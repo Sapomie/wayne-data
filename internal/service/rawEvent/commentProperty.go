@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/Sapomie/wayne-data/global"
 	"github.com/Sapomie/wayne-data/internal/model"
+	"github.com/Sapomie/wayne-data/internal/model/cons"
 	"strings"
 )
 
@@ -21,11 +22,11 @@ type propertyPair struct {
 }
 
 //从comment中获取自定义property的信息，并且添加到event的property id中
-func processCommentProperty(rawEventComment string) (stuffIds, tagIds, remark string, projectId int, updateInfos []string, err error) {
+func processCommentProperty(raw *RawEvent) (stuffIds, tagIds, remark string, projectId int, updateInfos []string, err error) {
 
-	pairs, remark, err := unpackEventComment(rawEventComment)
+	pairs, remark, err := unpackEventComment(raw.Comment)
 	if err != nil {
-		info := fmt.Sprintf("unpack tag info error coment: %v", rawEventComment)
+		info := fmt.Sprintf("unpack tag info error coment: %v,date: %v ", raw.Comment, raw.StartTime)
 		err = errors.New(info)
 		return
 	}
@@ -67,11 +68,22 @@ func processCommentProperty(rawEventComment string) (stuffIds, tagIds, remark st
 				updateInfos = append(updateInfos, addingInfo)
 			}
 			projectId = project.Id
+		}
+	}
 
-			//default:
-			//	info := fmt.Sprintf("unhandled type %v", pair.Key)
-			//	err = errors.New(info)
-			//	return
+	//add stuff mv
+	if raw.TaskName == cons.Movie {
+		stuff, addingInfo, err := model.NewStuffModel(global.DBEngine).InsertAndGetStuff(cons.StuMovie)
+		if err != nil {
+			return "", "", "", 0, nil, err
+		}
+		if addingInfo != "" {
+			updateInfos = append(updateInfos, addingInfo)
+		}
+		if stuffIds == "" {
+			stuffIds = fmt.Sprint(stuff.Id)
+		} else {
+			stuffIds = stuffIds + "," + fmt.Sprint(stuff.Id)
 		}
 	}
 

@@ -235,7 +235,7 @@
                                 <h4 class="card-title col-12 mb-3">{{.resp.Date}} <span
                                             class="bg-badge rounded-pill bg-gao1"> {{.resp.Days}} </span>
                                     <span
-                                            class="bg-badge rounded-pill bg-gao2"> {{.resp.DateProgress}}% </span>
+                                            class="bg-badge rounded-pill bg-gao2"> {{.resp.DaysPassed}}% </span>
 
                                     <span
                                             class="bg-badge rounded-pill bg-gao3"> {{.resp.Primary}} </span>
@@ -258,7 +258,7 @@
 
                                                     <div class="progress mb-1" style="height: 4px;">
                                                         <div class="progress-bar" role="progressbar"
-                                                             style="width: {{.resp.DateProgress}}%;"
+                                                             style="width: {{.resp.DaysPassed}}%;"
                                                              aria-valuenow="25" aria-valuemin="0"
                                                              aria-valuemax="100"></div>
                                                     </div>
@@ -277,7 +277,7 @@
 
                                                     <div class="progress mb-1" style="height: 4px;">
                                                         <div class="progress-bar" role="progressbar"
-                                                             style="width: {{.resp.DateProgress}}%;"
+                                                             style="width: {{.resp.DaysPassed}}%;"
                                                              aria-valuenow="25" aria-valuemin="0"
                                                              aria-valuemax="100"></div>
                                                     </div>
@@ -295,7 +295,7 @@
                                                     Cri : {{.resp.Task.codeInput.PercentAbs}}%
                                                     <div class="progress mb-1" style="height: 4px;">
                                                         <div class="progress-bar" role="progressbar"
-                                                             style="width: {{.resp.DateProgress}}%;"
+                                                             style="width: {{.resp.DaysPassed}}%;"
                                                              aria-valuenow="25" aria-valuemin="0"
                                                              aria-valuemax="100"></div>
                                                     </div>
@@ -313,7 +313,7 @@
                                                     Cn : {{.resp.Task.nonfiction.PercentAbs}}%
                                                     <div class="progress mb-1" style="height: 4px;">
                                                         <div class="progress-bar" role="progressbar"
-                                                             style="width: {{.resp.DateProgress}}%;"
+                                                             style="width: {{.resp.DaysPassed}}%;"
                                                              aria-valuenow="25" aria-valuemin="0"
                                                              aria-valuemax="100"></div>
                                                     </div>
@@ -331,7 +331,7 @@
                                                     Cei : {{.resp.Task.englishInput.PercentAbs}}%
                                                     <div class="progress mb-1" style="height: 4px;">
                                                         <div class="progress-bar" role="progressbar"
-                                                             style="width: {{.resp.DateProgress}}%;"
+                                                             style="width: {{.resp.DaysPassed}}%;"
                                                              aria-valuenow="25" aria-valuemin="0"
                                                              aria-valuemax="100"></div>
                                                     </div>
@@ -359,7 +359,7 @@
                                                     Fn : {{.resp.Task.running.PercentAbs}}%
                                                     <div class="progress mb-1" style="height: 4px;">
                                                         <div class="progress-bar " role="progressbar"
-                                                             style="width: {{.resp.DateProgress}}%;"
+                                                             style="width: {{.resp.DaysPassed}}%;"
                                                              aria-valuenow="25" aria-valuemin="0"
                                                              aria-valuemax="100"></div>
                                                     </div>
@@ -377,7 +377,7 @@
                                                     Fa : {{.resp.Task.anaerobic.PercentAbs}}%
                                                     <div class="progress mb-1" style="height: 4px;">
                                                         <div class="progress-bar" role="progressbar"
-                                                             style="width: {{.resp.DateProgress}}%;"
+                                                             style="width: {{.resp.DaysPassed}}%;"
                                                              aria-valuenow="25" aria-valuemin="0"
                                                              aria-valuemax="100"></div>
                                                     </div>
@@ -395,7 +395,7 @@
                                                     Mv : {{.resp.Stuff.mv.PercentAbs}}%
                                                     <div class="progress mb-1" style="height: 4px;">
                                                         <div class="progress-bar " role="progressbar"
-                                                             style="width: {{.resp.DateProgress}}%;"
+                                                             style="width: {{.resp.DaysPassed}}%;"
                                                              aria-valuenow="25" aria-valuemin="0"
                                                              aria-valuemax="100"></div>
                                                     </div>
@@ -413,7 +413,7 @@
                                                     Mask : {{.resp.Stuff.mask.PercentAbs}}%
                                                     <div class="progress mb-1" style="height: 4px;">
                                                         <div class="progress-bar" role="progressbar"
-                                                             style="width: {{.resp.DateProgress}}%;"
+                                                             style="width: {{.resp.DaysPassed}}%;"
                                                              aria-valuenow="25" aria-valuemin="0"
                                                              aria-valuemax="100"></div>
                                                     </div>
@@ -431,7 +431,7 @@
                                                     Protein1 : {{.resp.Stuff.protein1.PercentAbs}}%
                                                     <div class="progress mb-1" style="height: 4px;">
                                                         <div class="progress-bar" role="progressbar"
-                                                             style="width: {{.resp.DateProgress}}%;"
+                                                             style="width: {{.resp.DaysPassed}}%;"
                                                              aria-valuenow="25" aria-valuemin="0"
                                                              aria-valuemax="100"></div>
                                                     </div>
@@ -450,281 +450,281 @@
                                     </div>
 
                                     <!-- gcRunning  -->
-                                    <div class="col-xl-4">
-                                        <table id="" class="table table-bordered dt-responsive nowrap"
-                                               style="border-collapse: collapse; border-spacing: 0; width: 100%;">
-                                            <thead>
+                                    {{/*                                    <div class="col-xl-4">*/}}
+                                    {{/*                                        <table id="" class="table table-bordered dt-responsive nowrap"*/}}
+                                    {{/*                                               style="border-collapse: collapse; border-spacing: 0; width: 100%;">*/}}
+                                    {{/*                                            <thead>*/}}
 
-                                            <tr>
-                                                <th>Fn</th>
-                                                <th>GcAcc</th>
-                                                <th>GcUsed</th>
-                                                <th>GcLeft</th>
+                                    {{/*                                            <tr>*/}}
+                                    {{/*                                                <th>Fn</th>*/}}
+                                    {{/*                                                <th>GcAcc</th>*/}}
+                                    {{/*                                                <th>GcUsed</th>*/}}
+                                    {{/*                                                <th>GcLeft</th>*/}}
 
-                                            </tr>
+                                    {{/*                                            </tr>*/}}
 
-                                            </thead>
+                                    {{/*                                            </thead>*/}}
 
-                                            <tbody>
-                                            <tr>
-                                                <td>{{.resp.GcRunning.RunningDistance}}</td>
-                                                <td>{{.resp.GcRunning.GcAccumulation}}</td>
-                                                <td>{{.resp.GcRunning.GcUsed}}</td>
-                                                <td>{{.resp.GcRunning.GcLeft}}</td>
+                                    {{/*                                            <tbody>*/}}
+                                    {{/*                                            <tr>*/}}
+                                    {{/*                                                <td>{{.resp.GcRunning.RunningDistance}}</td>*/}}
+                                    {{/*                                                <td>{{.resp.GcRunning.GcAccumulation}}</td>*/}}
+                                    {{/*                                                <td>{{.resp.GcRunning.GcUsed}}</td>*/}}
+                                    {{/*                                                <td>{{.resp.GcRunning.GcLeft}}</td>*/}}
 
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                    {{/*                                            </tr>*/}}
+                                    {{/*                                            </tbody>*/}}
+                                    {{/*                                        </table>*/}}
+                                    {{/*                                    </div>*/}}
 
-                                    <!-- end col -->
-                                </div>
+                                    {{/*                                    <!-- end col -->*/}}
+                                    {{/*                                </div>*/}}
 
-                                <!-- table  -->
-                                <table id="datatableSummaryTen" class="table table-bordered dt-responsive nowrap"
-                                       style="border-collapse: collapse; border-spacing: 0; width: 100%;">
-
-
-                                    <thead>
-
-                                    <tr class="table-light">
-                                        <th>{{.resp.Date}}</th>
-                                        <th>Dly</th>
-
-                                        <th>Cr</th>
-                                        <th>Cri</th>
-                                        <th>Cn</th>
-                                        <th>Cei</th>
-                                        <th>Fn</th>
-                                        <th>Fa</th>
-                                        <th>Mv</th>
-                                        <th>Msk</th>
-                                        <th>Pro</th>
+                                    <!-- table  -->
+                                    <table id="datatableSummaryTen" class="table table-bordered dt-responsive nowrap"
+                                           style="border-collapse: collapse; border-spacing: 0; width: 100%;">
 
 
-                                    </tr>
+                                        <thead>
 
-                                    </thead>
+                                        <tr class="table-light">
+                                            <th>{{.resp.Date}}</th>
+                                            <th>Dly</th>
 
-                                    <tbody>
-
-                                    <tr class="table-light">
-                                        <td>Done</td>
-                                        <td>{{.resp.DailyLimit.Done}}</td>
-                                        <td>{{.resp.Parent.code.Done}}</td>
-                                        <td>{{.resp.Task.codeInput.Done}}</td>
-                                        <td>{{.resp.Task.nonfiction.Done}}</td>
-                                        <td>{{.resp.Task.englishInput.Done}}</td>
-                                        <td>{{.resp.Task.running.Done}}</td>
-                                        <td>{{.resp.Task.anaerobic.Done}}</td>
-                                        <td>{{.resp.Stuff.mv.Done}}</td>
-                                        <td>{{.resp.Stuff.mask.Done}}</td>
-                                        <td>{{.resp.Stuff.protein1.Done}}</td>
-                                    </tr>
-
-                                    <tr class="table-light">
-                                        <td>PerD</td>
-                                        <td>{{.resp.DailyLimit.DonePerDay}}</td>
-                                        <td>{{.resp.Parent.code.DonePerDay}}</td>
-                                        <td>{{.resp.Task.codeInput.DonePerDay}}</td>
-                                        <td>{{.resp.Task.nonfiction.DonePerDay}}</td>
-                                        <td>{{.resp.Task.englishInput.DonePerDay}}</td>
-                                        <td>{{.resp.Task.running.DonePerDay}}</td>
-                                        <td>{{.resp.Task.anaerobic.DonePerDay}}</td>
-                                        <td>{{.resp.Stuff.mv.DonePerDay}}</td>
-                                        <td>{{.resp.Stuff.mask.DonePerDay}}</td>
-                                        <td>{{.resp.Stuff.protein1.DonePerDay}}</td>
-                                    </tr>
+                                            <th>Cr</th>
+                                            <th>Cri</th>
+                                            <th>Cn</th>
+                                            <th>Cei</th>
+                                            <th>Fn</th>
+                                            <th>Fa</th>
+                                            <th>Mv</th>
+                                            <th>Msk</th>
+                                            <th>Pro</th>
 
 
-                                    <tr>
-                                        <td class="table-light">Pct</td>
+                                        </tr>
 
-                                        {{if ge .resp.DailyLimit.AheadLevel 1}}
-                                            <td class="table-success">{{.resp.DailyLimit.Percent}}%</td>
-                                        {{else}}
-                                            <td>{{.resp.DailyLimit.Percent}}%</td>
-                                        {{end}}
+                                        </thead>
 
-                                        {{if ge .resp.Parent.code.AheadLevel 1}}
-                                            <td class="table-success">{{.resp.Parent.code.Percent}}%</td>
-                                        {{else}}
-                                            <td>{{.resp.Parent.code.Percent}}%</td>
-                                        {{end}}
+                                        <tbody>
 
-                                        {{if ge .resp.Task.codeInput.AheadLevel 1}}
-                                            <td class="table-success">{{.resp.Task.codeInput.Percent}}%</td>
-                                        {{else}}
-                                            <td>  {{.resp.Task.codeInput.Percent}}%</td>
-                                        {{end}}
+                                        <tr class="table-light">
+                                            <td>Done</td>
+                                            <td>{{.resp.DailyLimit.Done}}</td>
+                                            <td>{{.resp.Parent.code.Done}}</td>
+                                            <td>{{.resp.Task.codeInput.Done}}</td>
+                                            <td>{{.resp.Task.nonfiction.Done}}</td>
+                                            <td>{{.resp.Task.englishInput.Done}}</td>
+                                            <td>{{.resp.Task.running.Done}}</td>
+                                            <td>{{.resp.Task.anaerobic.Done}}</td>
+                                            <td>{{.resp.Stuff.mv.Done}}</td>
+                                            <td>{{.resp.Stuff.mask.Done}}</td>
+                                            <td>{{.resp.Stuff.protein1.Done}}</td>
+                                        </tr>
 
-                                        {{if ge .resp.Task.nonfiction.AheadLevel 1}}
-                                            <td class="table-success">{{.resp.Task.nonfiction.Percent}}%</td>
-                                        {{else}}
-                                            <td>  {{.resp.Task.nonfiction.Percent}}%</td>
-                                        {{end}}
-
-                                        {{if ge .resp.Task.englishInput.AheadLevel 1}}
-                                            <td class="table-success">{{.resp.Task.englishInput.Percent}}%</td>
-                                        {{else}}
-                                            <td>  {{.resp.Task.englishInput.Percent}}%</td>
-                                        {{end}}
-
-                                        {{if ge .resp.Task.running.AheadLevel 1}}
-                                            <td class="table-success">{{.resp.Task.running.Percent}}%</td>
-                                        {{else}}
-                                            <td>  {{.resp.Task.running.Percent}}%</td>
-                                        {{end}}
-
-                                        {{if ge .resp.Task.anaerobic.AheadLevel 1}}
-                                            <td class="table-success">{{.resp.Task.anaerobic.Percent}}%</td>
-                                        {{else}}
-                                            <td>  {{.resp.Task.anaerobic.Percent}}%</td>
-                                        {{end}}
-
-                                        {{if ge .resp.Stuff.mv.AheadLevel 1}}
-                                            <td class="table-success">{{.resp.Stuff.mv.Percent}}%</td>
-                                        {{else}}
-                                            <td>  {{.resp.Stuff.mv.Percent}}%</td>
-                                        {{end}}
-
-                                        {{if ge .resp.Stuff.mask.AheadLevel 1}}
-                                            <td class="table-success">{{.resp.Stuff.mask.Percent}}%</td>
-                                        {{else}}
-                                            <td>  {{.resp.Stuff.mask.Percent}}%</td>
-                                        {{end}}
-
-                                        {{if ge .resp.Stuff.protein1.AheadLevel 1}}
-                                            <td class="table-success">{{.resp.Stuff.protein1.Percent}}%</td>
-                                        {{else}}
-                                            <td>  {{.resp.Stuff.protein1.Percent}}%</td>
-                                        {{end}}
-
-                                    </tr>
+                                        <tr class="table-light">
+                                            <td>PerD</td>
+                                            <td>{{.resp.DailyLimit.DonePerDay}}</td>
+                                            <td>{{.resp.Parent.code.DonePerDay}}</td>
+                                            <td>{{.resp.Task.codeInput.DonePerDay}}</td>
+                                            <td>{{.resp.Task.nonfiction.DonePerDay}}</td>
+                                            <td>{{.resp.Task.englishInput.DonePerDay}}</td>
+                                            <td>{{.resp.Task.running.DonePerDay}}</td>
+                                            <td>{{.resp.Task.anaerobic.DonePerDay}}</td>
+                                            <td>{{.resp.Stuff.mv.DonePerDay}}</td>
+                                            <td>{{.resp.Stuff.mask.DonePerDay}}</td>
+                                            <td>{{.resp.Stuff.protein1.DonePerDay}}</td>
+                                        </tr>
 
 
-                                    {{range .resp.GoalLefts}}
                                         <tr>
-                                            <td class="table-light">{{.Name}}</td>
+                                            <td class="table-light">Pct</td>
 
-
-                                            {{if ge .DailyLimit.Finish 1}}
-                                                <td class="table-success">{{.DailyLimit.Left}}</td>
+                                            {{if ge .resp.DailyLimit.AheadLevel 1}}
+                                                <td class="table-success">{{.resp.DailyLimit.Percent}}%</td>
                                             {{else}}
-                                                <td>{{.DailyLimit.Left}}</td>
+                                                <td>{{.resp.DailyLimit.Percent}}%</td>
                                             {{end}}
 
-
-                                            {{if ge .ParentInfo.code.Finish 1}}
-                                                <td class="table-success">{{.ParentInfo.code.Left}}</td>
+                                            {{if ge .resp.Parent.code.AheadLevel 1}}
+                                                <td class="table-success">{{.resp.Parent.code.Percent}}%</td>
                                             {{else}}
-                                                <td>{{.ParentInfo.code.Left}}</td>
+                                                <td>{{.resp.Parent.code.Percent}}%</td>
                                             {{end}}
 
-                                            {{if ge .TaskInfo.codeInput.Finish 1}}
-                                                <td class="table-success">{{.TaskInfo.codeInput.Left}}</td>
+                                            {{if ge .resp.Task.codeInput.AheadLevel 1}}
+                                                <td class="table-success">{{.resp.Task.codeInput.Percent}}%</td>
                                             {{else}}
-                                                <td>{{.TaskInfo.codeInput.Left}}</td>
+                                                <td>  {{.resp.Task.codeInput.Percent}}%</td>
                                             {{end}}
 
-                                            {{if ge .TaskInfo.nonfiction.Finish 1}}
-                                                <td class="table-success">{{.TaskInfo.nonfiction.Left}}</td>
+                                            {{if ge .resp.Task.nonfiction.AheadLevel 1}}
+                                                <td class="table-success">{{.resp.Task.nonfiction.Percent}}%</td>
                                             {{else}}
-                                                <td>{{.TaskInfo.nonfiction.Left}}</td>
+                                                <td>  {{.resp.Task.nonfiction.Percent}}%</td>
                                             {{end}}
 
-                                            {{if ge .TaskInfo.englishInput.Finish 1}}
-                                                <td class="table-success">{{.TaskInfo.englishInput.Left}}</td>
+                                            {{if ge .resp.Task.englishInput.AheadLevel 1}}
+                                                <td class="table-success">{{.resp.Task.englishInput.Percent}}%</td>
                                             {{else}}
-                                                <td>{{.TaskInfo.englishInput.Left}}</td>
+                                                <td>  {{.resp.Task.englishInput.Percent}}%</td>
                                             {{end}}
 
-                                            {{if ge .TaskInfo.running.Finish 1}}
-                                                <td class="table-success">{{.TaskInfo.running.Left}}</td>
+                                            {{if ge .resp.Task.running.AheadLevel 1}}
+                                                <td class="table-success">{{.resp.Task.running.Percent}}%</td>
                                             {{else}}
-                                                <td>{{.TaskInfo.running.Left}}</td>
+                                                <td>  {{.resp.Task.running.Percent}}%</td>
                                             {{end}}
 
-                                            {{if ge .TaskInfo.anaerobic.Finish 1}}
-                                                <td class="table-success">{{.TaskInfo.anaerobic.Left}}</td>
+                                            {{if ge .resp.Task.anaerobic.AheadLevel 1}}
+                                                <td class="table-success">{{.resp.Task.anaerobic.Percent}}%</td>
                                             {{else}}
-                                                <td>{{.TaskInfo.anaerobic.Left}}</td>
+                                                <td>  {{.resp.Task.anaerobic.Percent}}%</td>
                                             {{end}}
 
-                                            {{if ge .StuffInfo.mv.Finish 1}}
-                                                <td class="table-success">{{.StuffInfo.mv.Left}}</td>
+                                            {{if ge .resp.Stuff.mv.AheadLevel 1}}
+                                                <td class="table-success">{{.resp.Stuff.mv.Percent}}%</td>
                                             {{else}}
-                                                <td>{{.StuffInfo.mv.Left}}</td>
+                                                <td>  {{.resp.Stuff.mv.Percent}}%</td>
                                             {{end}}
 
-                                            {{if ge .StuffInfo.mask.Finish 1}}
-                                                <td class="table-success">{{.StuffInfo.mask.Left}}</td>
+                                            {{if ge .resp.Stuff.mask.AheadLevel 1}}
+                                                <td class="table-success">{{.resp.Stuff.mask.Percent}}%</td>
                                             {{else}}
-                                                <td>{{.StuffInfo.mask.Left}}</td>
+                                                <td>  {{.resp.Stuff.mask.Percent}}%</td>
                                             {{end}}
 
-                                            {{if ge .StuffInfo.protein1.Finish 1}}
-                                                <td class="table-success">{{.StuffInfo.protein1.Left}}</td>
+                                            {{if ge .resp.Stuff.protein1.AheadLevel 1}}
+                                                <td class="table-success">{{.resp.Stuff.protein1.Percent}}%</td>
                                             {{else}}
-                                                <td>{{.StuffInfo.protein1.Left}}</td>
+                                                <td>  {{.resp.Stuff.protein1.Percent}}%</td>
                                             {{end}}
 
                                         </tr>
 
-                                    {{end}}
 
-                                    </tbody>
+                                        {{range .resp.GoalLefts}}
+                                            <tr>
+                                                <td class="table-light">{{.Name}}</td>
 
-                                </table>
+
+                                                {{if ge .DailyLimit.Finish 1}}
+                                                    <td class="table-success">{{.DailyLimit.Left}}</td>
+                                                {{else}}
+                                                    <td>{{.DailyLimit.Left}}</td>
+                                                {{end}}
+
+
+                                                {{if ge .ParentInfo.code.Finish 1}}
+                                                    <td class="table-success">{{.ParentInfo.code.Left}}</td>
+                                                {{else}}
+                                                    <td>{{.ParentInfo.code.Left}}</td>
+                                                {{end}}
+
+                                                {{if ge .TaskInfo.codeInput.Finish 1}}
+                                                    <td class="table-success">{{.TaskInfo.codeInput.Left}}</td>
+                                                {{else}}
+                                                    <td>{{.TaskInfo.codeInput.Left}}</td>
+                                                {{end}}
+
+                                                {{if ge .TaskInfo.nonfiction.Finish 1}}
+                                                    <td class="table-success">{{.TaskInfo.nonfiction.Left}}</td>
+                                                {{else}}
+                                                    <td>{{.TaskInfo.nonfiction.Left}}</td>
+                                                {{end}}
+
+                                                {{if ge .TaskInfo.englishInput.Finish 1}}
+                                                    <td class="table-success">{{.TaskInfo.englishInput.Left}}</td>
+                                                {{else}}
+                                                    <td>{{.TaskInfo.englishInput.Left}}</td>
+                                                {{end}}
+
+                                                {{if ge .TaskInfo.running.Finish 1}}
+                                                    <td class="table-success">{{.TaskInfo.running.Left}}</td>
+                                                {{else}}
+                                                    <td>{{.TaskInfo.running.Left}}</td>
+                                                {{end}}
+
+                                                {{if ge .TaskInfo.anaerobic.Finish 1}}
+                                                    <td class="table-success">{{.TaskInfo.anaerobic.Left}}</td>
+                                                {{else}}
+                                                    <td>{{.TaskInfo.anaerobic.Left}}</td>
+                                                {{end}}
+
+                                                {{if ge .StuffInfo.mv.Finish 1}}
+                                                    <td class="table-success">{{.StuffInfo.mv.Left}}</td>
+                                                {{else}}
+                                                    <td>{{.StuffInfo.mv.Left}}</td>
+                                                {{end}}
+
+                                                {{if ge .StuffInfo.mask.Finish 1}}
+                                                    <td class="table-success">{{.StuffInfo.mask.Left}}</td>
+                                                {{else}}
+                                                    <td>{{.StuffInfo.mask.Left}}</td>
+                                                {{end}}
+
+                                                {{if ge .StuffInfo.protein1.Finish 1}}
+                                                    <td class="table-success">{{.StuffInfo.protein1.Left}}</td>
+                                                {{else}}
+                                                    <td>{{.StuffInfo.protein1.Left}}</td>
+                                                {{end}}
+
+                                            </tr>
+
+                                        {{end}}
+
+                                        </tbody>
+
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+
+
+                    <footer class="footer">
+                        <div class="container-fluid">
+                            <div class="row">
 
                             </div>
                         </div>
-                    </div>
-                    <!-- end col -->
+                    </footer>
                 </div>
 
 
-                <footer class="footer">
-                    <div class="container-fluid">
-                        <div class="row">
-
-                        </div>
-                    </div>
-                </footer>
             </div>
-
-
+            <!-- container-fluid -->
         </div>
-        <!-- container-fluid -->
+
     </div>
 
-</div>
+
+    <!-- JAVASCRIPT -->
+    <script src="static/js/jquery.min.js"></script>
+    <script src="static/js/bootstrap.bundle.min.js"></script>
+    <script src="static/js/metisMenu.min.js"></script>
+    <script src="static/js/simplebar.min.js"></script>
+    <script src="static/js/waves.min.js"></script>
+    <script src="static/js/jquery.sparkline.min.js"></script>
+
+    <script src="static/js/dashboard.init.js"></script>
+    <script src="static/js/app.js"></script>
 
 
-<!-- JAVASCRIPT -->
-<script src="static/js/jquery.min.js"></script>
-<script src="static/js/bootstrap.bundle.min.js"></script>
-<script src="static/js/metisMenu.min.js"></script>
-<script src="static/js/simplebar.min.js"></script>
-<script src="static/js/waves.min.js"></script>
-<script src="static/js/jquery.sparkline.min.js"></script>
+    <!-- Required datatable js -->
+    <script src="static/js/jquery.dataTables.min.js"></script>
+    <script src="static/js/dataTables.bootstrap4.min.js"></script>
+    <!-- Datatable init js -->
+    <script src="static/js/datatables.init.js"></script>
 
-<script src="static/js/dashboard.init.js"></script>
-<script src="static/js/app.js"></script>
+    <!-- Responsive examples -->
+    <script src="static/js/dataTables.responsive.min.js"></script>
+    <script src="static/js/responsive.bootstrap4.min.js"></script>
 
-
-<!-- Required datatable js -->
-<script src="static/js/jquery.dataTables.min.js"></script>
-<script src="static/js/dataTables.bootstrap4.min.js"></script>
-<!-- Datatable init js -->
-<script src="static/js/datatables.init.js"></script>
-
-<!-- Responsive examples -->
-<script src="static/js/dataTables.responsive.min.js"></script>
-<script src="static/js/responsive.bootstrap4.min.js"></script>
-
-<!-- Plugins js -->
-<script src="static/js/dropzone.min.js"></script>
+    <!-- Plugins js -->
+    <script src="static/js/dropzone.min.js"></script>
 
 </body>
 

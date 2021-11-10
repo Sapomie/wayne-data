@@ -16,12 +16,17 @@ func ImportCsvData() (model.Events, map[string]interface{}, error) {
 		return nil, nil, err
 	}
 
-	events, taskAndParentAddingInfo, err := makeEventsByRaws(rawEvents)
+	events, taskAndParentAddingInfo, err := makeEventsByRawEvents(rawEvents)
 	if err != nil {
 		return nil, nil, err
 	}
 
 	eventsStoreInfo, err := storeEvents(events)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	err = model.NewCache(global.CacheEngine).FlushDb()
 	if err != nil {
 		return nil, nil, err
 	}

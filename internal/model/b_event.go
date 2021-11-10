@@ -2,8 +2,9 @@ package model
 
 import (
 	"github.com/Sapomie/wayne-data/global"
-	"github.com/Sapomie/wayne-data/internal/model/constant"
+	"github.com/Sapomie/wayne-data/internal/model/cons"
 	"github.com/Sapomie/wayne-data/pkg/convert"
+	"github.com/Sapomie/wayne-data/pkg/mtime"
 	"github.com/jinzhu/gorm"
 	"strings"
 	"time"
@@ -105,6 +106,26 @@ func (em *EventDbModel) GetAll() (Events, int, error) {
 	return events, count, nil
 }
 
+func (em *EventDbModel) YearEvents(year int) (Events, error) {
+	var events Events
+	start, end := mtime.NewTimeZone(mtime.TypeYear, year, 1).BeginAndEnd()
+	err := em.Base.Where("start_time>= ? and start_time < ?", start.Unix(), end.Unix()).Scan(&events).Error
+	if err != nil {
+		return nil, err
+	}
+	return events, nil
+}
+
+func (em *EventDbModel) Timezone(typ mtime.TimeType, year, num int) (Events, error) {
+	var events Events
+	start, end := mtime.NewTimeZone(typ, year, num).BeginAndEnd()
+	err := em.Base.Where("start_time>= ? and start_time < ?", start.Unix(), end.Unix()).Scan(&events).Error
+	if err != nil {
+		return nil, err
+	}
+	return events, nil
+}
+
 func (em *EventDbModel) ListEvents(parentId, taskId, limit, offset int) (Events, int, error) {
 	var events Events
 	var count int
@@ -143,6 +164,6 @@ func updateNewest() error {
 	if err != nil {
 		return err
 	}
-	constant.Newest = time.Unix(evt.EndTime, 0)
+	cons.Newest = time.Unix(evt.EndTime, 0)
 	return nil
 }

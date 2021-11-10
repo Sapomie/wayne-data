@@ -11,16 +11,19 @@ type Cache struct {
 	*redis.Pool
 }
 
-func NewCacheEngine(s *setting.RedisSettingS) *redis.Pool {
-	return &redis.Pool{
+func NewCacheEngine(s *setting.RedisSettingS) (*redis.Pool, error) {
+	pool := &redis.Pool{
 		Dial: func() (redis.Conn, error) {
-			conn, err := redis.Dial(s.Network, s.Address+":"+s.Port)
+			conn, err := redis.Dial(s.Network, s.Address+":"+s.Port, redis.DialDatabase(0))
 			if err != nil {
 				return nil, err
 			}
 			return conn, nil
 		},
 	}
+	//have a try
+	_, err := pool.Get().Do("ping")
+	return pool, err
 }
 
 func NewCache(pool *redis.Pool) *Cache {
@@ -83,6 +86,15 @@ func (c *Cache) Set(key string, value interface{}, expire int) (err error) {
 	}
 	err = c.SetString(key, string(byt), expire)
 	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *Cache) FlushDb() (err error) {
+	conn := r.getConn()
+	defer conn.Close()
+	if _, err = conn.Do("flushdb"); err != nil {
 		return err
 	}
 	return nil

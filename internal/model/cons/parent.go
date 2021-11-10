@@ -1,4 +1,4 @@
-package constant
+package cons
 
 //parent task name
 const (

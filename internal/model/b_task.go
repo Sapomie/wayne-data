@@ -3,7 +3,7 @@ package model
 import (
 	"fmt"
 	"github.com/Sapomie/wayne-data/global"
-	"github.com/Sapomie/wayne-data/internal/model/constant"
+	"github.com/Sapomie/wayne-data/internal/model/cons"
 	"github.com/jinzhu/gorm"
 )
 
@@ -119,7 +119,7 @@ func updateTaskVariables() error {
 	if err != nil {
 		return err
 	}
-	constant.DailyFull = 0
+	cons.DailyFull = 0
 	for _, task := range tasks {
 		TaskInfoById[task.Id] = struct {
 			Name        string
@@ -132,8 +132,8 @@ func updateTaskVariables() error {
 			TenGoal     float64
 			DayHourType int
 		}{Id: task.Id, TenGoal: task.TenGoal, DayHourType: task.DayHourType}
-		if task.DayHourType == constant.DayHourDaily {
-			constant.DailyFull += task.TenGoal / 10
+		if task.DayHourType == cons.DayHourDaily {
+			cons.DailyFull += task.TenGoal / 10
 		}
 	}
 

@@ -27,16 +27,6 @@ func BeforeStarting() error {
 	if err != nil {
 		return err
 	}
-	//启动数据库
-	err = setupDBEngine()
-	if err != nil {
-		return err
-	}
-	//启动redis
-	err = setupRedisEngine()
-	if err != nil {
-		return err
-	}
 	//日志
 	err = setupLogger()
 	if err != nil {
@@ -47,13 +37,22 @@ func BeforeStarting() error {
 	if err != nil {
 		return err
 	}
+	//启动数据库
+	err = setupDBEngine()
+	if err != nil {
+		return err
+	}
+	//启动redis
+	err = setupRedisEngine()
+	if err != nil {
+		return err
+	}
 
-	//field 全局变量
+	//更新field 全局变量
 	err = model.UpdateFieldVariables()
 	if err != nil {
 		return err
 	}
-	//rawEvent.ImportCsvData()
 
 	return nil
 }
@@ -125,8 +124,13 @@ func setupDBEngine() error {
 }
 
 func setupRedisEngine() error {
-	global.CacheEngine = model.NewCacheEngine(global.RedisSetting)
-	return nil
+	var err error
+	global.CacheEngine, err = model.NewCacheEngine(global.RedisSetting)
+	if err != nil {
+		return err
+	}
+
+	return model.NewCache(global.CacheEngine).FlushDb()
 }
 
 func setupLogger() error {

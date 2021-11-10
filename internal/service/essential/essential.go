@@ -1,7 +1,8 @@
 package essential
 
 import (
-	"github.com/Sapomie/wayne-data/internal/model/constant"
+	"github.com/Sapomie/wayne-data/internal/model"
+	"github.com/Sapomie/wayne-data/internal/model/cons"
 	"github.com/Sapomie/wayne-data/pkg/convert"
 	"github.com/Sapomie/wayne-data/pkg/mtime"
 	"time"
@@ -44,6 +45,36 @@ func (es *Essential) Decimal() {
 	}
 }
 
+func (es *Essential) giveMainColumnMapKey() {
+	for _, task := range cons.MainTasks {
+		_, ok := es.TaskInfo[task]
+		if !ok {
+			es.TaskInfo[task] = &FieldInfo{
+				TenGoal: model.TaskInfoByName[task].TenGoal,
+			}
+		}
+	}
+
+	for _, parent := range cons.MainParents {
+		_, ok := es.ParentInfo[parent]
+		if !ok {
+			es.ParentInfo[parent] = &FieldInfo{
+				TenGoal: model.ParentInfoByName[parent].TenGoal,
+			}
+		}
+	}
+
+	for _, stuff := range cons.MainStuffs {
+		_, ok := es.StuffInfo[stuff]
+		if !ok {
+			es.StuffInfo[stuff] = &FieldInfo{
+				TenGoal: model.StuffInfoByName[stuff].TenGoal,
+			}
+		}
+	}
+
+}
+
 type FieldInfo struct {
 	Done        float64
 	Percent     float64
@@ -66,7 +97,7 @@ func (ess Essentials) Response() {
 	ess.Decimal()
 	//running case
 	for _, es := range ess {
-		es.TaskInfo[constant.Running].Done *= 5
+		es.TaskInfo[cons.Running].Done *= 5
 	}
 	return
 }
