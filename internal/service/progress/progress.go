@@ -46,14 +46,7 @@ type goalLeftField struct {
 	Finish      int8
 }
 
-type GcRunning struct {
-	RunningDistance float64
-	GcAccumulation  int
-	GcUsed          int
-	GcLeft          int
-}
-
-func MakeProgress(es *essential.Essential, progressStartTime time.Time) *Progress {
+func makeProgress(es *essential.Essential, progressStartTime time.Time) *Progress {
 	if es.StartTime.Unix() < progressStartTime.Unix() {
 		es.StartTime = progressStartTime
 	}

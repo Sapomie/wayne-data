@@ -44,7 +44,7 @@ type TimeZoneInterface interface {
 	Number() (num int)
 }
 
-func NewTimeZone(typ TimeType, year, num int) TimeZoneInterface {
+func NewTimeZone(typ TimeType, year, num int) *TimeZone {
 	return &TimeZone{
 		Typ:  typ,
 		Year: year,
@@ -154,7 +154,7 @@ func (mt *MTime) Half() int {
 	}
 }
 
-func (mt *MTime) TimeZone(typ TimeType) TimeZoneInterface {
+func (mt *MTime) TimeZone(typ TimeType) *TimeZone {
 	var num int
 	switch typ {
 	case TypeDay:

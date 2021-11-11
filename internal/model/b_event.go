@@ -116,9 +116,9 @@ func (em *EventDbModel) YearEvents(year int) (Events, error) {
 	return events, nil
 }
 
-func (em *EventDbModel) Timezone(typ mtime.TimeType, year, num int) (Events, error) {
+func (em *EventDbModel) Timezone(zone *mtime.TimeZone) (Events, error) {
 	var events Events
-	start, end := mtime.NewTimeZone(typ, year, num).BeginAndEnd()
+	start, end := zone.BeginAndEnd()
 	err := em.Base.Where("start_time>= ? and start_time < ?", start.Unix(), end.Unix()).Scan(&events).Error
 	if err != nil {
 		return nil, err

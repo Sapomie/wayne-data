@@ -17,7 +17,8 @@ func MakeEssentials(events model.Events, start, end time.Time, typ mtime.TimeTyp
 
 	var essentials Essentials
 	for i := startNumber; i <= endNumber; i++ {
-		essential, err := MakeEssential(events, start, typ, year, i)
+		zone := mtime.NewTimeZone(typ, year, i)
+		essential, err := MakeEssential(events, start, zone)
 		if essential != nil {
 			essential.giveMainColumnMapKey()
 		}
@@ -33,8 +34,7 @@ func MakeEssentials(events model.Events, start, end time.Time, typ mtime.TimeTyp
 }
 
 //start 为progress自定开始日期，默认为初始年第一天
-func MakeEssential(events model.Events, start time.Time, typ mtime.TimeType, year, num int) (ess *Essential, err error) {
-	zone := mtime.NewTimeZone(typ, year, num)
+func MakeEssential(events model.Events, start time.Time, zone *mtime.TimeZone) (ess *Essential, err error) {
 	zoneStart, zoneEnd := zone.BeginAndEnd()
 	eventsZone := events.Between(zoneStart, zoneEnd)
 
@@ -50,14 +50,14 @@ func MakeEssential(events model.Events, start time.Time, typ mtime.TimeType, yea
 
 	dayHour := dayHourInfos(taskInfo, dur)
 	primary := getPrimary(dayHour)
-	goalPct := countGoal(dayHour[cons.DHOther], dayHour[cons.DHSelfEntertain], typ) * 100
-	goalMaxPct := countGoal(dayHour[cons.DHOther]*dur/durTotal, dayHour[cons.DHSelfEntertain]*dur/durTotal, typ) * 100
+	goalPct := countGoal(dayHour[cons.DHOther], dayHour[cons.DHSelfEntertain], zone.Typ) * 100
+	goalMaxPct := countGoal(dayHour[cons.DHOther]*dur/durTotal, dayHour[cons.DHSelfEntertain]*dur/durTotal, zone.Typ) * 100
 	dailyPct := dayHour[cons.DHDaily] / cons.DailyFull * 100
 
 	essential := &Essential{
 		Date:           zone.DateString(),
-		Type:           typ,
-		DateNumber:     num,
+		Type:           zone.Typ,
+		DateNumber:     zone.Num,
 		StartTime:      zoneStart,
 		EndTime:        zoneEnd,
 		Duration:       dur,
