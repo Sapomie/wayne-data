@@ -30,6 +30,25 @@ const (
 	TypeYear
 )
 
+func NewTimeTypeByStr(str string) TimeType {
+	switch str {
+	case "day":
+		return TypeDay
+	case "ten":
+		return TypeTen
+	case "month":
+		return TypeMonth
+	case "quarter":
+		return TypeQuarter
+	case "half":
+		return TypeHalf
+	case "year":
+		return TypeYear
+	default:
+		return TypeTen
+	}
+}
+
 type TimeZone struct {
 	Typ  TimeType
 	Year int

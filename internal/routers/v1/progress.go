@@ -1,7 +1,6 @@
 package v1
 
 import (
-	"fmt"
 	"github.com/Sapomie/wayne-data/global"
 	"github.com/Sapomie/wayne-data/internal/model/cons"
 	"github.com/Sapomie/wayne-data/internal/service/progress"
@@ -32,9 +31,9 @@ func GetProgressTenNow(c *gin.Context) {
 func GetProgressMonthNow(c *gin.Context) {
 	response := app.NewResponse(c)
 
-	typ := c.Param("typ")
-	fmt.Println(typ)
-	zone := mtime.NewMTime(cons.Newest.Add(-1 * time.Hour)).TimeZone(mtime.TypeMonth)
+	typ := mtime.NewTimeTypeByStr(c.Param("typ"))
+
+	zone := mtime.NewMTime(cons.Newest.Add(-1 * time.Hour)).TimeZone(typ)
 	startTime := time.Date(2021, 1, 1, 0, 0, 0, 0, time.Local)
 
 	svc := progress.NewEssentialService(c)

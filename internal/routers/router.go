@@ -34,7 +34,7 @@ func NewRouter() *gin.Engine {
 		apiv1.GET("essquarter", v1.ListEssentialsQuarter)
 		apiv1.GET("essyear", v1.ListEssentialsYear)
 
-		apiv1.GET("progressmonthnow/:typ", v1.GetProgressMonthNow)
+		apiv1.GET("progressnow/:typ", v1.GetProgressMonthNow)
 	}
 
 	return r
