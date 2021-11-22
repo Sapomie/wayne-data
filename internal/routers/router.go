@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"github.com/Sapomie/wayne-data/global"
 	"github.com/Sapomie/wayne-data/internal/routers/v1"
-	"github.com/Sapomie/wayne-data/internal/service/rawEvent"
+	"github.com/Sapomie/wayne-data/internal/service/c_book"
+	"github.com/Sapomie/wayne-data/internal/service/c_series"
 	"github.com/gin-gonic/gin"
 )
 
@@ -15,14 +16,20 @@ func NewRouter() *gin.Engine {
 	r.LoadHTMLGlob("view/*.html")
 
 	r.GET("/test", func(c *gin.Context) {
-
-		svc := rawEvent.NewRawEventService(c, global.DBEngine, global.CacheEngine)
-		_, info, err := svc.ImportCsvData()
+		//_, info, err := b_rawEvent.NewRawEventService(c, global.DBEngine, global.CacheEngine).ImportCsvData()
+		//if err != nil {
+		//	fmt.Println(err)
+		//}
+		infos, err := c_book.NewBookService(c, global.DBEngine, global.CacheEngine).ProcessBook()
+		if err != nil {
+			fmt.Println(err)
+		}
+		infos, err = c_series.NewSeriesService(c, global.DBEngine, global.CacheEngine).ProcessSeries()
 		if err != nil {
 			fmt.Println(err)
 		}
 
-		c.JSON(200, info)
+		c.JSON(200, infos)
 	})
 
 	apiv1 := r.Group("/api/v1")

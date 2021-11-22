@@ -1,4 +1,4 @@
-package essential
+package b_essential
 
 import (
 	"context"
@@ -17,21 +17,21 @@ const (
 	RedisYearEssKey    = "WayneDataEssYear"
 )
 
-type ServiceEssential struct {
+type EssentialService struct {
 	ctx     context.Context
 	cache   *model.Cache
 	eventDb *model.EventDbModel
 }
 
-func NewEssentialService(c context.Context) ServiceEssential {
-	return ServiceEssential{
+func NewEssentialService(c context.Context) EssentialService {
+	return EssentialService{
 		ctx:     c,
 		cache:   model.NewCache(global.CacheEngine),
 		eventDb: model.NewEventModel(global.DBEngine),
 	}
 }
 
-func (svc *ServiceEssential) GetEssentialList(typ mtime.TimeType) (Essentials, int, error) {
+func (svc *EssentialService) GetEssentialList(typ mtime.TimeType) (Essentials, int, error) {
 	var ess Essentials
 
 	var key string

@@ -3,7 +3,7 @@ package v1
 import (
 	"github.com/Sapomie/wayne-data/global"
 	"github.com/Sapomie/wayne-data/internal/model/resp"
-	"github.com/Sapomie/wayne-data/internal/service/essential"
+	"github.com/Sapomie/wayne-data/internal/service/b_essential"
 	"github.com/Sapomie/wayne-data/pkg/app"
 	"github.com/Sapomie/wayne-data/pkg/errcode"
 	"github.com/Sapomie/wayne-data/pkg/mtime"
@@ -20,7 +20,7 @@ func ListEssentialsDay(c *gin.Context) {
 		return
 	}
 
-	svc := essential.NewEssentialService(c)
+	svc := b_essential.NewEssentialService(c)
 	ess, _, err := svc.GetEssentialList(mtime.TypeDay)
 	if err != nil {
 		global.Logger.Errorf(c, "svc.GetEssentialList err: %v", err)
@@ -41,7 +41,7 @@ func ListEssentialsDay(c *gin.Context) {
 
 func ListEssentialsTen(c *gin.Context) {
 	response := app.NewResponse(c)
-	svc := essential.NewEssentialService(c)
+	svc := b_essential.NewEssentialService(c)
 	ess, _, err := svc.GetEssentialList(mtime.TypeTen)
 	if err != nil {
 		global.Logger.Errorf(c, "svc.GetEssentialList err: %v", err)
@@ -57,7 +57,7 @@ func ListEssentialsTen(c *gin.Context) {
 
 func ListEssentialsMonth(c *gin.Context) {
 	response := app.NewResponse(c)
-	svc := essential.NewEssentialService(c)
+	svc := b_essential.NewEssentialService(c)
 	ess, _, err := svc.GetEssentialList(mtime.TypeMonth)
 	if err != nil {
 		global.Logger.Errorf(c, "svc.GetEssentialList err: %v", err)
@@ -74,7 +74,7 @@ func ListEssentialsMonth(c *gin.Context) {
 
 func ListEssentialsQuarter(c *gin.Context) {
 	response := app.NewResponse(c)
-	svc := essential.NewEssentialService(c)
+	svc := b_essential.NewEssentialService(c)
 	ess, _, err := svc.GetEssentialList(mtime.TypeQuarter)
 	if err != nil {
 		global.Logger.Errorf(c, "svc.GetEssentialList err: %v", err)
@@ -91,7 +91,7 @@ func ListEssentialsQuarter(c *gin.Context) {
 
 func ListEssentialsYear(c *gin.Context) {
 	response := app.NewResponse(c)
-	svc := essential.NewEssentialService(c)
+	svc := b_essential.NewEssentialService(c)
 	essHalf, _, err := svc.GetEssentialList(mtime.TypeHalf)
 	if err != nil {
 		global.Logger.Errorf(c, "svc.GetEssentialList err: %v", err)

@@ -1,4 +1,4 @@
-package rawEvent
+package b_rawEvent
 
 import (
 	"context"
@@ -7,7 +7,7 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-type ServiceRawEvent struct {
+type RawEventService struct {
 	ctx       context.Context
 	cache     *model.Cache
 	eventDb   *model.EventDbModel
@@ -18,8 +18,8 @@ type ServiceRawEvent struct {
 	projectDb *model.ProjectModel
 }
 
-func NewRawEventService(c context.Context, db *gorm.DB, cache *redis.Pool) ServiceRawEvent {
-	return ServiceRawEvent{
+func NewRawEventService(c context.Context, db *gorm.DB, cache *redis.Pool) RawEventService {
+	return RawEventService{
 		ctx:       c,
 		cache:     model.NewCache(cache),
 		eventDb:   model.NewEventModel(db),

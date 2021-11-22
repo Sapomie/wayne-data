@@ -1,4 +1,4 @@
-package rawEvent
+package b_rawEvent
 
 import (
 	"errors"
@@ -20,7 +20,7 @@ type propertyPair struct {
 }
 
 //从comment中获取自定义property的信息，并且添加到event的property id中
-func (svc ServiceRawEvent) processCommentProperty(raw *RawEvent, taskId int) (stuffIds, tagIds, remark string, projectId int, updateInfos []string, err error) {
+func (svc RawEventService) processCommentProperty(raw *RawEvent, taskId int) (stuffIds, tagIds, remark string, projectId int, updateInfos []string, err error) {
 
 	pairs, remark, err := unpackEventComment(raw.Comment)
 	if err != nil {

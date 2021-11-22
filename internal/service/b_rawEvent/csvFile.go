@@ -1,4 +1,4 @@
-package rawEvent
+package b_rawEvent
 
 import (
 	"fmt"
@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-func (svc ServiceRawEvent) ImportCsvData() (model.Events, map[string]interface{}, error) {
+func (svc RawEventService) ImportCsvData() (model.Events, map[string]interface{}, error) {
 	rawEvents, _, err := getRawEventFromCsvFile()
 	if err != nil {
 		return nil, nil, err

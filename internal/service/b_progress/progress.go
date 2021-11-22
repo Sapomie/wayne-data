@@ -1,9 +1,9 @@
-package progress
+package b_progress
 
 import (
 	"fmt"
 	"github.com/Sapomie/wayne-data/internal/model/cons"
-	"github.com/Sapomie/wayne-data/internal/service/essential"
+	"github.com/Sapomie/wayne-data/internal/service/b_essential"
 	"github.com/Sapomie/wayne-data/pkg/convert"
 	"strconv"
 	"time"
@@ -46,7 +46,7 @@ type goalLeftField struct {
 	Finish      int8
 }
 
-func makeProgress(es *essential.Essential, progressStartTime time.Time) *Progress {
+func makeProgress(es *b_essential.Essential, progressStartTime time.Time) *Progress {
 	if es.StartTime.Unix() < progressStartTime.Unix() {
 		es.StartTime = progressStartTime
 	}
@@ -91,7 +91,7 @@ func makeProgress(es *essential.Essential, progressStartTime time.Time) *Progres
 	return progress
 }
 
-func makeMapValueFloatToString(mp map[string]*essential.FieldInfo, dur float64, goalNowPct float64) (mpO map[string]*summaryField) {
+func makeMapValueFloatToString(mp map[string]*b_essential.FieldInfo, dur float64, goalNowPct float64) (mpO map[string]*summaryField) {
 	mpO = make(map[string]*summaryField)
 	for k, v := range mp {
 		if k == cons.Running {
@@ -110,7 +110,7 @@ func makeMapValueFloatToString(mp map[string]*essential.FieldInfo, dur float64, 
 	return
 }
 
-func makeStuffMapValueFloatToString(mp map[string]*essential.FieldInfo, dur, durTotal float64, goalNowPct float64) (mpO map[string]*summaryField) {
+func makeStuffMapValueFloatToString(mp map[string]*b_essential.FieldInfo, dur, durTotal float64, goalNowPct float64) (mpO map[string]*summaryField) {
 	mpO = make(map[string]*summaryField)
 
 	goalMin, restrainMax := goalNowPct*100, 10000/(goalNowPct*100)
@@ -170,7 +170,7 @@ func makeStuffMapValueFloatToString(mp map[string]*essential.FieldInfo, dur, dur
 
 }
 
-func makeGoalLeft(es *essential.Essential, pct float64) (mrc *goalLeft, dailyLimitField *summaryField) {
+func makeGoalLeft(es *b_essential.Essential, pct float64) (mrc *goalLeft, dailyLimitField *summaryField) {
 	taskInfo := make(map[string]*goalLeftField)
 	parentInfo := make(map[string]*goalLeftField)
 	stuffInfo := make(map[string]*goalLeftField)

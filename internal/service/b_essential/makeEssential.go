@@ -1,4 +1,4 @@
-package essential
+package b_essential
 
 import (
 	"github.com/Sapomie/wayne-data/internal/model"

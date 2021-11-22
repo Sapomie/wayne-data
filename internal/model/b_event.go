@@ -158,6 +158,20 @@ func (em *EventDbModel) Newest() (*Event, error) {
 	return event, nil
 }
 
+//get events during start time to end time
+func (em *EventDbModel) ByTaskName(start, end time.Time, name string) (Events, error) {
+	db := em.Base
+	var events Events
+	err := db.
+		Where("start_time >= ? and end_time <= ?", start.Unix(), end.Unix()).
+		Where("task_id = ?", TaskInfoByName[name].Id).
+		Scan(&events).Error
+	if err != nil {
+		return nil, err
+	}
+	return events, nil
+}
+
 func updateNewest() error {
 	em := NewEventModel(global.DBEngine)
 	evt, err := em.Newest()

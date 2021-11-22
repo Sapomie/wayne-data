@@ -1,8 +1,8 @@
-package progress
+package b_progress
 
 import (
 	"github.com/Sapomie/wayne-data/internal/model/cons"
-	"github.com/Sapomie/wayne-data/internal/service/essential"
+	"github.com/Sapomie/wayne-data/internal/service/b_essential"
 )
 
 type GcRunning struct {
@@ -12,7 +12,7 @@ type GcRunning struct {
 	GcLeft          int
 }
 
-func gcRunningInfo(es *essential.Essential) (info *GcRunning) {
+func gcRunningInfo(es *b_essential.Essential) (info *GcRunning) {
 	//get distance
 
 	runningDistance := es.TaskInfo[cons.Running].Done * 5
