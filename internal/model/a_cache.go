@@ -91,8 +91,8 @@ func (c *Cache) Set(key string, value interface{}, expire int) (err error) {
 	return nil
 }
 
-func (r *Cache) FlushDb() (err error) {
-	conn := r.getConn()
+func (c *Cache) FlushDb() (err error) {
+	conn := c.getConn()
 	defer conn.Close()
 	if _, err = conn.Do("flushdb"); err != nil {
 		return err

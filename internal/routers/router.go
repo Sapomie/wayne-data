@@ -2,6 +2,7 @@ package routers
 
 import (
 	"fmt"
+	"github.com/Sapomie/wayne-data/global"
 	"github.com/Sapomie/wayne-data/internal/routers/v1"
 	"github.com/Sapomie/wayne-data/internal/service/rawEvent"
 	"github.com/gin-gonic/gin"
@@ -14,7 +15,9 @@ func NewRouter() *gin.Engine {
 	r.LoadHTMLGlob("view/*.html")
 
 	r.GET("/test", func(c *gin.Context) {
-		_, info, err := rawEvent.ImportCsvData()
+
+		svc := rawEvent.NewRawEventService(c, global.DBEngine, global.CacheEngine)
+		_, info, err := svc.ImportCsvData()
 		if err != nil {
 			fmt.Println(err)
 		}

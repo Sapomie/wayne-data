@@ -9,6 +9,7 @@ import (
 type Project struct {
 	Id            int     `gorm:"primary_key"`
 	Name          string  `gorm:"not null;unique"`
+	TaskId        int     `gorm:"not null"`
 	EventNum      int64   `gorm:"not null" json:"tag_num"`
 	TotalDuration float64 `gorm:"not null" json:"total_duration"`
 	FirstTime     int64   `gorm:"not null"`
@@ -77,13 +78,13 @@ func (em *ProjectModel) ListProjects(limit, offset int) (Projects, int, error) {
 	return projects, count, nil
 }
 
-func (em *ProjectModel) InsertAndGetProject(name string) (project *Project, info string, err error) {
+func (em *ProjectModel) InsertAndGetProject(name string, taskId int) (project *Project, info string, err error) {
 	exists, err := em.Exists(name)
 	if err != nil {
 		return nil, "", err
 	}
 	if !exists {
-		err = em.Base.Create(&Project{Name: name}).Error
+		err = em.Base.Create(&Project{Name: name, TaskId: taskId}).Error
 		if err != nil {
 			return nil, "", err
 		}

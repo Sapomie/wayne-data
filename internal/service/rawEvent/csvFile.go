@@ -10,23 +10,23 @@ import (
 	"strings"
 )
 
-func ImportCsvData() (model.Events, map[string]interface{}, error) {
+func (svc ServiceRawEvent) ImportCsvData() (model.Events, map[string]interface{}, error) {
 	rawEvents, _, err := getRawEventFromCsvFile()
 	if err != nil {
 		return nil, nil, err
 	}
 
-	events, taskAndParentAddingInfo, err := makeEventsByRawEvents(rawEvents)
+	events, taskAndParentAddingInfo, err := svc.makeEventsByRawEvents(rawEvents)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	eventsStoreInfo, err := storeEvents(events)
+	eventsStoreInfo, err := svc.storeEvents(events)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	err = model.NewCache(global.CacheEngine).FlushDb()
+	err = svc.cache.FlushDb()
 	if err != nil {
 		return nil, nil, err
 	}

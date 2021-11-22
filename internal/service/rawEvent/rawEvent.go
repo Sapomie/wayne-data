@@ -2,7 +2,6 @@ package rawEvent
 
 import (
 	"fmt"
-	"github.com/Sapomie/wayne-data/global"
 	"github.com/Sapomie/wayne-data/internal/model"
 	"github.com/Sapomie/wayne-data/pkg/mtime"
 	"time"
@@ -19,11 +18,11 @@ type RawEvent struct {
 	ParentTask string  `csv:"母任务"`
 }
 
-func makeEventsByRawEvents(raws []*RawEvent) (model.Events, []string, error) {
+func (svc ServiceRawEvent) makeEventsByRawEvents(raws []*RawEvent) (model.Events, []string, error) {
 	var events model.Events
 	var info []string
 	for _, raw := range raws {
-		event, taskAndParentAddingInfo, err := raw.toEvent()
+		event, taskAndParentAddingInfo, err := svc.toEvent(raw)
 		if err != nil {
 			return nil, nil, err
 		}
@@ -33,7 +32,7 @@ func makeEventsByRawEvents(raws []*RawEvent) (model.Events, []string, error) {
 	return events, info, nil
 }
 
-func storeEvents(events model.Events) (infos []string, err error) {
+func (svc ServiceRawEvent) storeEvents(events model.Events) (infos []string, err error) {
 
 	var (
 		eventsInsert, eventsUpdate     model.Events
@@ -42,7 +41,7 @@ func storeEvents(events model.Events) (infos []string, err error) {
 	)
 
 	for _, event := range events {
-		em := model.NewEventModel(global.DBEngine)
+		em := svc.eventDb
 		existEvt, err := em.Exists(event.StartTime)
 		if err != nil {
 			return nil, err
@@ -78,26 +77,26 @@ func storeEvents(events model.Events) (infos []string, err error) {
 }
 
 //通过 RawEvent 生成 Event, 并且插入 task,parentTask 等条目
-func (raw *RawEvent) toEvent() (event *model.Event, info []string, err error) {
+func (svc ServiceRawEvent) toEvent(raw *RawEvent) (event *model.Event, info []string, err error) {
 	start, end, err := raw.parseRawEventTime()
 	if err != nil {
 		return nil, nil, err
 	}
-	task, taskAddingInfo, err := model.NewTaskModel(global.DBEngine).InsertAndGetTask(raw.TaskName)
+	task, taskAddingInfo, err := svc.taskDb.InsertAndGetTask(raw.TaskName)
 	if err != nil {
 		return nil, nil, err
 	}
 	if taskAddingInfo != "" {
 		info = append(info, taskAddingInfo)
 	}
-	parent, parentAddingInfo, err := model.NewParentModel(global.DBEngine).InsertAndGetParent(raw.ParentTask)
+	parent, parentAddingInfo, err := svc.parentDb.InsertAndGetParent(raw.ParentTask)
 	if err != nil {
 		return nil, nil, err
 	}
 	if parentAddingInfo != "" {
 		info = append(info, parentAddingInfo)
 	}
-	stuffIds, tagIds, remark, projectId, commentPropertyInfo, err := processCommentProperty(raw)
+	stuffIds, tagIds, remark, projectId, commentPropertyInfo, err := svc.processCommentProperty(raw, task.Id)
 	if err != nil {
 		return nil, nil, err
 	}

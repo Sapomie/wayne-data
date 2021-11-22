@@ -3,8 +3,6 @@ package rawEvent
 import (
 	"errors"
 	"fmt"
-	"github.com/Sapomie/wayne-data/global"
-	"github.com/Sapomie/wayne-data/internal/model"
 	"github.com/Sapomie/wayne-data/internal/model/cons"
 	"strings"
 )
@@ -22,7 +20,7 @@ type propertyPair struct {
 }
 
 //从comment中获取自定义property的信息，并且添加到event的property id中
-func processCommentProperty(raw *RawEvent) (stuffIds, tagIds, remark string, projectId int, updateInfos []string, err error) {
+func (svc ServiceRawEvent) processCommentProperty(raw *RawEvent, taskId int) (stuffIds, tagIds, remark string, projectId int, updateInfos []string, err error) {
 
 	pairs, remark, err := unpackEventComment(raw.Comment)
 	if err != nil {
@@ -34,7 +32,7 @@ func processCommentProperty(raw *RawEvent) (stuffIds, tagIds, remark string, pro
 	for _, pair := range pairs {
 		switch pair.Key {
 		case Stuff:
-			stuff, addingInfo, err := model.NewStuffModel(global.DBEngine).InsertAndGetStuff(pair.Value)
+			stuff, addingInfo, err := svc.stuffDb.InsertAndGetStuff(pair.Value)
 			if err != nil {
 				return "", "", "", 0, nil, err
 			}
@@ -47,7 +45,7 @@ func processCommentProperty(raw *RawEvent) (stuffIds, tagIds, remark string, pro
 				stuffIds = stuffIds + "," + fmt.Sprint(stuff.Id)
 			}
 		case Tag:
-			tag, addingInfo, err := model.NewTagModel(global.DBEngine).InsertAndGetTag(pair.Value)
+			tag, addingInfo, err := svc.tagDb.InsertAndGetTag(pair.Value)
 			if err != nil {
 				return "", "", "", 0, nil, err
 			}
@@ -60,7 +58,7 @@ func processCommentProperty(raw *RawEvent) (stuffIds, tagIds, remark string, pro
 				tagIds = tagIds + "," + fmt.Sprint(tag.Id)
 			}
 		case Project:
-			project, addingInfo, err := model.NewProjectModel(global.DBEngine).InsertAndGetProject(pair.Value)
+			project, addingInfo, err := svc.projectDb.InsertAndGetProject(pair.Value, taskId)
 			if err != nil {
 				return "", "", "", 0, nil, err
 			}
@@ -73,7 +71,7 @@ func processCommentProperty(raw *RawEvent) (stuffIds, tagIds, remark string, pro
 
 	//add stuff mv
 	if raw.TaskName == cons.Movie {
-		stuff, addingInfo, err := model.NewStuffModel(global.DBEngine).InsertAndGetStuff(cons.StuMovie)
+		stuff, addingInfo, err := svc.stuffDb.InsertAndGetStuff(cons.StuMovie)
 		if err != nil {
 			return "", "", "", 0, nil, err
 		}
