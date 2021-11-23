@@ -1,7 +1,6 @@
 package model
 
 import (
-	"github.com/Sapomie/wayne-data/global"
 	"github.com/Sapomie/wayne-data/internal/model/cons"
 	"github.com/Sapomie/wayne-data/pkg/convert"
 	"github.com/Sapomie/wayne-data/pkg/mtime"
@@ -172,10 +171,12 @@ func (em *EventDbModel) ByTaskName(start, end time.Time, name string) (Events, e
 	return events, nil
 }
 
-func updateNewest() error {
-	em := NewEventModel(global.DBEngine)
+func (em *EventDbModel) UpdateNewest() error {
 	evt, err := em.Newest()
 	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil
+		}
 		return err
 	}
 	cons.Newest = time.Unix(evt.EndTime, 0)

@@ -4,6 +4,10 @@ var (
 	ErrorGetEventListFail     = NewError(30010001, "获取Event列表失败")
 	ErrorGetEssentialListFail = NewError(30010002, "获取Essential列表失败")
 	ErrorGetProgressFail      = NewError(30010003, "获取Progress失败")
-	ErrorGetGcRunningFail     = NewError(30010004, "获取Gcrunning失败")
-	ErrorUploadFileFail       = NewError(30030009, "上传文件失败")
+	ErrorUploadFail           = NewError(30010004, "上传文件错误")
+	ErrorSaveUploadingFile    = NewError(30010005, "存储上传文件错误")
+	ErrorImportCsvFile        = NewError(30010006, "处理Csv文件错误")
+	ErrorProcess              = NewError(30010007, "ProcessAll错误")
+
+	ErrorGetGcRunningFail = NewError(40010004, "获取Gcrunning失败")
 )

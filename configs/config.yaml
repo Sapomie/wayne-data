@@ -27,8 +27,8 @@ App:
   LogFileName: app
   LogFileExt: .log
 
-  CsvSavePath: storage/csv
-  DoneCsvSavePath: storage/csv/done
+  CsvSavePath: storage/csv/
+  DoneCsvSavePath: storage/csv/done/
 
   LogV2SavePath: storage/logv2
   LogV2FileName: default.log

@@ -2,7 +2,6 @@ package model
 
 import (
 	"fmt"
-	"github.com/Sapomie/wayne-data/global"
 	"github.com/jinzhu/gorm"
 )
 
@@ -107,9 +106,9 @@ var StuffInfoByName = make(map[string]struct {
 	TenGoal float64
 })
 
-func updateStuffVariables() error {
+func (em *StuffModel) UpdateStuffVariables() error {
 
-	stuffs, err := NewStuffModel(global.DBEngine).GetAll()
+	stuffs, err := em.GetAll()
 	if err != nil {
 		return err
 	}

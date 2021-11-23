@@ -2,7 +2,6 @@ package model
 
 import (
 	"fmt"
-	"github.com/Sapomie/wayne-data/global"
 	"github.com/Sapomie/wayne-data/internal/model/cons"
 	"github.com/jinzhu/gorm"
 )
@@ -113,9 +112,9 @@ var TaskInfoByName = make(map[string]struct {
 	DayHourType int
 })
 
-func updateTaskVariables() error {
+func (em *TaskModel) UpdateTaskVariables() error {
 
-	tasks, err := NewTaskModel(global.DBEngine).GetAll()
+	tasks, err := em.GetAll()
 	if err != nil {
 		return err
 	}

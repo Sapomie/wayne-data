@@ -2,13 +2,12 @@ package model
 
 import (
 	"fmt"
-	"github.com/Sapomie/wayne-data/global"
 	"github.com/jinzhu/gorm"
 )
 
 type Project struct {
 	Id            int     `gorm:"primary_key"`
-	Name          string  `gorm:"not null;unique"`
+	Name          string  `gorm:"not null"`
 	TaskId        int     `gorm:"not null"`
 	EventNum      int64   `gorm:"not null" json:"tag_num"`
 	TotalDuration float64 `gorm:"not null" json:"total_duration"`
@@ -105,9 +104,8 @@ var ProjectInfoByName = make(map[string]struct {
 	Id int
 })
 
-func updateProjectVariables() error {
-
-	projects, err := NewProjectModel(global.DBEngine).GetAll()
+func (em *ProjectModel) UpdateProjectVariables() error {
+	projects, err := em.GetAll()
 	if err != nil {
 		return err
 	}

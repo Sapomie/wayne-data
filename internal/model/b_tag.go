@@ -2,7 +2,6 @@ package model
 
 import (
 	"fmt"
-	"github.com/Sapomie/wayne-data/global"
 	"github.com/jinzhu/gorm"
 )
 
@@ -104,9 +103,9 @@ var TagInfoByName = make(map[string]struct {
 	Id int
 })
 
-func updateTagVariables() error {
+func (em *TagModel) UpdateTagVariables() error {
 
-	tags, err := NewTagModel(global.DBEngine).GetAll()
+	tags, err := em.GetAll()
 	if err != nil {
 		return err
 	}

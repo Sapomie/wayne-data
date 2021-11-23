@@ -4,6 +4,7 @@ import (
 	"flag"
 	"github.com/Sapomie/wayne-data/global"
 	"github.com/Sapomie/wayne-data/internal/model"
+	"github.com/Sapomie/wayne-data/internal/service/a_procession"
 	"github.com/Sapomie/wayne-data/pkg/log"
 	"github.com/Sapomie/wayne-data/pkg/loggerV0"
 	"github.com/Sapomie/wayne-data/pkg/setting"
@@ -49,7 +50,7 @@ func BeforeStarting() error {
 	}
 
 	//更新field 全局变量
-	err = model.UpdateFieldVariables()
+	_, err = a_procession.NewProcessionService(nil, global.DBEngine, global.CacheEngine).ProcessAll()
 	if err != nil {
 		return err
 	}

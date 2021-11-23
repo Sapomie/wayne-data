@@ -85,6 +85,19 @@ func (svc RawEventService) processCommentProperty(raw *RawEvent, taskId int) (st
 		}
 	}
 
+	//book,series project
+	if raw.TaskName == cons.Nonfiction || raw.TaskName == cons.AnimationAndEpisode {
+		strs := strings.Split(raw.Comment, "，")
+		project, addingInfo, err := svc.projectDb.InsertAndGetProject(strs[0], taskId)
+		if err != nil {
+			return "", "", "", 0, nil, err
+		}
+		if addingInfo != "" {
+			updateInfos = append(updateInfos, addingInfo)
+		}
+		projectId = project.Id
+	}
+
 	return
 }
 

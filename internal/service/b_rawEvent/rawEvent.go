@@ -18,11 +18,11 @@ type RawEvent struct {
 	ParentTask string  `csv:"母任务"`
 }
 
-func (svc RawEventService) makeEventsByRawEvents(raws []*RawEvent) (model.Events, []string, error) {
+func (svc RawEventService) makeEvents(raws []*RawEvent) (model.Events, []string, error) {
 	var events model.Events
 	var info []string
 	for _, raw := range raws {
-		event, taskAndParentAddingInfo, err := svc.makeEventByRawEvent(raw)
+		event, taskAndParentAddingInfo, err := svc.makeEvent(raw)
 		if err != nil {
 			return nil, nil, err
 		}
@@ -77,7 +77,7 @@ func (svc RawEventService) storeEvents(events model.Events) (infos []string, err
 }
 
 //通过 RawEvent 生成 Event, 并且插入 task,parentTask 等条目
-func (svc RawEventService) makeEventByRawEvent(raw *RawEvent) (event *model.Event, info []string, err error) {
+func (svc RawEventService) makeEvent(raw *RawEvent) (event *model.Event, info []string, err error) {
 	start, end, err := raw.parseRawEventTime()
 	if err != nil {
 		return nil, nil, err

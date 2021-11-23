@@ -3,40 +3,11 @@ package b_rawEvent
 import (
 	"fmt"
 	"github.com/Sapomie/wayne-data/global"
-	"github.com/Sapomie/wayne-data/internal/model"
 	"github.com/gocarina/gocsv"
 	"io/ioutil"
 	"os"
 	"strings"
 )
-
-func (svc RawEventService) ImportCsvData() (model.Events, map[string]interface{}, error) {
-	rawEvents, _, err := getRawEventFromCsvFile()
-	if err != nil {
-		return nil, nil, err
-	}
-
-	events, taskAndParentAddingInfo, err := svc.makeEventsByRawEvents(rawEvents)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	eventsStoreInfo, err := svc.storeEvents(events)
-	if err != nil {
-		return nil, nil, err
-	}
-
-	err = svc.cache.FlushDb()
-	if err != nil {
-		return nil, nil, err
-	}
-
-	info := make(map[string]interface{})
-	info["Task and Parent"] = taskAndParentAddingInfo
-	info["Events"] = eventsStoreInfo
-
-	return events, info, nil
-}
 
 func getRawEventFromCsvFile() ([]*RawEvent, string, error) {
 	files, filesRemove, err := getFileAndRemove()

@@ -2,7 +2,6 @@ package model
 
 import (
 	"fmt"
-	"github.com/Sapomie/wayne-data/global"
 	"github.com/jinzhu/gorm"
 )
 
@@ -107,9 +106,9 @@ var ParentInfoByName = make(map[string]struct {
 	TenGoal float64
 })
 
-func updateParentVariables() error {
+func (em *ParentModel) UpdateParentVariables() error {
 
-	parents, err := NewParentModel(global.DBEngine).GetAll()
+	parents, err := em.GetAll()
 	if err != nil {
 		return err
 	}
