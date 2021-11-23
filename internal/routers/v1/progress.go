@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-func GetProgressMonthNow(c *gin.Context) {
+func GetProgressNow(c *gin.Context) {
 	response := app.NewResponse(c)
 
 	typ := mtime.NewTimeTypeByStr(c.Param("typ"))

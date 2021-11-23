@@ -16,6 +16,7 @@ type RawEventService struct {
 	stuffDb   *model.StuffModel
 	tagDb     *model.TagModel
 	projectDb *model.ProjectModel
+	abbrDb    *model.AbbrModel
 }
 
 func NewRawEventService(c context.Context, db *gorm.DB, cache *redis.Pool) RawEventService {

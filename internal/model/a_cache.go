@@ -14,7 +14,7 @@ type Cache struct {
 func NewCacheEngine(s *setting.RedisSettingS) (*redis.Pool, error) {
 	pool := &redis.Pool{
 		Dial: func() (redis.Conn, error) {
-			conn, err := redis.Dial(s.Network, s.Address+":"+s.Port, redis.DialDatabase(0))
+			conn, err := redis.Dial(s.Network, s.Address+":"+s.Port, redis.DialDatabase(2))
 			if err != nil {
 				return nil, err
 			}

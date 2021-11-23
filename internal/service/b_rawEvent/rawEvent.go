@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/Sapomie/wayne-data/internal/model"
 	"github.com/Sapomie/wayne-data/pkg/mtime"
+	"strings"
 	"time"
 )
 
@@ -78,10 +79,12 @@ func (svc RawEventService) storeEvents(events model.Events) (infos []string, err
 
 //通过 RawEvent 生成 Event, 并且插入 task,parentTask 等条目
 func (svc RawEventService) makeEvent(raw *RawEvent) (event *model.Event, info []string, err error) {
+
 	start, end, err := raw.parseRawEventTime()
 	if err != nil {
 		return nil, nil, err
 	}
+
 	task, taskAddingInfo, err := svc.taskDb.InsertAndGetTask(raw.TaskName)
 	if err != nil {
 		return nil, nil, err
@@ -96,6 +99,12 @@ func (svc RawEventService) makeEvent(raw *RawEvent) (event *model.Event, info []
 	if parentAddingInfo != "" {
 		info = append(info, parentAddingInfo)
 	}
+
+	err = svc.translateAbbreviate(raw, task.Id)
+	if err != nil {
+		return nil, nil, err
+	}
+
 	stuffIds, tagIds, remark, projectId, commentPropertyInfo, err := svc.processCommentProperty(raw, task.Id)
 	if err != nil {
 		return nil, nil, err
@@ -150,4 +159,17 @@ func parseTime(str string) (time.Time, error) {
 		}
 	}
 	return timeParsed, nil
+}
+
+func (svc RawEventService) translateAbbreviate(raw *RawEvent, taskId int) (err error) {
+	abbrs, err := svc.abbrDb.GetAll()
+	if err != nil {
+		return err
+	}
+	for _, abbr := range abbrs {
+		if taskId == abbr.TaskId {
+			raw.Comment = strings.ReplaceAll(raw.Comment, abbr.Abbr, abbr.Content)
+		}
+	}
+	return nil
 }

@@ -1,7 +1,6 @@
 package model
 
 import (
-	"fmt"
 	"github.com/jinzhu/gorm"
 )
 
@@ -58,15 +57,6 @@ func (em *BookModel) GetAll() (Books, error) {
 	return books, nil
 }
 
-func (em *BookModel) ByName(name string) (*Book, error) {
-	book := new(Book)
-	err := em.Base.Where("name = ?", name).Scan(book).Error
-	if err != nil {
-		return nil, err
-	}
-	return book, nil
-}
-
 func (em *BookModel) ListBooks(limit, offset int) (Books, int, error) {
 	var (
 		books Books
@@ -82,23 +72,4 @@ func (em *BookModel) ListBooks(limit, offset int) (Books, int, error) {
 		return nil, 0, err
 	}
 	return books, count, nil
-}
-
-func (em *BookModel) InsertAndGetBook(name string) (book *Book, info string, err error) {
-	exists, err := em.Exists(name)
-	if err != nil {
-		return nil, "", err
-	}
-	if !exists {
-		err = em.Base.Create(&Book{Name: name}).Error
-		if err != nil {
-			return nil, "", err
-		}
-		info = fmt.Sprintf("Add Book %v ", name)
-	}
-	book, err = em.ByName(name)
-	if err != nil {
-		return nil, "", err
-	}
-	return
 }

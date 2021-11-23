@@ -49,6 +49,7 @@ func NewDBEngine(setting *setting.DatabaseSettingS) (*gorm.DB, error) {
 		new(Project),
 		new(Book),
 		new(Series),
+		new(Abbr),
 	)
 
 	return db, nil

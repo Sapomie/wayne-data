@@ -1,7 +1,6 @@
 package model
 
 import (
-	"fmt"
 	"github.com/jinzhu/gorm"
 )
 
@@ -62,15 +61,6 @@ func (em *SeriesModel) GetAll() (SeriesS, error) {
 	return seriesS, nil
 }
 
-func (em *SeriesModel) ByName(name string) (*Series, error) {
-	series := new(Series)
-	err := em.Base.Where("name = ?", name).Scan(series).Error
-	if err != nil {
-		return nil, err
-	}
-	return series, nil
-}
-
 func (em *SeriesModel) ListSeriesS(limit, offset int) (SeriesS, int, error) {
 	var (
 		seriesS SeriesS
@@ -86,23 +76,4 @@ func (em *SeriesModel) ListSeriesS(limit, offset int) (SeriesS, int, error) {
 		return nil, 0, err
 	}
 	return seriesS, count, nil
-}
-
-func (em *SeriesModel) InsertAndGetSeries(name string) (series *Series, info string, err error) {
-	exists, err := em.Exists(name)
-	if err != nil {
-		return nil, "", err
-	}
-	if !exists {
-		err = em.Base.Create(&Series{Name: name}).Error
-		if err != nil {
-			return nil, "", err
-		}
-		info = fmt.Sprintf("Add Series %v ", name)
-	}
-	series, err = em.ByName(name)
-	if err != nil {
-		return nil, "", err
-	}
-	return
 }
