@@ -239,14 +239,7 @@
 
                                     <tr>
                                         <th>StartTime</th>
-                                        <th>TaskName</th>
                                         <th>Comment</th>
-                                        <th>Duration</th>
-                                        <th>Category</th>
-                                        <th>Project</th>
-                                        <th>Stuff</th>
-                                        <th>Via</th>
-                                        <th>Tag</th>
                                     </tr>
 
 
@@ -257,14 +250,7 @@
                                     {{range .events}}
                                         <tr>
                                             <td>{{.Date}}</td>
-                                            <td>{{.TaskName.Name}}</td>
                                             <td>{{.Comment}}</td>
-                                            <td>{{.Duration}}</td>
-                                            <td>{{.Category.Name}}</td>
-                                            <td>{{.Project.Name}}</td>
-                                            <td>{{.Stuff.Name}}</td>
-                                            <td>{{.Via.Name}}</td>
-                                            <td>{{.Tag.Name}}</td>
 
                                         </tr>
                                     {{end}}

@@ -21,17 +21,16 @@ func ListEvents(c *gin.Context) {
 
 	svc := b_event.NewEventService(c)
 	limit, offset := app.GetLimitOffset(c)
-	casts, num, err := svc.GetEventList(&param, limit, offset)
+	events, num, err := svc.GetEventList(&param, limit, offset)
 	if err != nil {
 		global.Logger.Errorf(c, "svc.GetEventList err: %v", err)
 		response.ToErrorResponse(errcode.ErrorGetEventListFail)
 		return
 	}
 
-	response.ToResponseList(casts, num)
-
-	//response.ToResponseHtml("a_casts.html", gin.H{
-	//	"casts": casts,
-	//})
+	response.ToResponseHtml("event.html", gin.H{
+		"events": events,
+		"num":    num,
+	})
 
 }

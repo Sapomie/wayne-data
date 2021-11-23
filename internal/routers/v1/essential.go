@@ -33,7 +33,7 @@ func ListEssentialsDay(c *gin.Context) {
 	}
 
 	response.ToResponseHtml("essential.html", gin.H{
-		"resp":      ess[:param.Limit],
+		"resp":      ess[len(ess)-param.Limit:],
 		"type":      "day",
 		"tableName": "datatableDay",
 	})

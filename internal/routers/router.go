@@ -6,17 +6,17 @@ import (
 )
 
 func NewRouter() *gin.Engine {
-	r := gin.New()
-	r.Use(gin.Logger())
-	r.Use(gin.Recovery())
-	r.LoadHTMLGlob("view/*.html")
+	router := gin.New()
+	router.Use(gin.Logger())
+	router.Use(gin.Recovery())
+	router.LoadHTMLGlob("view/*.html")
 
-	r.GET("/test", func(c *gin.Context) {
+	router.GET("/test", func(c *gin.Context) {
 
 		c.JSON(200, "haha")
 	})
 
-	apiv1 := r.Group("/api/v1")
+	apiv1 := router.Group("/api/v1")
 
 	{
 		apiv1.Static("static/", "view/static")
@@ -35,5 +35,5 @@ func NewRouter() *gin.Engine {
 		apiv1.GET("event", v1.ListEvents)
 	}
 
-	return r
+	return router
 }

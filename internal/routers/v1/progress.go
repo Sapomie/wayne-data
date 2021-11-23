@@ -18,7 +18,7 @@ func GetProgressMonthNow(c *gin.Context) {
 	zone := mtime.NewMTime(cons.Newest.Add(-1 * time.Hour)).TimeZone(typ)
 	startTime := time.Date(2021, 1, 1, 0, 0, 0, 0, time.Local)
 
-	svc := b_progress.NewEssentialService(c)
+	svc := b_progress.NewProgressService(c)
 	pro, err := svc.GetProgress(zone, startTime)
 	if err != nil {
 		global.Logger.Errorf(c, "svc.GetProgress err: %v", err)
