@@ -9,21 +9,21 @@ const (
 )
 
 type Series struct {
-	Id               int64  `gorm:"primary_key"`
-	NameSeason       string `gorm:"not null"`
-	Name             string `gorm:"not null"`
-	NameOrigin       string
-	Season           int
-	Category         string
-	Year             int
-	EpisodeNumber    int
-	Rate             int
-	Duration         float64
-	FirstReadingTime int64
-	LastReadingTime  int64
-	Finish           int8
-	CreatedTime      int64 `gorm:"not null" json:"created_time"`
-	UpdatedTime      int64 `gorm:"not null" json:"updated_time"`
+	Id            int64  `gorm:"primary_key"`
+	NameSeason    string `gorm:"not null"`
+	Name          string `gorm:"not null"`
+	NameOrigin    string
+	Season        int
+	Category      string
+	Year          int
+	EpisodeNumber int
+	Rate          int
+	Duration      float64
+	FirstTime     int64
+	LastTime      int64
+	Finish        int8
+
+	*Base
 }
 
 func (e *Series) TableName() string {

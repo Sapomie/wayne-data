@@ -60,6 +60,15 @@ func (em *ParentModel) ByName(name string) (*Parent, error) {
 	return parent, nil
 }
 
+func (em *ParentModel) ById(id int) (*Parent, error) {
+	parent := new(Parent)
+	err := em.Base.Where("id = ?", id).Scan(parent).Error
+	if err != nil {
+		return nil, err
+	}
+	return parent, nil
+}
+
 func (em *ParentModel) ListParents(limit, offset int) (Parents, int, error) {
 	var (
 		parents Parents

@@ -17,7 +17,7 @@ type SeriesService struct {
 	ctx      context.Context
 	cache    *model.Cache
 	seriesDb *model.SeriesModel
-	eventDb  *model.EventDbModel
+	eventDb  *model.EventModel
 }
 
 func NewSeriesService(c context.Context, db *gorm.DB, cache *redis.Pool) SeriesService {
@@ -88,7 +88,7 @@ func (svc SeriesService) makeTvSeriesS() (seriesS model.SeriesS, infos []string,
 			if isSeriesFirstTime(event) {
 				series.NameOrigin, series.Category, series.Year, series.Season, series.EpisodeNumber, err = seriesInfo(event)
 				series.NameSeason = series.Name + "_" + fmt.Sprintf("第%v季", series.Season)
-				series.FirstReadingTime = event.StartTime
+				series.FirstTime = event.StartTime
 				if err != nil {
 					infos = append(infos, fmt.Sprintf("make series error,event start time: %v,coment: %v", event.Start(), event.Comment))
 					continue
@@ -101,11 +101,11 @@ func (svc SeriesService) makeTvSeriesS() (seriesS model.SeriesS, infos []string,
 					infos = append(infos, fmt.Sprintf("make series error,event start time: %v,coment: %v", event.Start(), event.Comment))
 					continue
 				}
-				series.Finish = model.BookSeriesFinish
+				series.Finish = model.ProjectFinish
 			}
 
-			if event.StartTime > series.LastReadingTime {
-				series.LastReadingTime = event.StartTime
+			if event.StartTime > series.LastTime {
+				series.LastTime = event.StartTime
 			}
 
 			series.Duration += event.Duration

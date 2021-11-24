@@ -13,7 +13,7 @@ import (
 type ProcessionService struct {
 	ctx           context.Context
 	cache         *model.Cache
-	eventDb       *model.EventDbModel
+	eventDb       *model.EventModel
 	taskDb        *model.TaskModel
 	parentDb      *model.ParentModel
 	stuffDb       *model.StuffModel

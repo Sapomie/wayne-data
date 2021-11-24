@@ -17,7 +17,7 @@ type BookService struct {
 	ctx     context.Context
 	cache   *model.Cache
 	bookDb  *model.BookModel
-	eventDb *model.EventDbModel
+	eventDb *model.EventModel
 }
 
 func NewBookService(c context.Context, db *gorm.DB, cache *redis.Pool) BookService {
@@ -64,7 +64,7 @@ func (svc BookService) makeBooks() (books model.Books, infos []string, err error
 
 			if isBookFirstTime(event) {
 				book.Category, book.Author, book.Year, book.WordNumber, err = bookInfo(event)
-				book.FirstReadingTime = event.StartTime
+				book.FirstTime = event.StartTime
 				if err != nil {
 					infos = append(infos, fmt.Sprintf("make book error,event start time: %v,coment: %v", event.Start(), event.Comment))
 					continue
@@ -77,11 +77,11 @@ func (svc BookService) makeBooks() (books model.Books, infos []string, err error
 					infos = append(infos, fmt.Sprintf("make book error,event start time: %v,coment: %v", event.Start(), event.Comment))
 					continue
 				}
-				book.Finish = model.BookSeriesFinish
+				book.Finish = model.ProjectFinish
 			}
 
-			if event.StartTime > book.LastReadingTime {
-				book.LastReadingTime = event.StartTime
+			if event.StartTime > book.LastTime {
+				book.LastTime = event.StartTime
 			}
 
 			book.Duration += event.Duration

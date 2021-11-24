@@ -4,24 +4,20 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-const (
-	BookSeriesFinish = 1
-)
-
 type Book struct {
-	Id               int64  `gorm:"primary_key"`
-	Name             string `gorm:"not null"`
-	Category         string
-	Author           string
-	Year             int
-	WordNumber       float64
-	Rate             int
-	Duration         float64
-	FirstReadingTime int64
-	LastReadingTime  int64
-	Finish           int8
-	CreatedTime      int64 `gorm:"not null" json:"created_time"`
-	UpdatedTime      int64 `gorm:"not null" json:"updated_time"`
+	Id         int64  `gorm:"primary_key"`
+	Name       string `gorm:"not null"`
+	Category   string
+	Author     string
+	Year       int
+	WordNumber float64
+	Rate       int
+	Duration   float64
+	FirstTime  int64
+	LastTime   int64
+	Finish     int8
+
+	*Base
 }
 
 func (e *Book) TableName() string {

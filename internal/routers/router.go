@@ -33,6 +33,8 @@ func NewRouter() *gin.Engine {
 		apiv1.POST("upload", v1.UploadPost)
 
 		apiv1.GET("event", v1.ListEvents)
+
+		apiv1.GET("export", v1.ExportAllRawEvent)
 	}
 
 	return router

@@ -5,10 +5,17 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
+const (
+	ProjectFinish = 1
+)
+
 type Project struct {
-	Id            int     `gorm:"primary_key"`
-	Name          string  `gorm:"not null"`
-	TaskId        int     `gorm:"not null"`
+	Id            int    `gorm:"primary_key"`
+	Name          string `gorm:"not null"`
+	TaskId        int    `gorm:"not null"`
+	TagId         string
+	ViaId         int
+	Finish        int
 	EventNum      int64   `gorm:"not null" json:"tag_num"`
 	TotalDuration float64 `gorm:"not null" json:"total_duration"`
 	FirstTime     int64   `gorm:"not null"`

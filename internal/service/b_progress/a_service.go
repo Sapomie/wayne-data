@@ -20,7 +20,7 @@ const (
 type ProgressService struct {
 	ctx     context.Context
 	cache   *model.Cache
-	eventDb *model.EventDbModel
+	eventDb *model.EventModel
 }
 
 func NewProgressService(c context.Context) ProgressService {

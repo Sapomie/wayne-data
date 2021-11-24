@@ -75,15 +75,36 @@ func (ets Events) Duration() (duration float64) {
 	return
 }
 
-type EventDbModel struct {
+func (ets Events) Newest() (newest *Event) {
+	newest = new(Event)
+	for _, event := range ets {
+		if event.StartTime >= newest.StartTime {
+			newest = event
+		}
+	}
+	return
+}
+
+func (ets Events) Oldest() (oldest *Event) {
+	oldest = new(Event)
+	oldest.StartTime = cons.BiggestTime
+	for _, event := range ets {
+		if event.StartTime <= oldest.StartTime {
+			oldest = event
+		}
+	}
+	return
+}
+
+type EventModel struct {
 	Base *BaseDbModel
 }
 
-func NewEventModel(db *gorm.DB) *EventDbModel {
-	return &EventDbModel{NewBaseModel(new(Event), db)}
+func NewEventModel(db *gorm.DB) *EventModel {
+	return &EventModel{NewBaseModel(new(Event), db)}
 }
 
-func (em *EventDbModel) Exists(startTime int64) (bool, error) {
+func (em *EventModel) Exists(startTime int64) (bool, error) {
 	db := em.Base
 	var count int
 	err := db.Where("start_time = ?", startTime).Count(&count).Error
@@ -94,7 +115,7 @@ func (em *EventDbModel) Exists(startTime int64) (bool, error) {
 	return exists, nil
 }
 
-func (em *EventDbModel) GetAll() (Events, int, error) {
+func (em *EventModel) GetAll() (Events, int, error) {
 	var events Events
 	var count int
 	err := em.Base.Scan(&events).Error
@@ -105,7 +126,7 @@ func (em *EventDbModel) GetAll() (Events, int, error) {
 	return events, count, nil
 }
 
-func (em *EventDbModel) YearEvents(year int) (Events, error) {
+func (em *EventModel) YearEvents(year int) (Events, error) {
 	var events Events
 	start, end := mtime.NewTimeZone(mtime.TypeYear, year, 1).BeginAndEnd()
 	err := em.Base.Where("start_time>= ? and start_time < ?", start.Unix(), end.Unix()).Scan(&events).Error
@@ -115,7 +136,7 @@ func (em *EventDbModel) YearEvents(year int) (Events, error) {
 	return events, nil
 }
 
-func (em *EventDbModel) Timezone(zone *mtime.TimeZone) (Events, error) {
+func (em *EventModel) Timezone(zone *mtime.TimeZone) (Events, error) {
 	var events Events
 	start, end := zone.BeginAndEnd()
 	err := em.Base.Where("start_time>= ? and start_time < ?", start.Unix(), end.Unix()).Scan(&events).Error
@@ -125,7 +146,7 @@ func (em *EventDbModel) Timezone(zone *mtime.TimeZone) (Events, error) {
 	return events, nil
 }
 
-func (em *EventDbModel) ListEvents(parentId, taskId, limit, offset int) (Events, int, error) {
+func (em *EventModel) ListEvents(parentId, taskId, limit, offset int) (Events, int, error) {
 	var events Events
 	var count int
 	db := em.Base.DB
@@ -147,7 +168,7 @@ func (em *EventDbModel) ListEvents(parentId, taskId, limit, offset int) (Events,
 	return events, count, nil
 }
 
-func (em *EventDbModel) Newest() (*Event, error) {
+func (em *EventModel) Newest() (*Event, error) {
 	db := em.Base
 	event := new(Event)
 	err := db.Order("end_time desc").First(event).Error
@@ -158,7 +179,7 @@ func (em *EventDbModel) Newest() (*Event, error) {
 }
 
 //get events during start time to end time
-func (em *EventDbModel) ByTaskName(start, end time.Time, name string) (Events, error) {
+func (em *EventModel) ByTaskName(start, end time.Time, name string) (Events, error) {
 	db := em.Base
 	var events Events
 	err := db.
@@ -171,7 +192,21 @@ func (em *EventDbModel) ByTaskName(start, end time.Time, name string) (Events, e
 	return events, nil
 }
 
-func (em *EventDbModel) UpdateNewest() error {
+//get events during start time to end time
+func (em *EventModel) WithProject(start, end time.Time) (Events, error) {
+	db := em.Base
+	var events Events
+	err := db.
+		Where("start_time >= ? and end_time <= ?", start.Unix(), end.Unix()).
+		Where("project_id > 0").
+		Scan(&events).Error
+	if err != nil {
+		return nil, err
+	}
+	return events, nil
+}
+
+func (em *EventModel) UpdateNewest() error {
 	evt, err := em.Newest()
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {

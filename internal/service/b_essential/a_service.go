@@ -20,7 +20,7 @@ const (
 type EssentialService struct {
 	ctx     context.Context
 	cache   *model.Cache
-	eventDb *model.EventDbModel
+	eventDb *model.EventModel
 }
 
 func NewEssentialService(c context.Context) EssentialService {

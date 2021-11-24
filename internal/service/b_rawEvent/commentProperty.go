@@ -9,9 +9,10 @@ import (
 
 const (
 	//Category = "@c"
-	Project = "@p"
-	Stuff   = "@s"
-	Tag     = "@t"
+	Project     = "@p"
+	Stuff       = "@s"
+	Tag         = "@t"
+	NoneProject = "、none"
 )
 
 type propertyPair struct {
@@ -57,15 +58,6 @@ func (svc RawEventService) processCommentProperty(raw *RawEvent, taskId int) (st
 			} else {
 				tagIds = tagIds + "," + fmt.Sprint(tag.Id)
 			}
-		case Project:
-			project, addingInfo, err := svc.projectDb.InsertAndGetProject(pair.Value, taskId)
-			if err != nil {
-				return "", "", "", 0, nil, err
-			}
-			if addingInfo != "" {
-				updateInfos = append(updateInfos, addingInfo)
-			}
-			projectId = project.Id
 		}
 	}
 
@@ -85,8 +77,8 @@ func (svc RawEventService) processCommentProperty(raw *RawEvent, taskId int) (st
 		}
 	}
 
-	//book,series project
-	if raw.TaskName == cons.Nonfiction || raw.TaskName == cons.AnimationAndEpisode {
+	// project
+	if cons.IsProjectTask(raw.TaskName) && !isNoneProject(raw.Comment) {
 		strs := strings.Split(raw.Comment, "，")
 		project, addingInfo, err := svc.projectDb.InsertAndGetProject(strs[0], taskId)
 		if err != nil {
@@ -154,4 +146,11 @@ OUT:
 	}
 
 	return tagPairs, remark, nil
+}
+
+func isNoneProject(comment string) bool {
+	if strings.Contains(comment, NoneProject) {
+		return true
+	}
+	return false
 }

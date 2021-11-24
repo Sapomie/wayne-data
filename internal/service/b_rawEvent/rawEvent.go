@@ -173,3 +173,28 @@ func (svc RawEventService) translateAbbreviate(raw *RawEvent, taskId int) (err e
 	}
 	return nil
 }
+
+func (svc RawEventService) eventToRawEvent(event *model.Event) (*RawEvent, error) {
+
+	task, err := svc.taskDb.ById(event.TaskId)
+	if err != nil {
+		return nil, err
+	}
+	parent, err := svc.parentDb.ById(event.ParentId)
+	if err != nil {
+		return nil, err
+	}
+
+	raw := &RawEvent{
+		TaskName:   task.Name,
+		StartDate:  time.Unix(event.StartTime, 0).Format(mtime.TimeTemplate10),
+		StartTime:  time.Unix(event.StartTime, 0).Format(mtime.TimeTemplate9),
+		EndDate:    time.Unix(event.EndTime, 0).Format(mtime.TimeTemplate10),
+		EndTime:    time.Unix(event.EndTime, 0).Format(mtime.TimeTemplate9),
+		Duration:   event.Duration,
+		Comment:    event.Comment,
+		ParentTask: parent.Name,
+	}
+
+	return raw, nil
+}

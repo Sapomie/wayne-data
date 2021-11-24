@@ -64,6 +64,15 @@ func (em *TaskModel) ByName(name string) (*Task, error) {
 	return task, nil
 }
 
+func (em *TaskModel) ById(id int) (*Task, error) {
+	task := new(Task)
+	err := em.Base.Where("id = ?", id).Scan(task).Error
+	if err != nil {
+		return nil, err
+	}
+	return task, nil
+}
+
 func (em *TaskModel) ListTasks(limit, offset int) (Tasks, int, error) {
 	var (
 		tasks Tasks

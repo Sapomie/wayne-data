@@ -9,7 +9,7 @@ import (
 
 type EventService struct {
 	ctx context.Context
-	db  *model.EventDbModel
+	db  *model.EventModel
 }
 
 func NewEventService(c context.Context) EventService {

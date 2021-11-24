@@ -3,14 +3,18 @@ package b_rawEvent
 import (
 	"context"
 	"github.com/Sapomie/wayne-data/internal/model"
+	"github.com/Sapomie/wayne-data/pkg/mtime"
 	"github.com/garyburd/redigo/redis"
+	"github.com/gocarina/gocsv"
 	"github.com/jinzhu/gorm"
+	"os"
+	"time"
 )
 
 type RawEventService struct {
 	ctx       context.Context
 	cache     *model.Cache
-	eventDb   *model.EventDbModel
+	eventDb   *model.EventModel
 	taskDb    *model.TaskModel
 	parentDb  *model.ParentModel
 	stuffDb   *model.StuffModel
@@ -29,6 +33,7 @@ func NewRawEventService(c context.Context, db *gorm.DB, cache *redis.Pool) RawEv
 		stuffDb:   model.NewStuffModel(db),
 		tagDb:     model.NewTagModel(db),
 		projectDb: model.NewProjectModel(db),
+		abbrDb:    model.NewAbbrModel(db),
 	}
 }
 
@@ -58,4 +63,37 @@ func (svc RawEventService) ImportCsvData() (model.Events, map[string]interface{}
 	info["Events"] = eventsStoreInfo
 
 	return events, info, nil
+}
+
+func (svc RawEventService) ExportAllRawEvent() error {
+
+	events, _, err := svc.eventDb.GetAll()
+	if err != nil {
+		return err
+	}
+
+	raws := make([]*RawEvent, 0)
+	for _, event := range events {
+		raw, err := svc.eventToRawEvent(event)
+		if err != nil {
+			return err
+		}
+		raws = append(raws, raw)
+	}
+	endDate := time.Unix(events.Newest().StartTime, 0).Format(mtime.TimeTemplate4)
+	startDate := time.Unix(events.Oldest().StartTime, 0).Format(mtime.TimeTemplate4)
+
+	f, err := os.Create(startDate + "-----" + endDate + ".csv")
+	if err != nil {
+		return err
+	}
+
+	defer f.Close()
+
+	err = gocsv.MarshalFile(raws, f)
+	if err != nil {
+		return err
+	}
+	return nil
+
 }

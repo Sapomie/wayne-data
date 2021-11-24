@@ -76,3 +76,20 @@ func IsDailyTask(taskName string) bool {
 	}
 	return false
 }
+
+var ProjectTasks = []string{
+	Nonfiction,
+	AnimationAndEpisode,
+	EnglishInput,
+	CodeOutput,
+	CodeInput,
+}
+
+func IsProjectTask(taskName string) bool {
+	for _, dailyTask := range ProjectTasks {
+		if dailyTask == taskName {
+			return true
+		}
+	}
+	return false
+}

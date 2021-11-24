@@ -8,6 +8,7 @@ var (
 	ErrorSaveUploadingFile    = NewError(30010005, "存储上传文件错误")
 	ErrorImportCsvFile        = NewError(30010006, "处理Csv文件错误")
 	ErrorProcess              = NewError(30010007, "ProcessAll错误")
+	ErrorExportCsv            = NewError(30010008, "CSV导出错误")
 
 	ErrorGetGcRunningFail = NewError(40010004, "获取Gcrunning失败")
 )
