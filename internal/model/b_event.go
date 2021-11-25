@@ -68,6 +68,15 @@ func (ets Events) Between(start, end time.Time) (events Events) {
 	return
 }
 
+func (ets Events) WithProject() (events Events) {
+	for _, event := range ets {
+		if event.ProjectId > 0 {
+			events = append(events, event)
+		}
+	}
+	return
+}
+
 func (ets Events) Duration() (duration float64) {
 	for _, event := range ets {
 		duration += event.Duration
@@ -185,6 +194,25 @@ func (em *EventModel) ByTaskName(start, end time.Time, name string) (Events, err
 	err := db.
 		Where("start_time >= ? and end_time <= ?", start.Unix(), end.Unix()).
 		Where("task_id = ?", TaskInfoByName[name].Id).
+		Scan(&events).Error
+	if err != nil {
+		return nil, err
+	}
+	return events, nil
+}
+
+//get events during start time to end time
+func (em *EventModel) ByTaskNames(start, end time.Time, names ...string) (Events, error) {
+	db := em.Base
+	var events Events
+	var ids []int
+	for _, name := range names {
+		ids = append(ids, TaskInfoByName[name].Id)
+	}
+
+	err := db.
+		Where("start_time >= ? and end_time <= ?", start.Unix(), end.Unix()).
+		Where("task_id in (?)", ids).
 		Scan(&events).Error
 	if err != nil {
 		return nil, err

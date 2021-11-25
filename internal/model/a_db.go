@@ -50,6 +50,7 @@ func NewDBEngine(setting *setting.DatabaseSettingS) (*gorm.DB, error) {
 		new(Book),
 		new(Series),
 		new(Abbr),
+		new(PTag),
 	)
 
 	return db, nil

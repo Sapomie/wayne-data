@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	TypeProjectTag = iota
+	TypeProjectTag = iota + 1
 	TypeProjectVia
 )
 

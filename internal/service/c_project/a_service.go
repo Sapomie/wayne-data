@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/Sapomie/wayne-data/internal/model"
+	"github.com/Sapomie/wayne-data/internal/model/cons"
 	"github.com/Sapomie/wayne-data/pkg/mtime"
 	"github.com/garyburd/redigo/redis"
 	"github.com/jinzhu/gorm"
@@ -26,6 +27,7 @@ func NewProjectService(c context.Context, db *gorm.DB, cache *redis.Pool) Projec
 		cache:     model.NewCache(cache),
 		projectDb: model.NewProjectModel(db),
 		pTagDb:    model.NewPTagModel(db),
+		eventDb:   model.NewEventModel(db),
 	}
 }
 
@@ -46,7 +48,12 @@ func (svc ProjectService) ProcessProject() ([]string, error) {
 func (svc ProjectService) makeProjects() (projects model.Projects, infos []string, err error) {
 
 	start, end := mtime.NewTimeZone(mtime.TypeYear, 2021, 1).BeginAndEnd()
-	events, err := svc.eventDb.WithProject(start, end)
+	events, err := svc.eventDb.ByTaskNames(start, end,
+		cons.CodeInput,
+		cons.CodeOutput,
+		cons.EnglishInput,
+	)
+	events = events.WithProject()
 	if err != nil {
 		return nil, nil, err
 	}
@@ -70,11 +77,14 @@ func (svc ProjectService) makeProjects() (projects model.Projects, infos []strin
 					continue
 				}
 				project.FirstTime = event.StartTime
-				via, _, err := svc.pTagDb.InsertAndGetPTag(viaName, model.TypeProjectVia)
-				if err != nil {
-					return nil, nil, err
+				if viaName != "" {
+					via, _, err := svc.pTagDb.InsertAndGetPTag(viaName, model.TypeProjectVia)
+					if err != nil {
+						return nil, nil, err
+					}
+					project.ViaId = via.Id
 				}
-				project.ViaId = via.Id
+
 				for _, tagName := range tagNames {
 					ptag, _, err := svc.pTagDb.InsertAndGetPTag(tagName, model.TypeProjectTag)
 					if err != nil {
