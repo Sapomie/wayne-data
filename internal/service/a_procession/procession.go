@@ -14,12 +14,7 @@ import (
 type ProcessionService struct {
 	ctx            context.Context
 	cache          *model.Cache
-	eventDb        *model.EventModel
-	taskDb         *model.TaskModel
-	parentDb       *model.ParentModel
-	stuffDb        *model.StuffModel
-	tagDb          *model.TagModel
-	projectDb      *model.ProjectModel
+	db             *gorm.DB
 	bookService    c_book.BookService
 	seriesService  c_series.SeriesService
 	projectService c_project.ProjectService
@@ -28,13 +23,7 @@ type ProcessionService struct {
 func NewProcessionService(c context.Context, db *gorm.DB, cache *redis.Pool) ProcessionService {
 	return ProcessionService{
 		ctx:            c,
-		cache:          model.NewCache(cache),
-		eventDb:        model.NewEventModel(db),
-		taskDb:         model.NewTaskModel(db),
-		parentDb:       model.NewParentModel(db),
-		stuffDb:        model.NewStuffModel(db),
-		tagDb:          model.NewTagModel(db),
-		projectDb:      model.NewProjectModel(db),
+		db:             db,
 		bookService:    c_book.NewBookService(c, db, cache),
 		seriesService:  c_series.NewSeriesService(c, db, cache),
 		projectService: c_project.NewProjectService(c, db, cache),
@@ -66,27 +55,27 @@ func (svc ProcessionService) ProcessAll() (info gin.H, err error) {
 }
 
 func (svc ProcessionService) UpdateFieldVariables() error {
-	err := svc.parentDb.UpdateParentVariables()
+	err := model.NewParentModel(svc.db).UpdateParentVariables()
 	if err != nil {
 		return err
 	}
-	err = svc.projectDb.UpdateProjectVariables()
+	err = model.NewProjectModel(svc.db).UpdateProjectVariables()
 	if err != nil {
 		return err
 	}
-	err = svc.stuffDb.UpdateStuffVariables()
+	err = model.NewStuffModel(svc.db).UpdateStuffVariables()
 	if err != nil {
 		return err
 	}
-	err = svc.tagDb.UpdateTagVariables()
+	err = model.NewTagModel(svc.db).UpdateTagVariables()
 	if err != nil {
 		return err
 	}
-	err = svc.taskDb.UpdateTaskVariables()
+	err = model.NewTaskModel(svc.db).UpdateTaskVariables()
 	if err != nil {
 		return err
 	}
-	err = svc.eventDb.UpdateNewest()
+	err = model.NewEventModel(svc.db).UpdateNewest()
 	if err != nil {
 		return err
 	}

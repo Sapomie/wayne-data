@@ -34,6 +34,7 @@ type AppSettingS struct {
 	LogFileExt            string
 	CsvSavePath           string
 	DoneCsvSavePath       string
+	DefaultValuePath      string
 	LogV2SavePath         string
 	LogV2FileName         string
 	UploadSavePath        string

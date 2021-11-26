@@ -2,7 +2,7 @@ Database:
   UserName: root
   Password: 12345678
   Host: 127.0.0.1:3306
-  DBName: wayne_data
+  DBName: wayne_datav2
   Charset: utf8
   MaxIdleConns: 10
   MaxOpenConns: 30
@@ -29,6 +29,7 @@ App:
 
   CsvSavePath: storage/csv/
   DoneCsvSavePath: storage/csv/done/
+  DefaultValuePath: configs/default_value.json
 
   LogV2SavePath: storage/logv2
   LogV2FileName: default.log

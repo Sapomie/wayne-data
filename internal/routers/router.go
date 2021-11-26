@@ -1,7 +1,10 @@
 package routers
 
 import (
+	"fmt"
+	"github.com/Sapomie/wayne-data/global"
 	"github.com/Sapomie/wayne-data/internal/routers/v1"
+	"github.com/Sapomie/wayne-data/internal/service/b_rawEvent"
 	"github.com/gin-gonic/gin"
 )
 
@@ -12,6 +15,11 @@ func NewRouter() *gin.Engine {
 	router.LoadHTMLGlob("view/*.html")
 
 	router.GET("/test", func(c *gin.Context) {
+
+		err := b_rawEvent.NewRawEventService(c, global.DBEngine, global.CacheEngine).ReadDefaultTaskValue()
+		if err != nil {
+			fmt.Println(err)
+		}
 
 		c.JSON(200, "haha")
 	})

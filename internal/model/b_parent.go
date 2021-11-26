@@ -86,19 +86,27 @@ func (em *ParentModel) ListParents(limit, offset int) (Parents, int, error) {
 	return parents, count, nil
 }
 
-func (em *ParentModel) InsertAndGetParent(name string) (parent *Parent, info string, err error) {
-	exists, err := em.Exists(name)
+func InsertAndGetParent(db *gorm.DB, parent *Parent) (parentDb *Parent, info string, err error) {
+
+	em := NewParentModel(db)
+	exists, err := em.Exists(parent.Name)
 	if err != nil {
 		return nil, "", err
 	}
 	if !exists {
-		err = em.Base.Create(&Parent{Name: name}).Error
+		err = em.Base.Create(parent).Error
 		if err != nil {
 			return nil, "", err
 		}
-		info = fmt.Sprintf("Add Parent %v ", name)
+		info = fmt.Sprintf("Add Parent %v ", parent.Name)
+	} else {
+		err = em.Base.Where("name = ?", parent.Name).Update(parent).Error
+		if err != nil {
+			return nil, "", err
+		}
 	}
-	parent, err = em.ByName(name)
+
+	parentDb, err = NewParentModel(db).ByName(parent.Name)
 	if err != nil {
 		return nil, "", err
 	}

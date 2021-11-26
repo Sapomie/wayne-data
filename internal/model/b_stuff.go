@@ -77,19 +77,27 @@ func (em *StuffModel) ListStuffs(limit, offset int) (Stuffs, int, error) {
 	return stuffs, count, nil
 }
 
-func (em *StuffModel) InsertAndGetStuff(name string) (stuff *Stuff, info string, err error) {
-	exists, err := em.Exists(name)
+func InsertAndGetStuff(db *gorm.DB, stuff *Stuff) (stuffDb *Stuff, info string, err error) {
+
+	em := NewStuffModel(db)
+	exists, err := em.Exists(stuff.Name)
 	if err != nil {
 		return nil, "", err
 	}
 	if !exists {
-		err = em.Base.Create(&Stuff{Name: name}).Error
+		err = em.Base.Create(stuff).Error
 		if err != nil {
 			return nil, "", err
 		}
-		info = fmt.Sprintf("Add Stuff %v ", name)
+		info = fmt.Sprintf("Add Stuff %v ", stuff.Name)
+	} else {
+		err = em.Base.Where("name = ?", stuff.Name).Update(stuff).Error
+		if err != nil {
+			return nil, "", err
+		}
 	}
-	stuff, err = em.ByName(name)
+
+	stuffDb, err = NewStuffModel(db).ByName(stuff.Name)
 	if err != nil {
 		return nil, "", err
 	}

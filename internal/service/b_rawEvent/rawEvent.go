@@ -42,7 +42,7 @@ func (svc RawEventService) storeEvents(events model.Events) (infos []string, err
 	)
 
 	for _, event := range events {
-		em := svc.eventDb
+		em := model.NewEventModel(svc.db)
 		existEvt, err := em.Exists(event.StartTime)
 		if err != nil {
 			return nil, err
@@ -79,20 +79,21 @@ func (svc RawEventService) storeEvents(events model.Events) (infos []string, err
 
 //通过 RawEvent 生成 Event, 并且插入 task,parentTask 等条目
 func (svc RawEventService) makeEvent(raw *RawEvent) (event *model.Event, info []string, err error) {
+	raw.compactWithOldComment()
 
 	start, end, err := raw.parseRawEventTime()
 	if err != nil {
 		return nil, nil, err
 	}
 
-	task, taskAddingInfo, err := svc.taskDb.InsertAndGetTask(raw.TaskName)
+	task, taskAddingInfo, err := model.InsertAndGetTask(svc.db, &model.Task{Name: raw.TaskName})
 	if err != nil {
 		return nil, nil, err
 	}
 	if taskAddingInfo != "" {
 		info = append(info, taskAddingInfo)
 	}
-	parent, parentAddingInfo, err := svc.parentDb.InsertAndGetParent(raw.ParentTask)
+	parent, parentAddingInfo, err := model.InsertAndGetParent(svc.db, &model.Parent{Name: raw.ParentTask})
 	if err != nil {
 		return nil, nil, err
 	}
@@ -147,6 +148,12 @@ func (raw *RawEvent) parseRawEventTime() (startTime, endTime time.Time, err erro
 	return
 }
 
+//旧格式适配新格式
+func (raw *RawEvent) compactWithOldComment() {
+	raw.Comment = strings.TrimPrefix(raw.Comment, "@p：")
+	return
+}
+
 func parseTime(str string) (time.Time, error) {
 	timeParsed, err := time.ParseInLocation(mtime.TimeTemplate1, str, time.Local)
 	if err != nil {
@@ -162,7 +169,7 @@ func parseTime(str string) (time.Time, error) {
 }
 
 func (svc RawEventService) translateAbbreviate(raw *RawEvent, taskId int) (err error) {
-	abbrs, err := svc.abbrDb.GetAll()
+	abbrs, err := model.NewAbbrModel(svc.db).GetAll()
 	if err != nil {
 		return err
 	}
@@ -176,11 +183,11 @@ func (svc RawEventService) translateAbbreviate(raw *RawEvent, taskId int) (err e
 
 func (svc RawEventService) eventToRawEvent(event *model.Event) (*RawEvent, error) {
 
-	task, err := svc.taskDb.ById(event.TaskId)
+	task, err := model.NewTaskModel(svc.db).ById(event.TaskId)
 	if err != nil {
 		return nil, err
 	}
-	parent, err := svc.parentDb.ById(event.ParentId)
+	parent, err := model.NewParentModel(svc.db).ById(event.ParentId)
 	if err != nil {
 		return nil, err
 	}

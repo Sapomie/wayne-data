@@ -3,10 +3,11 @@ package b_progress
 import (
 	"context"
 	"fmt"
-	"github.com/Sapomie/wayne-data/global"
 	"github.com/Sapomie/wayne-data/internal/model"
 	"github.com/Sapomie/wayne-data/internal/service/b_essential"
 	"github.com/Sapomie/wayne-data/pkg/mtime"
+	"github.com/garyburd/redigo/redis"
+	"github.com/jinzhu/gorm"
 	"time"
 )
 
@@ -18,16 +19,16 @@ const (
 )
 
 type ProgressService struct {
-	ctx     context.Context
-	cache   *model.Cache
-	eventDb *model.EventModel
+	ctx   context.Context
+	cache *model.Cache
+	db    *gorm.DB
 }
 
-func NewProgressService(c context.Context) ProgressService {
+func NewProgressService(c context.Context, db *gorm.DB, cache *redis.Pool) ProgressService {
 	return ProgressService{
-		ctx:     c,
-		cache:   model.NewCache(global.CacheEngine),
-		eventDb: model.NewEventModel(global.DBEngine),
+		ctx:   c,
+		cache: model.NewCache(cache),
+		db:    db,
 	}
 }
 
@@ -41,7 +42,7 @@ func (svc *ProgressService) GetProgress(zone *mtime.TimeZone, progressStart time
 	}
 
 	if !exists {
-		events, err := svc.eventDb.Timezone(zone)
+		events, err := model.NewEventModel(svc.db).Timezone(zone)
 		if err != nil {
 			return nil, err
 		}
@@ -70,7 +71,7 @@ func progressKey(zone *mtime.TimeZone) (key string) {
 
 func (svc *ProgressService) GetYearGcRunning(year int, progressStart time.Time) (*GcRunning, error) {
 	zone := mtime.NewTimeZone(mtime.TypeYear, year, 1)
-	events, err := svc.eventDb.Timezone(zone)
+	events, err := model.NewEventModel(svc.db).Timezone(zone)
 	if err != nil {
 		return nil, err
 	}

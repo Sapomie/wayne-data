@@ -2,10 +2,11 @@ package b_essential
 
 import (
 	"context"
-	"github.com/Sapomie/wayne-data/global"
 	"github.com/Sapomie/wayne-data/internal/model"
 	"github.com/Sapomie/wayne-data/internal/model/cons"
 	"github.com/Sapomie/wayne-data/pkg/mtime"
+	"github.com/garyburd/redigo/redis"
+	"github.com/jinzhu/gorm"
 )
 
 const (
@@ -18,16 +19,16 @@ const (
 )
 
 type EssentialService struct {
-	ctx     context.Context
-	cache   *model.Cache
-	eventDb *model.EventModel
+	ctx   context.Context
+	cache *model.Cache
+	db    *gorm.DB
 }
 
-func NewEssentialService(c context.Context) EssentialService {
+func NewEssentialService(c context.Context, db *gorm.DB, cache *redis.Pool) EssentialService {
 	return EssentialService{
-		ctx:     c,
-		cache:   model.NewCache(global.CacheEngine),
-		eventDb: model.NewEventModel(global.DBEngine),
+		ctx:   c,
+		cache: model.NewCache(cache),
+		db:    db,
 	}
 }
 
@@ -56,7 +57,7 @@ func (svc *EssentialService) GetEssentialList(typ mtime.TimeType) (Essentials, i
 	}
 	if !exists {
 		start, _ := mtime.NewTimeZone(mtime.TypeYear, 2021, 1).BeginAndEnd()
-		events, _, err := svc.eventDb.GetAll()
+		events, _, err := model.NewEventModel(svc.db).GetAll()
 		ess, err = MakeEssentials(events, start, cons.Newest, typ)
 		if err != nil {
 			return nil, 0, err

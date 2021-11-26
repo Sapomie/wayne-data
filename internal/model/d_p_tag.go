@@ -100,31 +100,3 @@ func (em *PTagModel) InsertAndGetPTag(name string, typ int) (pTag *PTag, info st
 	}
 	return
 }
-
-//
-//var PTagInfoById = make(map[int]struct {
-//	Name string
-//})
-//
-//var PTagInfoByName = make(map[string]struct {
-//	Id int
-//})
-//
-//func (em *PTagModel) UpdatePTagVariables() error {
-//
-//	pTags, err := em.GetAll()
-//	if err != nil {
-//		return err
-//	}
-//	for _, pTag := range pTags {
-//		PTagInfoById[pTag.Id] = struct {
-//			Name string
-//		}{Name: pTag.Name}
-//
-//		PTagInfoByName[pTag.Name] = struct {
-//			Id int
-//		}{Id: pTag.Id}
-//	}
-//
-//	return nil
-//}

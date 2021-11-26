@@ -3,6 +3,7 @@ package b_rawEvent
 import (
 	"errors"
 	"fmt"
+	"github.com/Sapomie/wayne-data/internal/model"
 	"github.com/Sapomie/wayne-data/internal/model/cons"
 	"strings"
 )
@@ -33,7 +34,7 @@ func (svc RawEventService) processCommentProperty(raw *RawEvent, taskId int) (st
 	for _, pair := range pairs {
 		switch pair.Key {
 		case Stuff:
-			stuff, addingInfo, err := svc.stuffDb.InsertAndGetStuff(pair.Value)
+			stuff, addingInfo, err := model.InsertAndGetStuff(svc.db, &model.Stuff{Name: pair.Value})
 			if err != nil {
 				return "", "", "", 0, nil, err
 			}
@@ -46,7 +47,7 @@ func (svc RawEventService) processCommentProperty(raw *RawEvent, taskId int) (st
 				stuffIds = stuffIds + "," + fmt.Sprint(stuff.Id)
 			}
 		case Tag:
-			tag, addingInfo, err := svc.tagDb.InsertAndGetTag(pair.Value)
+			tag, addingInfo, err := model.InsertAndGetTag(svc.db, pair.Value)
 			if err != nil {
 				return "", "", "", 0, nil, err
 			}
@@ -63,7 +64,7 @@ func (svc RawEventService) processCommentProperty(raw *RawEvent, taskId int) (st
 
 	//add stuff mv
 	if raw.TaskName == cons.Movie {
-		stuff, addingInfo, err := svc.stuffDb.InsertAndGetStuff(cons.StuMovie)
+		stuff, addingInfo, err := model.InsertAndGetStuff(svc.db, &model.Stuff{Name: cons.StuMovie})
 		if err != nil {
 			return "", "", "", 0, nil, err
 		}
@@ -80,7 +81,7 @@ func (svc RawEventService) processCommentProperty(raw *RawEvent, taskId int) (st
 	// project
 	if cons.IsProjectTask(raw.TaskName) && !isNoneProject(raw.Comment) {
 		strs := strings.Split(raw.Comment, "，")
-		project, addingInfo, err := svc.projectDb.InsertAndGetProject(strs[0], taskId)
+		project, addingInfo, err := model.InsertAndGetProject(svc.db, &model.Project{Name: strs[0], TaskId: taskId})
 		if err != nil {
 			return "", "", "", 0, nil, err
 		}

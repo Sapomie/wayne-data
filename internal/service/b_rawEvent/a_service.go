@@ -2,8 +2,10 @@ package b_rawEvent
 
 import (
 	"context"
+	"github.com/Sapomie/wayne-data/global"
 	"github.com/Sapomie/wayne-data/internal/model"
 	"github.com/Sapomie/wayne-data/pkg/mtime"
+	"github.com/Sapomie/wayne-data/pkg/setting"
 	"github.com/garyburd/redigo/redis"
 	"github.com/gocarina/gocsv"
 	"github.com/jinzhu/gorm"
@@ -12,33 +14,23 @@ import (
 )
 
 type RawEventService struct {
-	ctx       context.Context
-	cache     *model.Cache
-	eventDb   *model.EventModel
-	taskDb    *model.TaskModel
-	parentDb  *model.ParentModel
-	stuffDb   *model.StuffModel
-	tagDb     *model.TagModel
-	projectDb *model.ProjectModel
-	abbrDb    *model.AbbrModel
+	ctx        context.Context
+	cache      *model.Cache
+	db         *gorm.DB
+	appSetting *setting.AppSettingS
 }
 
 func NewRawEventService(c context.Context, db *gorm.DB, cache *redis.Pool) RawEventService {
 	return RawEventService{
-		ctx:       c,
-		cache:     model.NewCache(cache),
-		eventDb:   model.NewEventModel(db),
-		taskDb:    model.NewTaskModel(db),
-		parentDb:  model.NewParentModel(db),
-		stuffDb:   model.NewStuffModel(db),
-		tagDb:     model.NewTagModel(db),
-		projectDb: model.NewProjectModel(db),
-		abbrDb:    model.NewAbbrModel(db),
+		ctx:        c,
+		cache:      model.NewCache(cache),
+		db:         db,
+		appSetting: global.AppSetting,
 	}
 }
 
 func (svc RawEventService) ImportCsvData() (model.Events, map[string]interface{}, error) {
-	rawEvents, _, err := getRawEventFromCsvFile()
+	rawEvents, _, err := svc.getRawEventFromCsvFile()
 	if err != nil {
 		return nil, nil, err
 	}
@@ -66,8 +58,7 @@ func (svc RawEventService) ImportCsvData() (model.Events, map[string]interface{}
 }
 
 func (svc RawEventService) ExportAllRawEvent() error {
-
-	events, _, err := svc.eventDb.GetAll()
+	events, _, err := model.NewEventModel(svc.db).GetAll()
 	if err != nil {
 		return err
 	}

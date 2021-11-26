@@ -2,15 +2,14 @@ package b_rawEvent
 
 import (
 	"fmt"
-	"github.com/Sapomie/wayne-data/global"
 	"github.com/gocarina/gocsv"
 	"io/ioutil"
 	"os"
 	"strings"
 )
 
-func getRawEventFromCsvFile() ([]*RawEvent, string, error) {
-	files, filesRemove, err := getFileAndRemove()
+func (svc RawEventService) getRawEventFromCsvFile() ([]*RawEvent, string, error) {
+	files, filesRemove, err := svc.getFileAndRemove()
 	if err != nil {
 		return nil, "", err
 	}
@@ -44,15 +43,15 @@ func getRawEventFromCsvFile() ([]*RawEvent, string, error) {
 	return rawEvents, info, nil
 }
 
-func getFileAndRemove() (csvFiles []string, csvFilesRename []string, err error) {
-	rd, err := ioutil.ReadDir(global.AppSetting.CsvSavePath)
+func (svc RawEventService) getFileAndRemove() (csvFiles []string, csvFilesRename []string, err error) {
+	rd, err := ioutil.ReadDir(svc.appSetting.CsvSavePath)
 	for _, fi := range rd {
 		if !strings.HasSuffix(fi.Name(), ".csv") {
 			continue
 		} else {
-			filename := fmt.Sprint(global.AppSetting.CsvSavePath + "/" + fi.Name())
+			filename := fmt.Sprint(svc.appSetting.CsvSavePath + "/" + fi.Name())
 			csvFiles = append(csvFiles, filename)
-			fileNameRemoved := fmt.Sprint(global.AppSetting.DoneCsvSavePath + "/" + fi.Name())
+			fileNameRemoved := fmt.Sprint(svc.appSetting.DoneCsvSavePath + "/" + fi.Name())
 			csvFilesRename = append(csvFilesRename, fileNameRemoved)
 		}
 	}

@@ -10,9 +10,7 @@ type Task struct {
 	Id            int     `gorm:"primary_key"`
 	Name          string  `gorm:"not null;unique"`
 	TenGoal       float64 `gorm:"not null"`
-	Point         float64 `gorm:"not null"`
 	DayHourType   int     `gorm:"not null"`
-	ParentTaskId  int     `gorm:"not null"`
 	EventNum      int64   `gorm:"not null" json:"tag_num"`
 	TotalDuration float64 `gorm:"not null" json:"total_duration"`
 	FirstTime     int64   `gorm:"not null"`
@@ -90,19 +88,28 @@ func (em *TaskModel) ListTasks(limit, offset int) (Tasks, int, error) {
 	return tasks, count, nil
 }
 
-func (em *TaskModel) InsertAndGetTask(name string) (task *Task, info string, err error) {
-	exists, err := em.Exists(name)
+func InsertAndGetTask(db *gorm.DB, task *Task) (taskDb *Task, info string, err error) {
+
+	em := NewTaskModel(db)
+	exists, err := em.Exists(task.Name)
 	if err != nil {
 		return nil, "", err
 	}
 	if !exists {
-		err = em.Base.Create(&Task{Name: name}).Error
+		err = em.Base.Create(task).Error
 		if err != nil {
 			return nil, "", err
 		}
-		info = fmt.Sprintf("Add Task %v ", name)
+		info = fmt.Sprintf("Add Task %v ", task.Name)
+	} else {
+		//update struct 且struct 带有主键（id）时，em.Base.DB变量受影响（之后的查询会带有where id = *）
+		err = em.Base.Where("name = ?", task.Name).Update(task).Error
+		if err != nil {
+			return nil, "", err
+		}
 	}
-	task, err = em.ByName(name)
+
+	taskDb, err = NewTaskModel(db).ByName(task.Name)
 	if err != nil {
 		return nil, "", err
 	}

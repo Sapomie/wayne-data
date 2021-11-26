@@ -1,0 +1,385 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "name": "other",
+      "ten_goal": 0,
+      "day_hour_type": 1
+    },
+    {
+      "id": 2,
+      "name": "otherProject",
+      "ten_goal": 0,
+      "day_hour_type": 1
+    },
+    {
+      "id": 3,
+      "name": "vacant",
+      "ten_goal": 0,
+      "day_hour_type": 5
+    },
+    {
+      "id": 4,
+      "name": "sleeping",
+      "ten_goal": 0,
+      "day_hour_type": 4
+    },
+    {
+      "id": 5,
+      "name": "routine",
+      "ten_goal": 0,
+      "day_hour_type": 6
+    },
+    {
+      "id": 6,
+      "name": "selfEntertain",
+      "ten_goal": 0,
+      "day_hour_type": 3
+    },
+    {
+      "id": 7,
+      "name": "graphOutput",
+      "ten_goal": 0,
+      "day_hour_type": 1
+    },
+    {
+      "id": 8,
+      "name": "watchOther",
+      "ten_goal": 0,
+      "day_hour_type": 5
+    },
+    {
+      "id": 9,
+      "name": "socialEntertain",
+      "ten_goal": 0,
+      "day_hour_type": 1
+    },
+    {
+      "id": 10,
+      "name": "animationAndEpisode",
+      "ten_goal": 10,
+      "day_hour_type": 3
+    },
+    {
+      "id": 11,
+      "name": "codeOutput",
+      "ten_goal": 35,
+      "day_hour_type": 2
+    },
+    {
+      "id": 12,
+      "name": "recordPlan",
+      "ten_goal": 0,
+      "day_hour_type": 1
+    },
+    {
+      "id": 13,
+      "name": "virtueArrange",
+      "ten_goal": 0,
+      "day_hour_type": 1
+    },
+    {
+      "id": 14,
+      "name": "running",
+      "ten_goal": 5,
+      "day_hour_type": 2
+    },
+    {
+      "id": 15,
+      "name": "movie",
+      "ten_goal": 0,
+      "day_hour_type": 3
+    },
+    {
+      "id": 16,
+      "name": "anaerobic",
+      "ten_goal": 7.5,
+      "day_hour_type": 2
+    },
+    {
+      "id": 17,
+      "name": "nonfiction",
+      "ten_goal": 10,
+      "day_hour_type": 2
+    },
+    {
+      "id": 18,
+      "name": "englishInput",
+      "ten_goal": 3.5,
+      "day_hour_type": 2
+    },
+    {
+      "id": 19,
+      "name": "codeInput",
+      "ten_goal": 15,
+      "day_hour_type": 2
+    },
+    {
+      "id": 20,
+      "name": "codeInfoAndArrange",
+      "ten_goal": 0,
+      "day_hour_type": 2
+    },
+    {
+      "id": 21,
+      "name": "watchGame",
+      "ten_goal": 10,
+      "day_hour_type": 3
+    },
+    {
+      "id": 22,
+      "name": "englishInfoAndArrange",
+      "ten_goal": 0,
+      "day_hour_type": 1
+    },
+    {
+      "id": 23,
+      "name": "workOther",
+      "ten_goal": 0,
+      "day_hour_type": 1
+    },
+    {
+      "id": 24,
+      "name": "videoGame",
+      "ten_goal": 0,
+      "day_hour_type": 5
+    },
+    {
+      "id": 25,
+      "name": "housework",
+      "ten_goal": 0,
+      "day_hour_type": 1
+    },
+    {
+      "id": 26,
+      "name": "family",
+      "ten_goal": 0,
+      "day_hour_type": 1
+    },
+    {
+      "id": 27,
+      "name": "learningVideo",
+      "ten_goal": 0,
+      "day_hour_type": 1
+    },
+    {
+      "id": 28,
+      "name": "ballGame",
+      "ten_goal": 0,
+      "day_hour_type": 1
+    },
+    {
+      "id": 29,
+      "name": "riding",
+      "ten_goal": 0,
+      "day_hour_type": 1
+    },
+    {
+      "id": 30,
+      "name": "viewWork",
+      "ten_goal": 0,
+      "day_hour_type": 1
+    },
+    {
+      "id": 31,
+      "name": "documentary",
+      "ten_goal": 0,
+      "day_hour_type": 1
+    },
+    {
+      "id": 32,
+      "name": "englishOutput",
+      "ten_goal": 0,
+      "day_hour_type": 1
+    },
+    {
+      "id": 33,
+      "name": "englishVideo",
+      "ten_goal": 0,
+      "day_hour_type": 1
+    },
+    {
+      "id": 34,
+      "name": "sickness",
+      "ten_goal": 0,
+      "day_hour_type": 7
+    }
+  ],
+  "stuffs": [
+    {
+      "id": 1,
+      "name": "gc",
+      "ten_goal": 1.4286
+    },
+    {
+      "id": 4,
+      "name": "mask",
+      "ten_goal": 4
+    },
+    {
+      "id": 5,
+      "name": "mv",
+      "ten_goal": 3.6
+    },
+    {
+      "id": 6,
+      "name": "protein1",
+      "ten_goal": 7
+    },
+    {
+      "id": 12,
+      "name": "keganmin",
+      "ten_goal": 2
+    }
+  ],
+  "parents": [
+    {
+      "id": 1,
+      "name": "otherAndSocial",
+      "ten_goal": 10
+    },
+    {
+      "id": 6,
+      "name": "graph",
+      "ten_goal": 10
+    },
+    {
+      "id": 7,
+      "name": "code",
+      "ten_goal": 50
+    },
+    {
+      "id": 8,
+      "name": "arrange",
+      "ten_goal": 10
+    }
+  ],
+  "abbrs": [
+    {
+      "id": 1,
+      "task_id": 5,
+      "abbr": "、1",
+      "content": "@t：commute，"
+    },
+    {
+      "id": 2,
+      "task_id": 5,
+      "abbr": "、2",
+      "content": "@t：home，"
+    },
+    {
+      "id": 3,
+      "task_id": 5,
+      "abbr": "、3",
+      "content": "@t：meal，"
+    },
+    {
+      "id": 4,
+      "task_id": 5,
+      "abbr": "、4",
+      "content": "@t：office，"
+    },
+    {
+      "id": 5,
+      "task_id": 7,
+      "abbr": "、1",
+      "content": "@t：ps，"
+    },
+    {
+      "id": 6,
+      "task_id": 7,
+      "abbr": "、2",
+      "content": "@t：shoot，"
+    },
+    {
+      "id": 7,
+      "task_id": 12,
+      "abbr": "、1",
+      "content": "@t：fin，"
+    },
+    {
+      "id": 8,
+      "task_id": 6,
+      "abbr": "、s1",
+      "content": "@s：gc，"
+    },
+    {
+      "id": 9,
+      "task_id": 13,
+      "abbr": "、1",
+      "content": "@t：arrangeBook，"
+    },
+    {
+      "id": 10,
+      "task_id": 13,
+      "abbr": "、2",
+      "content": "@t：arrangeMovie，"
+    },
+    {
+      "id": 11,
+      "task_id": 13,
+      "abbr": "、3",
+      "content": "@t：arrangeGcMv，"
+    },
+    {
+      "id": 12,
+      "task_id": 16,
+      "abbr": "、1",
+      "content": "push-up"
+    },
+    {
+      "id": 13,
+      "task_id": 16,
+      "abbr": "、2",
+      "content": "sit-up"
+    },
+    {
+      "id": 14,
+      "task_id": 5,
+      "abbr": "、s1",
+      "content": "@s：protein1，"
+    },
+    {
+      "id": 15,
+      "task_id": 5,
+      "abbr": "、s2",
+      "content": "@s：mask，"
+    },
+    {
+      "id": 16,
+      "task_id": 8,
+      "abbr": "、1",
+      "content": "@t：bilibili，"
+    },
+    {
+      "id": 17,
+      "task_id": 21,
+      "abbr": "、1",
+      "content": "@t：NBA，"
+    },
+    {
+      "id": 18,
+      "task_id": 16,
+      "abbr": "、3",
+      "content": "dumbbellPress"
+    },
+    {
+      "id": 19,
+      "task_id": 8,
+      "abbr": "、2",
+      "content": "@t：liveStream，"
+    },
+    {
+      "id": 20,
+      "task_id": 7,
+      "abbr": "、3",
+      "content": "@t：clip，"
+    },
+    {
+      "id": 21,
+      "task_id": 5,
+      "abbr": "、s3",
+      "content": "@s：keganmin，"
+    }
+  ]
+}

@@ -76,7 +76,8 @@ func (em *TagModel) ListTags(limit, offset int) (Tags, int, error) {
 	return tags, count, nil
 }
 
-func (em *TagModel) InsertAndGetTag(name string) (tag *Tag, info string, err error) {
+func InsertAndGetTag(db *gorm.DB, name string) (tag *Tag, info string, err error) {
+	em := NewTagModel(db)
 	exists, err := em.Exists(name)
 	if err != nil {
 		return nil, "", err
@@ -88,7 +89,8 @@ func (em *TagModel) InsertAndGetTag(name string) (tag *Tag, info string, err err
 		}
 		info = fmt.Sprintf("Add Tag %v ", name)
 	}
-	tag, err = em.ByName(name)
+
+	tag, err = NewTagModel(db).ByName(name)
 	if err != nil {
 		return nil, "", err
 	}

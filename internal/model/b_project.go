@@ -84,19 +84,25 @@ func (em *ProjectModel) ListProjects(limit, offset int) (Projects, int, error) {
 	return projects, count, nil
 }
 
-func (em *ProjectModel) InsertAndGetProject(name string, taskId int) (project *Project, info string, err error) {
-	exists, err := em.Exists(name)
+func InsertAndGetProject(db *gorm.DB, project *Project) (projectDb *Project, info string, err error) {
+	em := NewProjectModel(db)
+	exists, err := em.Exists(project.Name)
 	if err != nil {
 		return nil, "", err
 	}
 	if !exists {
-		err = em.Base.Create(&Project{Name: name, TaskId: taskId}).Error
+		err = em.Base.Create(project).Error
 		if err != nil {
 			return nil, "", err
 		}
-		info = fmt.Sprintf("Add Project %v ", name)
+		info = fmt.Sprintf("Add Project %v ", project.Name)
+	} else {
+		err = em.Base.Where("name = ?", project.Name).Update(project).Error
+		if err != nil {
+			return nil, "", err
+		}
 	}
-	project, err = em.ByName(name)
+	projectDb, err = NewProjectModel(db).ByName(project.Name)
 	if err != nil {
 		return nil, "", err
 	}
