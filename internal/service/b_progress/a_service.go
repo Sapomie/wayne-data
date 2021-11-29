@@ -11,13 +11,6 @@ import (
 	"time"
 )
 
-const (
-	RedisTenProgressKey     = "WayneDataProgressTen"
-	RedisMonthProgressKey   = "WayneDataProgressMonth"
-	RedisQuarterProgressKey = "WayneDataProgressQuarter"
-	RedisYearProgressKey    = "WayneDataProgressYear"
-)
-
 type ProgressService struct {
 	ctx   context.Context
 	cache *model.Cache

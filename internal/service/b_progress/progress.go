@@ -55,9 +55,27 @@ func makeProgress(es *b_essential.Essential, progressStartTime time.Time) *Progr
 	goalNowPct := es.GoalPercent / 100
 	goalMaxPct := es.GoalMaxPercent / 100
 
-	nowPctSummary, dailyLimit := makeGoalLeft(es, goalNowPct)
-	maxPctSummary, _ := makeGoalLeft(es, goalMaxPct)
-	fullPctSummary, _ := makeGoalLeft(es, fullPct)
+	var crPct float64
+	_, ok := es.ParentInfo[cons.Code]
+	if ok {
+		crPct = es.ParentInfo[cons.Code].Percent / 100
+	}
+	var otPctNow, otPctMax float64
+	if crPct > 1.2*goalNowPct {
+		otPctNow = goalNowPct - (crPct-1.2*goalNowPct)/2
+		otPctMax = goalMaxPct - (crPct-1.2*goalMaxPct)/2
+	} else {
+		otPctNow = goalNowPct
+		otPctMax = goalMaxPct
+	}
+
+	taskMap := makeMapValueFloatToString(es.TaskInfo, es.Duration, goalNowPct, otPctNow)
+	parentMap := makeMapValueFloatToString(es.ParentInfo, es.Duration, goalNowPct, otPctNow)
+	stuffMap := makeStuffMapValueFloatToString(es.StuffInfo, es.Duration, es.DurationTotal, otPctNow)
+
+	nowPctSummary, dailyLimit := makeGoalLeft(es, goalNowPct, otPctNow)
+	maxPctSummary, _ := makeGoalLeft(es, goalMaxPct, otPctMax)
+	fullPctSummary, _ := makeGoalLeft(es, fullPct, fullPct)
 
 	nowPctSummary.Name += cons.LevelUpMark
 	maxPctSummary.Name += cons.LevelDownMark
@@ -69,10 +87,6 @@ func makeProgress(es *b_essential.Essential, progressStartTime time.Time) *Progr
 		maxPctSummary,
 		fullPctSummary,
 	)
-
-	taskMap := makeMapValueFloatToString(es.TaskInfo, es.Duration, goalNowPct)
-	parentMap := makeMapValueFloatToString(es.ParentInfo, es.Duration, goalNowPct)
-	stuffMap := makeStuffMapValueFloatToString(es.StuffInfo, es.Duration, es.DurationTotal, goalNowPct)
 
 	totalDays := es.EndTime.Sub(es.StartTime).Hours() / 24
 
@@ -91,17 +105,23 @@ func makeProgress(es *b_essential.Essential, progressStartTime time.Time) *Progr
 	return progress
 }
 
-func makeMapValueFloatToString(mp map[string]*b_essential.FieldInfo, dur float64, goalNowPct float64) (mpO map[string]*summaryField) {
+func makeMapValueFloatToString(mp map[string]*b_essential.FieldInfo, dur float64, goalNowPct, otPct float64) (mpO map[string]*summaryField) {
 	mpO = make(map[string]*summaryField)
 	for k, v := range mp {
+		pct := otPct
+		if k == cons.Code || k == cons.CodeInput {
+			pct = goalNowPct
+		}
+
+		done := v.Done
 		if k == cons.Running {
-			v.Done *= 5
+			done *= 5
 		}
 		mpO[k] = &summaryField{
-			Done:       v.Done,
-			DonePerDay: convert.FloatTo(v.Done / dur).Decimal(2),
+			Done:       done,
+			DonePerDay: convert.FloatTo(done / dur).Decimal(2),
 			Percent:    convert.FloatTo(v.Percent).Decimal(0),
-			PercentAbs: convert.FloatTo(v.PercentAbs / goalNowPct).Decimal(0),
+			PercentAbs: convert.FloatTo(v.PercentAbs / pct).Decimal(0),
 		}
 		if v.Percent >= goalNowPct*100 {
 			mpO[k].AheadLevel = 1
@@ -170,34 +190,38 @@ func makeStuffMapValueFloatToString(mp map[string]*b_essential.FieldInfo, dur, d
 
 }
 
-func makeGoalLeft(es *b_essential.Essential, pct float64) (mrc *goalLeft, dailyLimitField *summaryField) {
+func makeGoalLeft(es *b_essential.Essential, totalPct, otPct float64) (mrc *goalLeft, dailyLimitField *summaryField) {
 	taskInfo := make(map[string]*goalLeftField)
 	parentInfo := make(map[string]*goalLeftField)
 	stuffInfo := make(map[string]*goalLeftField)
 
 	totalDays := es.EndTime.Sub(es.StartTime).Hours() / 24
-	//leftDays := totalDays - es.Duration/24
 
 	var dailyDoneLimit,
-		dailyTaskGoalTotal,
+		dailyTaskGoalTotalOther,
+		dailyTaskGoalTotalCode,
 		dailyLimitPct,
 		dailyTaskGoalPresent float64
 
+	var pct float64
 	//task info
 	for task, fieldInfo := range es.TaskInfo {
-
+		if task == cons.CodeInput {
+			pct = totalPct
+		} else {
+			pct = otPct
+		}
 		if cons.IsDailyTask(task) {
 			taskDone := fieldInfo.Done
 			if fieldInfo.Done > fieldInfo.TenGoal/10.0*es.DurationTotal*pct {
 				taskDone = fieldInfo.TenGoal / 10.0 * es.DurationTotal * pct
 			}
 			dailyDoneLimit += taskDone
-			dailyTaskGoalTotal += fieldInfo.TenGoal / 10.0 * es.DurationTotal
+			dailyTaskGoalTotalOther += fieldInfo.TenGoal / 10.0 * es.DurationTotal
 			dailyTaskGoalPresent += fieldInfo.TenGoal / 10.0 * es.Duration
 		}
 
 		monthGoal := fieldInfo.TenGoal / 10.0 * totalDays
-
 		left := monthGoal*pct - fieldInfo.Done
 		leftPerDay := 0.0
 		if totalDays-es.Duration != 0 {
@@ -222,29 +246,33 @@ func makeGoalLeft(es *b_essential.Essential, pct float64) (mrc *goalLeft, dailyL
 				Finish:      1,
 			}
 		}
+
 	}
 
 	//code ,code input
-	dailyTaskGoalTotal += es.ParentInfo[cons.Code].TenGoal / 10.0 * es.DurationTotal
+	dailyTaskGoalTotalCode += es.ParentInfo[cons.Code].TenGoal / 10.0 * es.DurationTotal
 	dailyTaskGoalPresent += es.ParentInfo[cons.Code].TenGoal / 10.0 * es.Duration
 	croaTenGoal := es.ParentInfo[cons.Code].TenGoal - es.TaskInfo[cons.CodeInput].TenGoal
 	croaDone := es.TaskInfo[cons.CodeOutput].Done + es.TaskInfo[cons.CodeInfoAndArrange].Done
-	if croaDone > (croaTenGoal/10.0)*es.DurationTotal*pct {
-		croaDone = (croaTenGoal / 10.0) * es.DurationTotal * pct
+	if croaDone > (croaTenGoal/10.0)*es.DurationTotal*totalPct {
+		croaDone = (croaTenGoal / 10.0) * es.DurationTotal * totalPct
 	}
 	crDone := croaDone + es.TaskInfo[cons.CodeInput].Done
-	if crDone > es.ParentInfo[cons.Code].TenGoal/10.0*es.DurationTotal*pct {
-		dailyDoneLimit += es.ParentInfo[cons.Code].TenGoal / 10.0 * es.DurationTotal * pct
+	if crDone > es.ParentInfo[cons.Code].TenGoal/10.0*es.DurationTotal*totalPct {
+		dailyDoneLimit += es.ParentInfo[cons.Code].TenGoal / 10.0 * es.DurationTotal * totalPct
 	} else {
 		dailyDoneLimit += crDone
 	}
-	dailyLimitLeft := dailyTaskGoalTotal*pct - dailyDoneLimit
 
+	//dailyLimit
+	dailyGoalDoneTotal := dailyTaskGoalTotalOther*otPct + dailyTaskGoalTotalCode*totalPct
+	dailyLimitLeft := dailyGoalDoneTotal - dailyDoneLimit
 	if dailyTaskGoalPresent == 0 {
 		dailyLimitPct = 0
 	} else {
 		dailyLimitPct = dailyDoneLimit / dailyTaskGoalPresent
 	}
+	dailyLimitAbs := dailyDoneLimit / dailyGoalDoneTotal
 
 	dailyLimitLeftPerDay := 0.0
 	if totalDays-es.Duration != 0 {
@@ -261,25 +289,23 @@ func makeGoalLeft(es *b_essential.Essential, pct float64) (mrc *goalLeft, dailyL
 		dailyLimitGoalLeft.Finish = 1
 	}
 
-	dailyLimitPercent := convert.FloatTo(dailyLimitPct * 100).Decimal(0)
-
-	abs := convert.FloatTo(dailyLimitPercent * (es.Duration / es.DurationTotal) / pct).Decimal(0)
 	dailyLimitField = &summaryField{
 		Done:       convert.FloatTo(dailyDoneLimit).Decimal(2),
 		DonePerDay: convert.FloatTo(dailyDoneLimit / es.Duration).Decimal(2),
-		Percent:    dailyLimitPercent,
-		PercentAbs: abs,
+		Percent:    convert.FloatTo(dailyLimitPct * 100).Decimal(0),
+		//PercentAbs: convert.FloatTo(dailyLimitPct * 100 * (es.Duration / es.DurationTotal) / totalPct).Decimal(0),
+		PercentAbs: convert.FloatTo(dailyLimitAbs * 100).Decimal(0),
 		AheadLevel: 0,
 	}
 
-	if dailyLimitPercent >= pct*100 {
+	if dailyLimitField.Percent >= totalPct*100 {
 		dailyLimitField.AheadLevel = 1
 	}
 
 	//parent info
 	for parent, fieldInfo := range es.ParentInfo {
 		monthGoal := fieldInfo.TenGoal / 10.0 * totalDays
-		left := monthGoal*pct - fieldInfo.Done
+		left := monthGoal*totalPct - fieldInfo.Done
 		leftPerDay := 0.0
 		if totalDays-es.Duration != 0 {
 			leftPerDay = left / (totalDays - es.Duration)
@@ -304,9 +330,9 @@ func makeGoalLeft(es *b_essential.Essential, pct float64) (mrc *goalLeft, dailyL
 	for stuff, fieldInfo := range es.StuffInfo {
 		var pctStuff float64
 		if cons.IsRestrainStuff(stuff) {
-			pctStuff = 1 / pct
+			pctStuff = 1 / otPct
 		} else {
-			pctStuff = pct
+			pctStuff = otPct
 		}
 
 		goal := fieldInfo.TenGoal / 10.0 * totalDays
@@ -355,7 +381,7 @@ func makeGoalLeft(es *b_essential.Essential, pct float64) (mrc *goalLeft, dailyL
 	}
 
 	left := &goalLeft{
-		Name:       fmt.Sprintf("%.0f", pct*100) + "%",
+		Name:       fmt.Sprintf("%.0f%%/%.0f%%", totalPct*100, otPct*100),
 		TaskInfo:   taskInfo,
 		ParentInfo: parentInfo,
 		StuffInfo:  stuffInfo,
