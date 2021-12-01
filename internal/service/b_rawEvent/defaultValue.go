@@ -3,6 +3,7 @@ package b_rawEvent
 import (
 	"encoding/json"
 	"github.com/Sapomie/wayne-data/internal/model"
+	"github.com/Sapomie/wayne-data/internal/model/cons"
 	"os"
 )
 
@@ -33,10 +34,11 @@ type abbr struct {
 }
 
 type DefaultValue struct {
-	Tasks   []*task   `json:"tasks"`
-	Parents []*parent `json:"parents"`
-	Stuffs  []*stuff  `json:"stuffs"`
-	Abbrs   []*abbr   `json:"abbrs"`
+	Tasks    []*task   `json:"tasks"`
+	Parents  []*parent `json:"parents"`
+	Stuffs   []*stuff  `json:"stuffs"`
+	Abbrs    []*abbr   `json:"abbrs"`
+	GoalBase float64   `json:"goal_base"`
 }
 
 func (svc RawEventService) ReadDefaultTaskValue() error {
@@ -92,5 +94,6 @@ func (svc RawEventService) ReadDefaultTaskValue() error {
 		}
 	}
 
+	cons.GoalBase = data.GoalBase
 	return nil
 }

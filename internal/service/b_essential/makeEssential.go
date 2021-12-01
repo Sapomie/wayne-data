@@ -237,7 +237,7 @@ func dayHourInfos(taskInfo map[string]*FieldInfo, dur float64) map[string]float6
 func countGoal(dayHourOther, dayHourSelf float64, typ mtime.TimeType) (goalPct float64) {
 
 	var addition float64
-	baseDaily := cons.CountGoalBase * cons.DailyFull
+	baseDaily := cons.GoalBase * cons.DailyFull
 
 	switch typ {
 	case mtime.TypeTen:
@@ -251,7 +251,7 @@ func countGoal(dayHourOther, dayHourSelf float64, typ mtime.TimeType) (goalPct f
 	dayOtherPct := dayHourOther / (baseDaily * cons.OtherDailyCoefficient)
 	daySelfPct := dayHourSelf / (baseDaily * cons.SelfDailyCoefficient)
 
-	goalPct = cons.CountGoalBase*(1-dayOtherPct-daySelfPct) + addition
+	goalPct = cons.GoalBase*(1-dayOtherPct-daySelfPct) + addition
 	if goalPct < addition {
 		goalPct = addition
 	}

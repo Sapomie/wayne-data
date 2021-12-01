@@ -12,7 +12,7 @@ const (
 const (
 	OtherDailyCoefficient = 2.0
 	SelfDailyCoefficient  = 3.0
-	CountGoalBase         = 0.75
+	CountGoalBase         = 0.7
 )
 
 const (
@@ -35,4 +35,5 @@ var DayHourNames = []string{
 
 var (
 	DailyFull float64
+	GoalBase  float64
 )
