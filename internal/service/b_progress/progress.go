@@ -61,8 +61,8 @@ func makeProgress(es *b_essential.Essential, progressStartTime time.Time) *Progr
 		crPct = es.ParentInfo[cons.Code].Percent / 100
 	}
 	var otPctNow, otPctMax float64
-	if crPct > 1.2*goalNowPct {
-		otPctNow = goalNowPct - (crPct-1.2*goalNowPct)/3
+	if crPct > 1.1*goalNowPct {
+		otPctNow = goalNowPct - (crPct-1.1*goalNowPct)/3
 		otPctMax = otPctNow * (goalMaxPct / goalNowPct)
 	} else {
 		otPctNow = goalNowPct

@@ -10,9 +10,9 @@ const (
 )
 
 const (
-	OtherFull     = 11.0
-	SelfFull      = 17.0
-	CountGoalBase = 0.75
+	OtherDailyCoefficient = 2.0
+	SelfDailyCoefficient  = 3.0
+	CountGoalBase         = 0.75
 )
 
 const (

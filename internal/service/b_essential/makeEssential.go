@@ -195,7 +195,7 @@ func columnInfo(events model.Events, dur, durTotal float64) (taskInfo, parentInf
 
 func getPrimary(dayHour map[string]float64) float64 {
 
-	return dayHour[cons.DHDaily] + dayHour[cons.DHOther]*(cons.DailyFull*cons.CountGoalBase/cons.OtherFull) + dayHour[cons.DHSelfEntertain]*(cons.DailyFull*cons.CountGoalBase/cons.SelfFull)
+	return dayHour[cons.DHDaily] + dayHour[cons.DHOther]/cons.OtherDailyCoefficient + dayHour[cons.DHSelfEntertain]/cons.SelfDailyCoefficient
 }
 
 func dayHourInfos(taskInfo map[string]*FieldInfo, dur float64) map[string]float64 {
@@ -248,10 +248,10 @@ func countGoal(dayHourOther, dayHourSelf float64, typ mtime.TimeType) (goalPct f
 		addition = 0.15
 	}
 
-	dayOtherPct := dayHourOther / cons.OtherFull
-	daySelfPct := dayHourSelf / cons.SelfFull
+	dayOtherPct := dayHourOther / (baseDaily * cons.OtherDailyCoefficient)
+	daySelfPct := dayHourSelf / (baseDaily * cons.SelfDailyCoefficient)
 
-	goalPct = (baseDaily-baseDaily*dayOtherPct-baseDaily*daySelfPct)/baseDaily*cons.CountGoalBase + addition
+	goalPct = cons.CountGoalBase*(1-dayOtherPct-daySelfPct) + addition
 	if goalPct < addition {
 		goalPct = addition
 	}

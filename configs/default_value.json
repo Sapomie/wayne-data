@@ -63,7 +63,7 @@
     {
       "id": 11,
       "name": "codeOutput",
-      "ten_goal": 35,
+      "ten_goal": 45,
       "day_hour_type": 2
     },
     {
@@ -246,7 +246,7 @@
     {
       "id": 7,
       "name": "code",
-      "ten_goal": 50
+      "ten_goal": 60
     },
     {
       "id": 8,
