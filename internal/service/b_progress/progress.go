@@ -62,8 +62,8 @@ func makeProgress(es *b_essential.Essential, progressStartTime time.Time) *Progr
 	}
 	var otPctNow, otPctMax float64
 	if crPct > 1.2*goalNowPct {
-		otPctNow = goalNowPct - (crPct-1.2*goalNowPct)/2
-		otPctMax = goalMaxPct - (crPct-1.2*goalMaxPct)/2
+		otPctNow = goalNowPct - (crPct-1.2*goalNowPct)/3
+		otPctMax = otPctNow * (goalMaxPct / goalNowPct)
 	} else {
 		otPctNow = goalNowPct
 		otPctMax = goalMaxPct
