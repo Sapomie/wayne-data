@@ -93,7 +93,7 @@
     {
       "id": 16,
       "name": "anaerobic",
-      "ten_goal": 7,
+      "ten_goal": 8,
       "day_hour_type": 2
     },
     {
@@ -105,7 +105,7 @@
     {
       "id": 18,
       "name": "englishInput",
-      "ten_goal": 3,
+      "ten_goal": 4,
       "day_hour_type": 2
     },
     {
@@ -382,5 +382,5 @@
       "content": "@s：keganmin，"
     }
   ],
-  "goal_base": 0.75
+  "goal_base": 0.7
 }

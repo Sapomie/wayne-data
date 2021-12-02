@@ -29,20 +29,26 @@ func NewRouter() *gin.Engine {
 	{
 		apiv1.Static("static/", "view/static")
 
+		//essential
 		apiv1.GET("essday", v1.ListEssentialsDay)
 		apiv1.GET("essten", v1.ListEssentialsTen)
 		apiv1.GET("essmonth", v1.ListEssentialsMonth)
 		apiv1.GET("essquarter", v1.ListEssentialsQuarter)
 		apiv1.GET("essyear", v1.ListEssentialsYear)
 
+		//progress
 		apiv1.GET("progressnow/:typ", v1.GetProgressNow)
 
-		apiv1.GET("upload", v1.Upload)
-		apiv1.POST("upload", v1.UploadPost)
-
+		//event
 		apiv1.GET("event", v1.ListEvents)
 
+		//upload
+		apiv1.GET("upload", v1.Upload)
+		apiv1.POST("upload", v1.UploadPost)
 		apiv1.GET("export", v1.ExportAllRawEvent)
+
+		//mobile
+		apiv1.GET("mbprogressnow/:typ", v1.GetMobileProgressNow)
 	}
 
 	return router

@@ -29,3 +29,28 @@ func GetProgressNow(c *gin.Context) {
 		"progress": pro,
 	})
 }
+
+func GetMobileProgressNow(c *gin.Context) {
+	response := app.NewResponse(c)
+
+	typ := mtime.NewTimeTypeByStr(c.Param("typ"))
+	zone := mtime.NewMTime(cons.Newest.Add(-1 * time.Hour)).TimeZone(typ)
+	startTime := time.Date(2021, 1, 1, 0, 0, 0, 0, time.Local)
+
+	svc := b_progress.NewProgressService(c, global.DBEngine, global.CacheEngine)
+	pro, err := svc.GetProgress(zone, startTime)
+	if err != nil {
+		global.Logger.Errorf(c, "svc.GetProgress err: %v", err)
+		response.ToErrorResponse(errcode.ErrorGetProgressFail)
+		return
+	}
+
+	now := pro.GoalLefts[0]
+	max := pro.GoalLefts[1]
+
+	response.ToResponseHtml("progress_mobile.html", gin.H{
+		"resp": pro,
+		"now":  now,
+		"max":  max,
+	})
+}
