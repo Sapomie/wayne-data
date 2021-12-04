@@ -19,11 +19,41 @@ type Stuff struct {
 	*Base
 }
 
-func (e *Stuff) TableName() string {
+func (s *Stuff) TableName() string {
 	return "b_stuff"
 }
 
+func (s *Stuff) FieldName() string {
+	return s.Name
+}
+
+func (s *Stuff) FieldTotalDuration() float64 {
+	return s.TotalDuration
+}
+
+func (s *Stuff) FieldEventNum() int64 {
+	return s.EventNum
+}
+
+func (s *Stuff) FieldFirstTimeAndLastTime() (int64, int64) {
+	return s.FirstTime, s.LastTime
+}
+
+func (s *Stuff) FieldLongest() int64 {
+	return s.Longest
+}
+
 type Stuffs []*Stuff
+
+func (ss Stuffs) ToEventFields() []EventField {
+	eventFields := make([]EventField, 0)
+	for _, stuff := range ss {
+		var ef EventField
+		ef = stuff
+		eventFields = append(eventFields, ef)
+	}
+	return eventFields
+}
 
 type StuffModel struct {
 	Base *BaseDbModel

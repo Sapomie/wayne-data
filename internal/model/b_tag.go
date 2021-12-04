@@ -18,11 +18,41 @@ type Tag struct {
 	*Base
 }
 
-func (e *Tag) TableName() string {
+func (t *Tag) TableName() string {
 	return "b_tag"
 }
 
+func (t *Tag) FieldName() string {
+	return t.Name
+}
+
+func (t *Tag) FieldTotalDuration() float64 {
+	return t.TotalDuration
+}
+
+func (t *Tag) FieldEventNum() int64 {
+	return t.EventNum
+}
+
+func (t *Tag) FieldFirstTimeAndLastTime() (int64, int64) {
+	return t.FirstTime, t.LastTime
+}
+
+func (t *Tag) FieldLongest() int64 {
+	return t.Longest
+}
+
 type Tags []*Tag
+
+func (ts Tags) ToEventFields() []EventField {
+	eventFields := make([]EventField, 0)
+	for _, tag := range ts {
+		var ef EventField
+		ef = tag
+		eventFields = append(eventFields, ef)
+	}
+	return eventFields
+}
 
 type TagModel struct {
 	Base *BaseDbModel

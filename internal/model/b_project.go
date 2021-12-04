@@ -26,11 +26,41 @@ type Project struct {
 	*Base
 }
 
-func (e *Project) TableName() string {
+func (p *Project) TableName() string {
 	return "b_project"
 }
 
+func (p *Project) FieldName() string {
+	return p.Name
+}
+
+func (p *Project) FieldTotalDuration() float64 {
+	return p.TotalDuration
+}
+
+func (p *Project) FieldEventNum() int64 {
+	return p.EventNum
+}
+
+func (p *Project) FieldFirstTimeAndLastTime() (int64, int64) {
+	return p.FirstTime, p.LastTime
+}
+
+func (p *Project) FieldLongest() int64 {
+	return p.Longest
+}
+
 type Projects []*Project
+
+func (ps Projects) ToEventFields() []EventField {
+	eventFields := make([]EventField, 0)
+	for _, project := range ps {
+		var ef EventField
+		ef = project
+		eventFields = append(eventFields, ef)
+	}
+	return eventFields
+}
 
 type ProjectModel struct {
 	Base *BaseDbModel

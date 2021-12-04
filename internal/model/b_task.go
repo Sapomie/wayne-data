@@ -20,11 +20,41 @@ type Task struct {
 	*Base
 }
 
-func (e *Task) TableName() string {
+func (t *Task) TableName() string {
 	return "b_task"
 }
 
+func (t *Task) FieldName() string {
+	return t.Name
+}
+
+func (t *Task) FieldTotalDuration() float64 {
+	return t.TotalDuration
+}
+
+func (t *Task) FieldEventNum() int64 {
+	return t.EventNum
+}
+
+func (t *Task) FieldFirstTimeAndLastTime() (int64, int64) {
+	return t.FirstTime, t.LastTime
+}
+
+func (t *Task) FieldLongest() int64 {
+	return t.Longest
+}
+
 type Tasks []*Task
+
+func (ts Tasks) ToEventFields() []EventField {
+	eventFields := make([]EventField, 0)
+	for _, task := range ts {
+		var ef EventField
+		ef = task
+		eventFields = append(eventFields, ef)
+	}
+	return eventFields
+}
 
 type TaskModel struct {
 	Base *BaseDbModel

@@ -42,6 +42,9 @@ func NewRouter() *gin.Engine {
 		//event
 		apiv1.GET("event", v1.ListEvents)
 
+		//field
+		apiv1.GET("field/:typ", v1.ListStuffs)
+
 		//upload
 		apiv1.GET("upload", v1.Upload)
 		apiv1.POST("upload", v1.UploadPost)

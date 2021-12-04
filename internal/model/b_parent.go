@@ -23,7 +23,37 @@ func (p *Parent) TableName() string {
 	return "b_parent"
 }
 
+func (p *Parent) FieldName() string {
+	return p.Name
+}
+
+func (p *Parent) FieldTotalDuration() float64 {
+	return p.TotalDuration
+}
+
+func (p *Parent) FieldEventNum() int64 {
+	return p.EventNum
+}
+
+func (p *Parent) FieldFirstTimeAndLastTime() (int64, int64) {
+	return p.FirstTime, p.LastTime
+}
+
+func (p *Parent) FieldLongest() int64 {
+	return p.Longest
+}
+
 type Parents []*Parent
+
+func (ps Parents) ToEventFields() []EventField {
+	eventFields := make([]EventField, 0)
+	for _, parent := range ps {
+		var ef EventField
+		ef = parent
+		eventFields = append(eventFields, ef)
+	}
+	return eventFields
+}
 
 type ParentModel struct {
 	Base *BaseDbModel
