@@ -123,7 +123,7 @@ func makeMapValueFloatToString(mp map[string]*b_essential.FieldInfo, dur float64
 			Percent:    convert.FloatTo(v.Percent).Decimal(0),
 			PercentAbs: convert.FloatTo(v.PercentAbs / pct).Decimal(0),
 		}
-		if v.Percent >= goalNowPct*100 {
+		if v.Percent >= pct*100 {
 			mpO[k].AheadLevel = 1
 		}
 	}

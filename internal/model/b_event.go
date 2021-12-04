@@ -1,6 +1,7 @@
 package model
 
 import (
+	"fmt"
 	"github.com/Sapomie/wayne-data/internal/model/cons"
 	"github.com/Sapomie/wayne-data/pkg/convert"
 	"github.com/Sapomie/wayne-data/pkg/mtime"
@@ -187,6 +188,16 @@ func (em *EventModel) Newest() (*Event, error) {
 	return event, nil
 }
 
+func (em *EventModel) Oldest() (*Event, error) {
+	db := em.Base
+	event := new(Event)
+	err := db.Order("end_time asc").First(event).Error
+	if err != nil {
+		return nil, err
+	}
+	return event, nil
+}
+
 //get events during start time to end time
 func (em *EventModel) ByTaskName(start, end time.Time, name string) (Events, error) {
 	db := em.Base
@@ -194,6 +205,70 @@ func (em *EventModel) ByTaskName(start, end time.Time, name string) (Events, err
 	err := db.
 		Where("start_time >= ? and end_time <= ?", start.Unix(), end.Unix()).
 		Where("task_id = ?", TaskInfoByName[name].Id).
+		Scan(&events).Error
+	if err != nil {
+		return nil, err
+	}
+	return events, nil
+}
+
+//get events during start time to end time
+func (em *EventModel) ByParentName(start, end time.Time, name string) (Events, error) {
+	db := em.Base
+	var events Events
+	err := db.
+		Where("start_time >= ? and end_time <= ?", start.Unix(), end.Unix()).
+		Where("parent_id = ?", ParentInfoByName[name].Id).
+		Order("start_time asc").
+		Scan(&events).Error
+	if err != nil {
+		return nil, err
+	}
+	return events, nil
+}
+
+//get events during start time to end time
+func (em *EventModel) ByProjectName(start, end time.Time, name string) (Events, error) {
+	db := em.Base
+	var events Events
+	err := db.
+		Where("start_time >= ? and end_time <= ?", start.Unix(), end.Unix()).
+		Where("project_id = ?", ProjectInfoByName[name].Id).
+		Order("start_time asc").
+		Scan(&events).Error
+	if err != nil {
+		return nil, err
+	}
+	return events, nil
+}
+
+//get events during start time to end time
+func (em *EventModel) ByStuffName(start, end time.Time, name string) (Events, error) {
+	db := em.Base
+	var events Events
+	stuffId := StuffInfoByName[name].Id
+	sql := fmt.Sprintf(`select * from b_event where start_time >= %v and end_time <= %v and (stuff_id = '%v' or stuff_id like "%v,%%" or stuff_id like "%%,%v,%%" or stuff_id like "%%,%v")`,
+		start.Unix(), end.Unix(), stuffId, stuffId, stuffId, stuffId)
+	err := db.
+		Raw(sql).
+		Order("start_time asc").
+		Scan(&events).Error
+	if err != nil {
+		return nil, err
+	}
+	return events, nil
+}
+
+//get events during start time to end time
+func (em *EventModel) ByTagName(start, end time.Time, name string) (Events, error) {
+	db := em.Base
+	var events Events
+	stuffId := TagInfoByName[name].Id
+	sql := fmt.Sprintf(`select * from b_event where start_time >= %v and end_time <= %v and (tag_id = '%v' or tag_id like "%v,%%" or tag_id like "%%,%v,%%" or tag_id like "%%,%v")`,
+		start.Unix(), end.Unix(), stuffId, stuffId, stuffId, stuffId)
+	err := db.
+		Raw(sql).
+		Order("start_time asc").
 		Scan(&events).Error
 	if err != nil {
 		return nil, err
@@ -213,6 +288,7 @@ func (em *EventModel) ByTaskNames(start, end time.Time, names ...string) (Events
 	err := db.
 		Where("start_time >= ? and end_time <= ?", start.Unix(), end.Unix()).
 		Where("task_id in (?)", ids).
+		Order("start_time asc").
 		Scan(&events).Error
 	if err != nil {
 		return nil, err
@@ -234,14 +310,23 @@ func (em *EventModel) WithProject(start, end time.Time) (Events, error) {
 	return events, nil
 }
 
-func (em *EventModel) UpdateNewest() error {
-	evt, err := em.Newest()
+func (em *EventModel) UpdateNewestAndOldest() error {
+	newest, err := em.Newest()
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil
 		}
 		return err
 	}
-	cons.Newest = time.Unix(evt.EndTime, 0)
+	cons.Newest = time.Unix(newest.StartTime, 0)
+
+	oldest, err := em.Oldest()
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil
+		}
+		return err
+	}
+	cons.Oldest = time.Unix(oldest.StartTime, 0)
 	return nil
 }

@@ -28,4 +28,7 @@ const (
 )
 
 //数据库中最新event的start time
-var Newest time.Time
+var (
+	Newest time.Time
+	Oldest time.Time
+)

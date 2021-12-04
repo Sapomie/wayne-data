@@ -55,15 +55,27 @@ func (svc ProcessionService) ProcessAll() (info gin.H, err error) {
 }
 
 func (svc ProcessionService) UpdateFieldVariables() error {
-	err := model.NewParentModel(svc.db).UpdateParentVariables()
+	err := model.NewEventModel(svc.db).UpdateNewestAndOldest()
 	if err != nil {
 		return err
 	}
-	err = model.NewProjectModel(svc.db).UpdateProjectVariables()
+	err = model.UpdateParentColumn(svc.db)
 	if err != nil {
 		return err
 	}
-	err = model.NewStuffModel(svc.db).UpdateStuffVariables()
+	err = model.UpdateTaskColumn(svc.db)
+	if err != nil {
+		return err
+	}
+	err = model.UpdateProjectColumn(svc.db)
+	if err != nil {
+		return err
+	}
+	err = model.UpdateTagColumn(svc.db)
+	if err != nil {
+		return err
+	}
+	err = model.UpdateStuffColumn(svc.db)
 	if err != nil {
 		return err
 	}
@@ -75,9 +87,6 @@ func (svc ProcessionService) UpdateFieldVariables() error {
 	if err != nil {
 		return err
 	}
-	err = model.NewEventModel(svc.db).UpdateNewest()
-	if err != nil {
-		return err
-	}
+
 	return nil
 }

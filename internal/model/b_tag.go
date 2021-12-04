@@ -2,6 +2,7 @@ package model
 
 import (
 	"fmt"
+	"github.com/Sapomie/wayne-data/internal/model/cons"
 	"github.com/jinzhu/gorm"
 )
 
@@ -119,6 +120,64 @@ func (em *TagModel) UpdateTagVariables() error {
 		TagInfoByName[tag.Name] = struct {
 			Id int
 		}{Id: tag.Id}
+	}
+
+	return nil
+}
+
+func UpdateTagColumn(db *gorm.DB) (err error) {
+	if err = NewTagModel(db).UpdateTagVariables(); err != nil {
+		return err
+	}
+
+	tags, err := NewTagModel(db).GetAll()
+	if err != nil {
+		return nil
+	}
+	for _, tag := range tags {
+		var data struct {
+			Num            int64
+			Dur            float64
+			FirstTimestamp int64
+			LastTimestamp  int64
+		}
+		err := NewEventModel(db).Base.Select("sum(duration) as dur, count(id) as num").Where("tag_id = ?", tag.Id).Scan(&data).Error
+		if err != nil {
+			return err
+		}
+		err = NewEventModel(db).Base.Select("start_time as first_timestamp").Where("tag_id = ?", tag.Id).Order("start_time asc").Limit(1).Scan(&data).Error
+		if err != nil && err != gorm.ErrRecordNotFound {
+			return err
+		}
+		err = NewEventModel(db).Base.Select("start_time as last_timestamp").Where("tag_id = ?", tag.Id).Order("start_time desc").Limit(1).Scan(&data).Error
+		if err != nil && err != gorm.ErrRecordNotFound {
+			return err
+		}
+		evts, err := NewEventModel(db).ByTagName(cons.Oldest, cons.Newest, tag.Name)
+		if err != nil {
+			return err
+		}
+		longest := int64(0)
+		if len(evts) > 0 {
+			former := evts[0].StartTime
+			for _, evt := range evts {
+				span := evt.StartTime - former
+				if span > longest {
+					longest = span
+				}
+				former = evt.StartTime
+			}
+		}
+		err = NewTagModel(db).Base.Where("id = ?", tag.Id).Update(map[string]interface{}{
+			"event_num":      data.Num,
+			"total_duration": data.Dur,
+			"first_time":     data.FirstTimestamp,
+			"last_time":      data.LastTimestamp,
+			"longest":        longest,
+		}).Error
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
