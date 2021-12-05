@@ -55,19 +55,7 @@ func makeProgress(es *b_essential.Essential, progressStartTime time.Time) *Progr
 	goalNowPct := es.GoalPercent / 100
 	goalMaxPct := es.GoalMaxPercent / 100
 
-	var crPct float64
-	_, ok := es.ParentInfo[cons.Code]
-	if ok {
-		crPct = es.ParentInfo[cons.Code].Percent / 100
-	}
-	var otPctNow, otPctMax float64
-	if crPct > 1.1*goalNowPct {
-		otPctNow = goalNowPct - (crPct-1.1*goalNowPct)/3
-		otPctMax = otPctNow * (goalMaxPct / goalNowPct)
-	} else {
-		otPctNow = goalNowPct
-		otPctMax = goalMaxPct
-	}
+	otPctNow, otPctMax := countDailyOtherPct(es, goalNowPct, goalMaxPct)
 
 	taskMap := makeMapValueFloatToString(es.TaskInfo, es.Duration, goalNowPct, otPctNow)
 	parentMap := makeMapValueFloatToString(es.ParentInfo, es.Duration, goalNowPct, otPctNow)
@@ -103,6 +91,24 @@ func makeProgress(es *b_essential.Essential, progressStartTime time.Time) *Progr
 	}
 
 	return progress
+}
+
+func countDailyOtherPct(es *b_essential.Essential, goalNowPct float64, goalMaxPct float64) (float64, float64) {
+	var crPct, codePctAbs float64
+	_, ok := es.ParentInfo[cons.Code]
+	if ok {
+		crPct = es.ParentInfo[cons.Code].Percent / 100
+		codePctAbs = es.ParentInfo[cons.Code].PercentAbs / goalNowPct / 100
+	}
+	var otPctNow, otPctMax float64
+	if codePctAbs > 1.1 {
+		otPctNow = goalNowPct - (crPct-1.1*goalNowPct)/3
+		otPctMax = otPctNow * (goalMaxPct / goalNowPct)
+	} else {
+		otPctNow = goalNowPct
+		otPctMax = goalMaxPct
+	}
+	return otPctNow, otPctMax
 }
 
 func makeMapValueFloatToString(mp map[string]*b_essential.FieldInfo, dur float64, goalNowPct, otPct float64) (mpO map[string]*summaryField) {
