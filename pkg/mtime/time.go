@@ -77,13 +77,8 @@ func (tz *TimeZone) BeginAndEnd() (begin, end time.Time) {
 		begin = time.Date(tz.Year, 1, tz.Num, 0, 0, 0, 0, time.Local)
 		end = time.Date(tz.Year, 1, tz.Num+1, 0, 0, 0, 0, time.Local)
 	case TypeTen:
-		if tz.Num == 1 {
-			begin = time.Date(tz.Year, 1, 1+(tz.Num-1)*5, 0, 0, 0, 0, time.Local)
-			end = time.Date(tz.Year, 1, 1+tz.Num*5, 0, 0, 0, 0, time.Local)
-		} else {
-			begin = time.Date(tz.Year, 1, 6+(tz.Num-2)*10, 0, 0, 0, 0, time.Local)
-			end = time.Date(tz.Year, 1, 6+(tz.Num-1)*10, 0, 0, 0, 0, time.Local)
-		}
+		begin = time.Date(tz.Year, 1, 1+(tz.Num-1)*10, 0, 0, 0, 0, time.Local)
+		end = time.Date(tz.Year, 1, 1+tz.Num*10, 0, 0, 0, 0, time.Local)
 	case TypeMonth:
 		month := time.Month(tz.Num)
 		begin = time.Date(tz.Year, month, 1, 0, 0, 0, 0, time.Local)
@@ -152,7 +147,7 @@ func (mt *MTime) Day() (day int) {
 func (mt *MTime) Ten() (ten int) {
 	beginningOfTheYear, _ := NewTimeZone(TypeYear, mt.Time.Year(), 1).BeginAndEnd()
 	days := (mt.Time.Sub(beginningOfTheYear).Hours()) / 24
-	ten = int(days+5)/10 + 1
+	ten = int(days)/10 + 1
 	return
 }
 
