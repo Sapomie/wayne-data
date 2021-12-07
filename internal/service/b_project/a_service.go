@@ -1,4 +1,4 @@
-package c_project
+package b_project
 
 import (
 	"context"

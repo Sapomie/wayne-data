@@ -2,164 +2,96 @@ package c_series
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"github.com/Sapomie/wayne-data/internal/model"
-	"github.com/Sapomie/wayne-data/internal/model/cons"
+	"github.com/Sapomie/wayne-data/internal/model/resp"
+	"github.com/Sapomie/wayne-data/pkg/convert"
 	"github.com/Sapomie/wayne-data/pkg/mtime"
 	"github.com/garyburd/redigo/redis"
 	"github.com/jinzhu/gorm"
-	"strconv"
-	"strings"
+	"time"
 )
 
 type SeriesService struct {
-	ctx      context.Context
-	cache    *model.Cache
-	seriesDb *model.SeriesModel
-	eventDb  *model.EventModel
+	ctx   context.Context
+	cache *model.Cache
+	db    *gorm.DB
 }
 
 func NewSeriesService(c context.Context, db *gorm.DB, cache *redis.Pool) SeriesService {
 	return SeriesService{
-		ctx:      c,
-		cache:    model.NewCache(cache),
-		seriesDb: model.NewSeriesModel(db),
-		eventDb:  model.NewEventModel(db),
+		ctx:   c,
+		cache: model.NewCache(cache),
+		db:    db,
 	}
 }
 
-func (svc SeriesService) ProcessSeries() ([]string, error) {
-	seriesS, infos, err := svc.makeTvSeriesS()
-	if err != nil {
-		return nil, err
-	}
-
-	err = svc.storeSeriesS(seriesS)
-	if err != nil {
-		return nil, err
-	}
-
-	return infos, nil
-}
-
-func (svc SeriesService) storeSeriesS(seriesS model.SeriesS) error {
-	mm := svc.seriesDb
-
-	for _, series := range seriesS {
-		exist, err := mm.Exists(series.NameSeason)
-		if err != nil {
-			return err
-		}
-		if exist {
-			err := mm.Base.Where("name_season = ?", series.NameSeason).Update(series).Error
-			if err != nil {
-				return err
-			}
-		} else {
-			err := mm.Base.Create(series).Error
-			if err != nil {
-				return err
-			}
-		}
-	}
-	return nil
-}
-
-func (svc SeriesService) makeTvSeriesS() (seriesS model.SeriesS, infos []string, err error) {
-	start, end := mtime.NewTimeZone(mtime.TypeYear, 2021, 1).BeginAndEnd()
-	events, err := svc.eventDb.ByTaskName(start, end, cons.AnimationAndEpisode)
+func (svc SeriesService) ListSeries() ([]*resp.SeriesResp, *resp.SeriesSumResp, error) {
+	seriesS, err := model.NewSeriesModel(svc.db).GetAll()
 	if err != nil {
 		return nil, nil, err
 	}
 
-	seriesMap := make(map[string]model.Events, 0)
-
-	for _, event := range events {
-		strs := strings.Split(event.Comment, "，")
-		name := strs[0]
-		seriesMap[name] = append(seriesMap[name], event)
+	bookResponses := make([]*resp.SeriesResp, 0)
+	for _, series := range seriesS {
+		bookResp := toSeriesResponse(series)
+		bookResponses = append(bookResponses, bookResp)
 	}
 
-	for name, seriesEvents := range seriesMap {
-		series := &model.Series{Name: name}
-		for _, event := range seriesEvents {
+	return bookResponses, toSeriesSum(seriesS), nil
+}
 
-			if isSeriesFirstTime(event) {
-				series.NameOrigin, series.Category, series.Year, series.Season, series.EpisodeNumber, err = seriesInfo(event)
-				series.NameSeason = series.Name + "_" + fmt.Sprintf("第%v季", series.Season)
-				series.FirstTime = event.StartTime
-				if err != nil {
-					infos = append(infos, fmt.Sprintf("make series error,event start time: %v,coment: %v", event.Start(), event.Comment))
-					continue
-				}
-			}
+func toSeriesResponse(s *model.Series) *resp.SeriesResp {
+	var finishMark string
+	switch s.Finish {
+	case model.BookFinish:
+		finishMark = "Finish"
+	case model.BookAbandon:
+		finishMark = "Abandon"
+	}
 
-			if isSeriesLastTime(event) {
-				series.Rate, err = seriesRate(event)
-				if err != nil {
-					infos = append(infos, fmt.Sprintf("make series error,event start time: %v,coment: %v", event.Start(), event.Comment))
-					continue
-				}
-				series.Finish = model.ProjectFinish
-			}
+	return &resp.SeriesResp{
+		Name:          s.Name,
+		Category:      s.Category,
+		Season:        fmt.Sprintf("第%v季", s.Season),
+		Year:          s.Year,
+		EpisodeNumber: s.EpisodeNumber,
+		Duration:      s.Duration,
+		Rate:          s.Rate,
+		Finish:        finishMark,
+		FirstTime:     time.Unix(s.FirstTime, 0).Format(mtime.TimeTemplate4),
+		LastTime:      time.Unix(s.LastTime, 0).Format(mtime.TimeTemplate4),
+	}
 
-			if event.StartTime > series.LastTime {
-				series.LastTime = event.StartTime
-			}
+}
 
-			series.Duration += event.Duration
+func toSeriesSum(seriesS model.SeriesS) *resp.SeriesSumResp {
+	var (
+		finishNum         int
+		durationFinishSum float64
+		durationSum       float64
+		rateSum           int
+	)
+
+	for _, series := range seriesS {
+		if series.Finish == model.BookFinish {
+			finishNum++
+			durationFinishSum += series.Duration
+			rateSum += series.Rate
 		}
-		seriesS = append(seriesS, series)
-	}
-	return
-}
-
-func seriesInfo(event *model.Event) (originName, category string, year, season, episodeNumber int, err error) {
-	strs := strings.Split(event.Comment, "，")
-	if len(strs) < 7 {
-		return "", "", 0, 0, 0, errors.New("wrong length of series comment")
-	}
-	category = strs[3]
-	originName = strs[2]
-	season, err = strconv.Atoi(strs[1])
-	if err != nil {
-		return "", "", 0, 0, 0, err
-	}
-	year, err = strconv.Atoi(strs[4])
-	if err != nil {
-		return "", "", 0, 0, 0, err
-	}
-	episodeNumber, err = strconv.Atoi(strs[5])
-	if err != nil {
-		return "", "", 0, 0, 0, err
+		durationSum += series.Duration
 	}
 
-	return
-}
+	var (
+		durationAvg = durationSum / float64(finishNum)
+		rateAvg     = rateSum / finishNum
+	)
 
-func isSeriesFirstTime(event *model.Event) bool {
-	if strings.Contains(event.Comment, "、s") {
-		return true
+	return &resp.SeriesSumResp{
+		SeriesNumber: len(seriesS),
+		DurationAvg:  convert.FloatTo(durationAvg).Decimal(2),
+		RateAvg:      rateAvg,
+		Finish:       finishNum,
 	}
-	return false
-}
 
-func isSeriesLastTime(event *model.Event) bool {
-	if strings.Contains(event.Comment, "、e") {
-		return true
-	}
-	return false
-}
-
-func seriesRate(event *model.Event) (rate int, err error) {
-	strs := strings.Split(event.Comment, "，")
-	if len(strs) < 4 {
-		return 0, errors.New("wrong length of series comment")
-	}
-	rate, err = strconv.Atoi(strs[2])
-	if err != nil {
-		return 0, err
-	}
-	return
 }

@@ -3,8 +3,8 @@ package a_procession
 import (
 	"context"
 	"github.com/Sapomie/wayne-data/internal/model"
+	"github.com/Sapomie/wayne-data/internal/service/b_project"
 	"github.com/Sapomie/wayne-data/internal/service/c_book"
-	"github.com/Sapomie/wayne-data/internal/service/c_project"
 	"github.com/Sapomie/wayne-data/internal/service/c_series"
 	"github.com/garyburd/redigo/redis"
 	"github.com/gin-gonic/gin"
@@ -17,7 +17,7 @@ type ProcessionService struct {
 	db             *gorm.DB
 	bookService    c_book.BookService
 	seriesService  c_series.SeriesService
-	projectService c_project.ProjectService
+	projectService b_project.ProjectService
 }
 
 func NewProcessionService(c context.Context, db *gorm.DB, cache *redis.Pool) ProcessionService {
@@ -26,7 +26,7 @@ func NewProcessionService(c context.Context, db *gorm.DB, cache *redis.Pool) Pro
 		db:             db,
 		bookService:    c_book.NewBookService(c, db, cache),
 		seriesService:  c_series.NewSeriesService(c, db, cache),
-		projectService: c_project.NewProjectService(c, db, cache),
+		projectService: b_project.NewProjectService(c, db, cache),
 	}
 }
 

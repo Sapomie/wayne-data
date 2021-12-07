@@ -10,7 +10,8 @@ var (
 	ErrorProcess              = NewError(30010007, "ProcessAll错误")
 	ErrorExportCsv            = NewError(30010008, "CSV导出错误")
 	ErrorGetEventField        = NewError(30010009, "Event Field 获取失败")
-	ErrorGetBook              = NewError(30010010, "Event Field 获取失败")
+	ErrorGetBook              = NewError(30010010, "Book 获取失败")
+	ErrorGetSeries            = NewError(30010011, "Series 获取失败")
 
 	ErrorGetGcRunningFail = NewError(40010004, "获取Gcrunning失败")
 )
