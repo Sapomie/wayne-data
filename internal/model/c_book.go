@@ -4,6 +4,11 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
+const (
+	BookFinish  = 1
+	BookAbandon = 2
+)
+
 type Book struct {
 	Id         int64  `gorm:"primary_key"`
 	Name       string `gorm:"not null"`

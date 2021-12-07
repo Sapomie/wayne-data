@@ -42,22 +42,27 @@ func (svc EvtFieldService) GetFieldList(typ int) (response []*resp.EventFieldRes
 	}
 
 	for _, field := range eventFields.ToEventFields() {
-		first, last := field.FieldFirstTimeAndLastTime()
-		fromNow := time.Now().Sub(time.Unix(last, 0)).Hours() / 24
-		longest := float64(field.FieldLongest()) / 3600 / 24
-		if fromNow > longest {
-			longest = fromNow
-		}
-		stuffResp := &resp.EventFieldResponse{
-			Name:      field.FieldName(),
-			Duration:  field.FieldTotalDuration(),
-			Times:     field.FieldEventNum(),
-			FirstTime: time.Unix(first, 0).Format(mtime.TimeTemplate5),
-			LastTime:  time.Unix(last, 0).Format(mtime.TimeTemplate5),
-			FromNow:   convert.FloatTo(fromNow).Decimal(1),
-			Longest:   convert.FloatTo(longest).Decimal(1),
-		}
-		response = append(response, stuffResp)
+		fieldResp := toFieldResponse(field)
+		response = append(response, fieldResp)
 	}
 	return response, nil
+}
+
+func toFieldResponse(field model.EventField) *resp.EventFieldResponse {
+	first, last := field.FieldFirstTimeAndLastTime()
+	fromNow := time.Now().Sub(time.Unix(last, 0)).Hours() / 24
+	longest := float64(field.FieldLongest()) / 3600 / 24
+	if fromNow > longest {
+		longest = fromNow
+	}
+	fieldResp := &resp.EventFieldResponse{
+		Name:      field.FieldName(),
+		Duration:  field.FieldTotalDuration(),
+		Times:     field.FieldEventNum(),
+		FirstTime: time.Unix(first, 0).Format(mtime.TimeTemplate5),
+		LastTime:  time.Unix(last, 0).Format(mtime.TimeTemplate5),
+		FromNow:   convert.FloatTo(fromNow).Decimal(1),
+		Longest:   convert.FloatTo(longest).Decimal(1),
+	}
+	return fieldResp
 }

@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func ListStuffs(c *gin.Context) {
+func ListEventStuff(c *gin.Context) {
 	response := app.NewResponse(c)
 	typ := model.NewFieldTypeByStr(c.Param("typ"))
 
