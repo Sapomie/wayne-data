@@ -173,7 +173,7 @@ func (mt *MTime) Half() int {
 	}
 }
 
-func (mt *MTime) TimeZone(typ TimeType) *TimeZone {
+func (mt *MTime) TimeZoneNum(typ TimeType) int {
 	var num int
 	switch typ {
 	case TypeDay:
@@ -189,11 +189,15 @@ func (mt *MTime) TimeZone(typ TimeType) *TimeZone {
 	case TypeYear:
 		num = 1
 	}
+	return num
+}
+
+func (mt *MTime) TimeZone(typ TimeType) *TimeZone {
 
 	return &TimeZone{
 		Typ:  typ,
 		Year: mt.Time.Year(),
-		Num:  num,
+		Num:  mt.TimeZoneNum(typ),
 	}
 
 }
