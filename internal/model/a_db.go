@@ -47,6 +47,7 @@ func NewDBEngine(setting *setting.DatabaseSettingS) (*gorm.DB, error) {
 		new(Stuff),
 		new(Tag),
 		new(Project),
+		new(Movie),
 		new(Book),
 		new(Series),
 		new(Run),

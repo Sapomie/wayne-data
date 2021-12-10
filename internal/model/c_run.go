@@ -22,8 +22,8 @@ type Run struct {
 	Temperature int    `json:"temperature"`
 	Altitude    int    `json:"altitude"`
 	Comment     string `json:"comment"`
-	CreatedTime int64  `gorm:"not null" json:"created_time"`
-	UpdatedTime int64  `gorm:"not null" json:"updated_time"`
+
+	*Base
 }
 
 func (e *Run) TableName() string {

@@ -48,6 +48,7 @@ func NewRouter() *gin.Engine {
 		//run
 		apiv1.GET("run", v1.ListRuns)
 		apiv1.GET("runzone/:typ", v1.ListRunTimeZone)
+		apiv1.GET("movie", v1.ListMovies)
 
 		//upload
 		apiv1.GET("upload", v1.Upload)

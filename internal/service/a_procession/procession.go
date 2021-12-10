@@ -5,6 +5,7 @@ import (
 	"github.com/Sapomie/wayne-data/internal/model"
 	"github.com/Sapomie/wayne-data/internal/service/b_project"
 	"github.com/Sapomie/wayne-data/internal/service/c_book"
+	"github.com/Sapomie/wayne-data/internal/service/c_movie"
 	"github.com/Sapomie/wayne-data/internal/service/c_run"
 	"github.com/Sapomie/wayne-data/internal/service/c_series"
 	"github.com/garyburd/redigo/redis"
@@ -20,6 +21,7 @@ type ProcessionService struct {
 	seriesService  c_series.SeriesService
 	projectService b_project.ProjectService
 	runService     c_run.RunService
+	movieService   c_movie.MovieService
 }
 
 func NewProcessionService(c context.Context, db *gorm.DB, cache *redis.Pool) ProcessionService {
@@ -30,6 +32,7 @@ func NewProcessionService(c context.Context, db *gorm.DB, cache *redis.Pool) Pro
 		seriesService:  c_series.NewSeriesService(c, db, cache),
 		projectService: b_project.NewProjectService(c, db, cache),
 		runService:     c_run.NewRunService(c, db, cache),
+		movieService:   c_movie.NewMovieService(c, db, cache),
 	}
 }
 
@@ -51,6 +54,10 @@ func (svc ProcessionService) ProcessAll() (info gin.H, err error) {
 	if err != nil {
 		return nil, err
 	}
+	movieInfo, err := svc.movieService.ProcessMovie()
+	if err != nil {
+		return nil, err
+	}
 	_, err = svc.projectService.ProcessProject()
 	if err != nil {
 		return nil, err
@@ -59,7 +66,8 @@ func (svc ProcessionService) ProcessAll() (info gin.H, err error) {
 	return gin.H{
 		"book":   bookInfo,
 		"series": seriesInfo,
-		"runs":   runInfo,
+		"run":    runInfo,
+		"movie":  movieInfo,
 	}, nil
 }
 

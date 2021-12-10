@@ -13,6 +13,7 @@ var (
 	ErrorGetBook              = NewError(30010010, "Book 获取失败")
 	ErrorGetSeries            = NewError(30010011, "Series 获取失败")
 	ErrorGetRuns              = NewError(30010012, "Runs 获取失败")
+	ErrorGetMovies            = NewError(30010013, "Movies 获取失败")
 
 	ErrorGetGcRunningFail = NewError(40010004, "获取Gcrunning失败")
 )
