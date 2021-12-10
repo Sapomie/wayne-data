@@ -44,11 +44,15 @@ func NewRouter() *gin.Engine {
 		apiv1.GET("field/:typ", v1.ListEventStuff)
 		apiv1.GET("book", v1.ListBooks)
 		apiv1.GET("series", v1.ListSeriesS)
+		apiv1.GET("movie", v1.ListMovies)
 
 		//run
 		apiv1.GET("run", v1.ListRuns)
 		apiv1.GET("runzone/:typ", v1.ListRunTimeZone)
-		apiv1.GET("movie", v1.ListMovies)
+
+		//anaerobic
+		apiv1.GET("anaerobic", v1.ListAnaerobicS)
+		apiv1.GET("anaerobiczone/:typ", v1.ListAnaerobicTimeZone)
 
 		//upload
 		apiv1.GET("upload", v1.Upload)

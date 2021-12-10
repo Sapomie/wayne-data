@@ -115,10 +115,11 @@
                             <span>Progress</span>
                         </a>
                         <ul class="sub-menu" aria-expanded="false">
-                            <li><a href="tensummarynow">Ten</a></li>
-                            <li><a href="monthsummarynow">Month</a></li>
-                            <li><a href="quartersummarynow">Quarter</a></li>
-                            <li><a href="yearsummarynow">Year</a></li>
+                            <li><a href="progressnow/ten">Ten</a></li>
+                            <li><a href="progressnow/month">Month</a></li>
+                            <li><a href="progressnow/quarter">Quarter</a></li>
+                            <li><a href="progressnow/year">Year</a></li>
+                            <li><a href="upload">Upload</a></li>
                         </ul>
                     </li>
 
@@ -132,9 +133,9 @@
                         </a>
                         <ul class="sub-menu" aria-expanded="false">
                             <li><a href="run">Run</a></li>
-                            <li><a href="runten">Ten</a></li>
-                            <li><a href="runmonth">Month</a></li>
-                            <li><a href="runquarter">Quarter</a></li>
+                            <li><a href="runzone/ten">Ten</a></li>
+                            <li><a href="runzone/month">Month</a></li>
+                            <li><a href="runzone/quarter">Quarter</a></li>
                         </ul>
                     </li>
 
@@ -145,9 +146,9 @@
                         </a>
                         <ul class="sub-menu" aria-expanded="false">
                             <li><a href="anaerobic">Anaerobic</a></li>
-                            <li><a href="anaerobicten">Ten</a></li>
-                            <li><a href="anaerobicmonth">Month</a></li>
-                            <li><a href="anaerobicquarter">Quarter</a></li>
+                            <li><a href="anaerobiczone/ten">Ten</a></li>
+                            <li><a href="anaerobiczone/month">Month</a></li>
+                            <li><a href="anaerobiczone/quarter">Quarter</a></li>
                         </ul>
                     </li>
 
@@ -170,14 +171,11 @@
                             <span>Other</span>
                         </a>
                         <ul class="sub-menu" aria-expanded="false">
-                            <li><a href="event">Event</a></li>
-                            <li><a href="stuff">Stuff</a></li>
-                            <li><a href="project">Project</a></li>
-                            <li><a href="taskname">Taskname</a></li>
-                            <li><a href="parenttask">Parenttask</a></li>
-                            <li><a href="category">Category</a></li>
-                            <li><a href="tag">Tag</a></li>
-                            <li><a href="upload">Upload</a></li>
+                            <li><a href="field/stuff">Stuff</a></li>
+                            <li><a href="field/project">Project</a></li>
+                            <li><a href="field/task">Task</a></li>
+                            <li><a href="field/parent">Parent</a></li>
+                            <li><a href="field/tag">Tag</a></li>
                         </ul>
                     </li>
 
@@ -267,6 +265,7 @@
                                     <tr>
                                         <th>Date</th>
                                         <th>Total</th>
+                                        <th>Protein</th>
 
                                         <th>D-Press G</th>
                                         <th>Sit-up G</th>
@@ -284,6 +283,7 @@
                                     <tr>
                                         <td> Sum</td>
                                         <td>{{.sum.TotalGroup}}</td>
+                                        <td>{{.sum.Protein1}}</td>
 
                                         <td>{{.sum.DumbbellPressGroups}}</td>
                                         <td>{{.sum.SitUpGroups}}</td>
@@ -295,6 +295,7 @@
                                         <td>{{.sum.DumbbellPressMass}}</td>
                                     </tr>
                                     </tbody>
+
                                 </table>
 
                             </div>

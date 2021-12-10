@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/Sapomie/wayne-data/internal/model"
 	"github.com/Sapomie/wayne-data/internal/service/b_project"
+	"github.com/Sapomie/wayne-data/internal/service/c_anaerobic"
 	"github.com/Sapomie/wayne-data/internal/service/c_book"
 	"github.com/Sapomie/wayne-data/internal/service/c_movie"
 	"github.com/Sapomie/wayne-data/internal/service/c_run"
@@ -14,25 +15,27 @@ import (
 )
 
 type ProcessionService struct {
-	ctx            context.Context
-	cache          *model.Cache
-	db             *gorm.DB
-	bookService    c_book.BookService
-	seriesService  c_series.SeriesService
-	projectService b_project.ProjectService
-	runService     c_run.RunService
-	movieService   c_movie.MovieService
+	ctx              context.Context
+	cache            *model.Cache
+	db               *gorm.DB
+	bookService      c_book.BookService
+	seriesService    c_series.SeriesService
+	projectService   b_project.ProjectService
+	runService       c_run.RunService
+	movieService     c_movie.MovieService
+	anaerobicService c_anaerobic.AnaerobicService
 }
 
 func NewProcessionService(c context.Context, db *gorm.DB, cache *redis.Pool) ProcessionService {
 	return ProcessionService{
-		ctx:            c,
-		db:             db,
-		bookService:    c_book.NewBookService(c, db, cache),
-		seriesService:  c_series.NewSeriesService(c, db, cache),
-		projectService: b_project.NewProjectService(c, db, cache),
-		runService:     c_run.NewRunService(c, db, cache),
-		movieService:   c_movie.NewMovieService(c, db, cache),
+		ctx:              c,
+		db:               db,
+		bookService:      c_book.NewBookService(c, db, cache),
+		seriesService:    c_series.NewSeriesService(c, db, cache),
+		projectService:   b_project.NewProjectService(c, db, cache),
+		runService:       c_run.NewRunService(c, db, cache),
+		movieService:     c_movie.NewMovieService(c, db, cache),
+		anaerobicService: c_anaerobic.NewAnaerobicService(c, db, cache),
 	}
 }
 
@@ -54,6 +57,10 @@ func (svc ProcessionService) ProcessAll() (info gin.H, err error) {
 	if err != nil {
 		return nil, err
 	}
+	anaerobicInfo, err := svc.anaerobicService.ProcessAnaerobic()
+	if err != nil {
+		return nil, err
+	}
 	movieInfo, err := svc.movieService.ProcessMovie()
 	if err != nil {
 		return nil, err
@@ -64,10 +71,11 @@ func (svc ProcessionService) ProcessAll() (info gin.H, err error) {
 	}
 
 	return gin.H{
-		"book":   bookInfo,
-		"series": seriesInfo,
-		"run":    runInfo,
-		"movie":  movieInfo,
+		"book":      bookInfo,
+		"series":    seriesInfo,
+		"run":       runInfo,
+		"movie":     movieInfo,
+		"anaerobic": anaerobicInfo,
 	}, nil
 }
 
