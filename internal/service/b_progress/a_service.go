@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/Sapomie/wayne-data/internal/model"
+	"github.com/Sapomie/wayne-data/internal/model/cons"
 	"github.com/Sapomie/wayne-data/internal/service/b_essential"
 	"github.com/Sapomie/wayne-data/pkg/mtime"
 	"github.com/garyburd/redigo/redis"
@@ -35,16 +36,7 @@ func (svc *ProgressService) GetProgress(zone *mtime.TimeZone, progressStart time
 	}
 
 	if !exists {
-		events, err := model.NewEventModel(svc.db).Timezone(zone)
-		if err != nil {
-			return nil, err
-		}
-		es, err := b_essential.MakeEssential(events, progressStart, zone)
-		if err != nil {
-			return nil, err
-		}
-		progress = makeProgress(es, progressStart)
-		progress.GcRunning, err = svc.GetYearGcRunning(2021, progressStart)
+		progress, err = svc.getProgressFromDB(zone, progressStart)
 		if err != nil {
 			return nil, err
 		}
@@ -57,12 +49,29 @@ func (svc *ProgressService) GetProgress(zone *mtime.TimeZone, progressStart time
 	return progress, nil
 }
 
+func (svc *ProgressService) getProgressFromDB(zone *mtime.TimeZone, progressStart time.Time) (*Progress, error) {
+	events, err := model.NewEventModel(svc.db).Timezone(zone)
+	if err != nil {
+		return nil, err
+	}
+	es, err := b_essential.MakeEssential(events, progressStart, zone)
+	if err != nil {
+		return nil, err
+	}
+	progress := makeProgress(es, progressStart)
+	progress.GcRunning, err = svc.getYearGcRunning(2021, progressStart)
+	if err != nil {
+		return nil, err
+	}
+	return progress, nil
+}
+
 func progressKey(zone *mtime.TimeZone) (key string) {
-	key = "WayneDataProgress" + fmt.Sprint(zone.Year) + zone.DateString()
+	key = cons.RedisKeyProgressPrefix + fmt.Sprint(zone.Year) + zone.DateString()
 	return
 }
 
-func (svc *ProgressService) GetYearGcRunning(year int, progressStart time.Time) (*GcRunning, error) {
+func (svc *ProgressService) getYearGcRunning(year int, progressStart time.Time) (*GcRunning, error) {
 	zone := mtime.NewTimeZone(mtime.TypeYear, year, 1)
 	events, err := model.NewEventModel(svc.db).Timezone(zone)
 	if err != nil {

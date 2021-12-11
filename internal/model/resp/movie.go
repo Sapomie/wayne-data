@@ -1,6 +1,6 @@
 package resp
 
-type MovieResp struct {
+type MovieItem struct {
 	Date   string
 	Name   string
 	NameEn string
@@ -13,4 +13,9 @@ type MovieSum struct {
 	MovieNumber  int
 	Rate         int
 	CinemaNumber int
+}
+
+type Movie struct {
+	Items []*MovieItem
+	Sum   *MovieSum
 }

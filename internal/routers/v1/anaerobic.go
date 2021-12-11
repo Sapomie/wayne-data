@@ -13,7 +13,7 @@ func ListAnaerobicS(c *gin.Context) {
 	response := app.NewResponse(c)
 
 	svc := c_anaerobic.NewAnaerobicService(c, global.DBEngine, global.CacheEngine)
-	anaerobicS, sum, err := svc.ListAnaerobicS()
+	resp, err := svc.ListAnaerobic()
 	if err != nil {
 		global.Logger.Errorf(c, "svc.NewAnaerobicService err: %v", err)
 		response.ToErrorResponse(errcode.ErrorGetAnaerobicS)
@@ -21,8 +21,8 @@ func ListAnaerobicS(c *gin.Context) {
 	}
 
 	response.ToResponseHtml("anaerobic.html", gin.H{
-		"resp":      anaerobicS,
-		"sum":       sum,
+		"resp":      resp.Items,
+		"sum":       resp.Sum,
 		"tableName": "datatableRuns",
 	})
 }
@@ -32,16 +32,16 @@ func ListAnaerobicTimeZone(c *gin.Context) {
 	response := app.NewResponse(c)
 	typ := mtime.NewTimeTypeByStr(c.Param("typ"))
 	svc := c_anaerobic.NewAnaerobicService(c, global.DBEngine, global.CacheEngine)
-	anaerobicS, sum, err := svc.ListAnaerobicTimeZone(typ)
+	resp, err := svc.ListAnaerobicZone(typ)
 	if err != nil {
-		global.Logger.Errorf(c, "svc.ListAnaerobicTimeZone err: %v", err)
+		global.Logger.Errorf(c, "svc.GerAnaerobicZoneFromDB err: %v", err)
 		response.ToErrorResponse(errcode.ErrorGetAnaerobicS)
 		return
 	}
 
 	response.ToResponseHtml("anaerobic_month.html", gin.H{
-		"resp":      anaerobicS,
-		"sum":       sum,
+		"resp":      resp.Items,
+		"sum":       resp.Sum,
 		"tableName": "datatableRuns",
 	})
 }

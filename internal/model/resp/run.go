@@ -1,6 +1,6 @@
 package resp
 
-type RunResp struct {
+type RunItem struct {
 	Id          int
 	Date        string
 	Distance    float64
@@ -23,4 +23,14 @@ type RunSum struct {
 	RateAverage        int
 	TemperatureAverage int
 	AltitudeAverage    int
+}
+
+type Run struct {
+	Items []*RunItem
+	Sum   *RunSum
+}
+
+type RunZone struct {
+	Items []*RunSum
+	Sum   *RunSum
 }

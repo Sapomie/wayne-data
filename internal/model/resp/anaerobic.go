@@ -1,6 +1,6 @@
 package resp
 
-type AnaerobicResp struct {
+type AnaerobicItem struct {
 	Date     string
 	Name     string
 	Group    int
@@ -20,4 +20,14 @@ type AnaerobicSum struct {
 	DumbbellPressGroups   int
 	DumbbellPressPerGroup int
 	DumbbellPressMass     float64
+}
+
+type Anaerobic struct {
+	Items []*AnaerobicItem
+	Sum   *AnaerobicSum
+}
+
+type AnaerobicZone struct {
+	Items []*AnaerobicSum
+	Sum   *AnaerobicSum
 }

@@ -13,7 +13,7 @@ func ListRuns(c *gin.Context) {
 	response := app.NewResponse(c)
 
 	svc := c_run.NewRunService(c, global.DBEngine, global.CacheEngine)
-	runs, sum, err := svc.ListRuns()
+	run, err := svc.ListRuns()
 	if err != nil {
 		global.Logger.Errorf(c, "svc.NewRunService err: %v", err)
 		response.ToErrorResponse(errcode.ErrorGetRuns)
@@ -21,8 +21,8 @@ func ListRuns(c *gin.Context) {
 	}
 
 	response.ToResponseHtml("run.html", gin.H{
-		"resp":      runs,
-		"avg":       sum,
+		"resp":      run.Items,
+		"avg":       run.Sum,
 		"tableName": "datatableRuns",
 	})
 }
@@ -31,7 +31,7 @@ func ListRunTimeZone(c *gin.Context) {
 	response := app.NewResponse(c)
 	typ := mtime.NewTimeTypeByStr(c.Param("typ"))
 	svc := c_run.NewRunService(c, global.DBEngine, global.CacheEngine)
-	runs, sum, err := svc.ListRunTimeZone(typ)
+	resp, err := svc.ListRunZone(typ)
 	if err != nil {
 		global.Logger.Errorf(c, "svc.NewRunService err: %v", err)
 		response.ToErrorResponse(errcode.ErrorGetRuns)
@@ -39,8 +39,8 @@ func ListRunTimeZone(c *gin.Context) {
 	}
 
 	response.ToResponseHtml("run_month.html", gin.H{
-		"resp":      runs,
-		"avg":       sum,
+		"resp":      resp.Items,
+		"avg":       resp.Sum,
 		"tableName": "datatableRuns",
 	})
 }

@@ -12,7 +12,7 @@ func ListMovies(c *gin.Context) {
 	response := app.NewResponse(c)
 
 	svc := c_movie.NewMovieService(c, global.DBEngine, global.CacheEngine)
-	movies, sum, err := svc.ListMovies()
+	resp, err := svc.ListMovies()
 	if err != nil {
 		global.Logger.Errorf(c, "svc.ListMovies err: %v", err)
 		response.ToErrorResponse(errcode.ErrorGetMovies)
@@ -20,7 +20,7 @@ func ListMovies(c *gin.Context) {
 	}
 
 	response.ToResponseHtml("movie.html", gin.H{
-		"resp": movies,
-		"sum":  sum,
+		"resp": resp.Items,
+		"sum":  resp.Sum,
 	})
 }

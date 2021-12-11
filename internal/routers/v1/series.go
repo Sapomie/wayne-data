@@ -12,7 +12,7 @@ func ListSeriesS(c *gin.Context) {
 	response := app.NewResponse(c)
 
 	svc := c_series.NewSeriesService(c, global.DBEngine, global.CacheEngine)
-	seriesS, sum, err := svc.ListSeries()
+	resp, err := svc.ListSeries()
 	if err != nil {
 		global.Logger.Errorf(c, "svc.NewSeriesService err: %v", err)
 		response.ToErrorResponse(errcode.ErrorGetSeries)
@@ -20,7 +20,7 @@ func ListSeriesS(c *gin.Context) {
 	}
 
 	response.ToResponseHtml("series.html", gin.H{
-		"resp": seriesS,
-		"sum":  sum,
+		"resp": resp.Item,
+		"sum":  resp.Sum,
 	})
 }

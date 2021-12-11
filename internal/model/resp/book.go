@@ -1,6 +1,6 @@
 package resp
 
-type BookResp struct {
+type BookItemResp struct {
 	Name       string
 	Category   string
 	Author     string
@@ -20,4 +20,9 @@ type BookSumResp struct {
 	DurationAvg    float64
 	RateAvg        int
 	Finish         int
+}
+
+type BookResp struct {
+	Items []*BookItemResp
+	Sum   *BookSumResp
 }

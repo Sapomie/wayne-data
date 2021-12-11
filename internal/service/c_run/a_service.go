@@ -26,22 +26,67 @@ func NewRunService(c context.Context, db *gorm.DB, cache *redis.Pool) RunService
 	}
 }
 
-func (svc RunService) ListRuns() ([]*resp.RunResp, *resp.RunSum, error) {
-	runs, err := model.NewRunModel(svc.db).GetAll()
+func (svc RunService) ListRuns() (*resp.Run, error) {
+	run := new(resp.Run)
+	key := cons.RedisKeyRun
+	exists, err := svc.cache.Get(key, &run)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
+	}
+	if !exists {
+		run, err = svc.GetRunsFromDB()
+		if err != nil {
+			return nil, err
+		}
+		err = svc.cache.Set(key, run, 0)
+		if err != nil {
+			return nil, err
+		}
 	}
 
-	runResponses := make([]*resp.RunResp, 0)
+	return run, nil
+}
+
+func (svc RunService) ListRunZone(typ mtime.TimeType) (*resp.RunZone, error) {
+	runZone := new(resp.RunZone)
+	key := getRunZoneKey(typ)
+	exists, err := svc.cache.Get(key, &runZone)
+	if err != nil {
+		return nil, err
+	}
+	if !exists {
+		runZone, err = svc.GetRunZoneFromDB(typ)
+		if err != nil {
+			return nil, err
+		}
+		err = svc.cache.Set(key, runZone, 0)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return runZone, nil
+}
+
+func (svc RunService) GetRunsFromDB() (*resp.Run, error) {
+	runs, err := model.NewRunModel(svc.db).GetAll()
+	if err != nil {
+		return nil, err
+	}
+
+	runResponses := make([]*resp.RunItem, 0)
 	for _, run := range runs {
 		runResp := toRunResponse(run)
 		runResponses = append(runResponses, runResp)
 	}
 
-	return runResponses, toRunSum(runs), nil
+	return &resp.Run{
+		Items: runResponses,
+		Sum:   toRunSum(runs),
+	}, nil
 }
 
-func (svc RunService) ListRunTimeZone(typ mtime.TimeType) ([]*resp.RunSum, *resp.RunSum, error) {
+func (svc RunService) GetRunZoneFromDB(typ mtime.TimeType) (*resp.RunZone, error) {
 
 	numPresent := mtime.NewMTime(cons.Newest).TimeZoneNum(typ)
 	zoneRuns := make([]*resp.RunSum, 0)
@@ -49,7 +94,7 @@ func (svc RunService) ListRunTimeZone(typ mtime.TimeType) ([]*resp.RunSum, *resp
 		zone := mtime.NewTimeZone(typ, 2021, i)
 		runs, err := model.NewRunModel(svc.db).Timezone(zone)
 		if err != nil {
-			return nil, nil, err
+			return nil, err
 		}
 		runZone := toRunSum(runs)
 		runZone.Date = zone.DateString()
@@ -59,14 +104,17 @@ func (svc RunService) ListRunTimeZone(typ mtime.TimeType) ([]*resp.RunSum, *resp
 
 	runsYear, err := model.NewRunModel(svc.db).GetAll()
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 	sum := toRunSum(runsYear)
 
-	return zoneRuns, sum, nil
+	return &resp.RunZone{
+		Items: zoneRuns,
+		Sum:   sum,
+	}, nil
 }
 
-func toRunResponse(r *model.Run) *resp.RunResp {
+func toRunResponse(r *model.Run) *resp.RunItem {
 	distance := convert.FloatTo(float64(r.Distance) / 1000).Decimal(2)
 	TimeCostMinute := convert.FloatTo(float64(r.TimeCost) / 60).Decimal(2)
 	var speed float64
@@ -76,7 +124,7 @@ func toRunResponse(r *model.Run) *resp.RunResp {
 		speed = 0
 	}
 
-	return &resp.RunResp{
+	return &resp.RunItem{
 		Id:          r.Id,
 		Date:        r.Date,
 		Distance:    distance,
@@ -146,5 +194,22 @@ func toRunSum(runs model.Runs) *resp.RunSum {
 		TemperatureAverage: tempAvg,
 		AltitudeAverage:    altAvg,
 	}
+
+}
+
+func getRunZoneKey(typ mtime.TimeType) string {
+	str := ""
+	switch typ {
+	case mtime.TypeTen:
+		str = "Ten"
+	case mtime.TypeMonth:
+		str = "Month"
+	case mtime.TypeQuarter:
+		str = "Quarter"
+	case mtime.TypeYear:
+		str = "Year"
+	}
+
+	return cons.RedisKeyRunZonePrefix + str
 
 }

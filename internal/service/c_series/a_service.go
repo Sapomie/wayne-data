@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/Sapomie/wayne-data/internal/model"
+	"github.com/Sapomie/wayne-data/internal/model/cons"
 	"github.com/Sapomie/wayne-data/internal/model/resp"
 	"github.com/Sapomie/wayne-data/pkg/convert"
 	"github.com/Sapomie/wayne-data/pkg/mtime"
@@ -26,22 +27,46 @@ func NewSeriesService(c context.Context, db *gorm.DB, cache *redis.Pool) SeriesS
 	}
 }
 
-func (svc SeriesService) ListSeries() ([]*resp.SeriesResp, *resp.SeriesSumResp, error) {
-	seriesS, err := model.NewSeriesModel(svc.db).GetAll()
+func (svc SeriesService) ListSeries() (*resp.Series, error) {
+	seriesS := new(resp.Series)
+	key := cons.RedisKeySeries
+	exists, err := svc.cache.Get(key, &seriesS)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
+	}
+	if !exists {
+		seriesS, err = svc.GetSeriesFromDB()
+		if err != nil {
+			return nil, err
+		}
+		err = svc.cache.Set(key, seriesS, 0)
+		if err != nil {
+			return nil, err
+		}
 	}
 
-	bookResponses := make([]*resp.SeriesResp, 0)
+	return seriesS, nil
+}
+
+func (svc SeriesService) GetSeriesFromDB() (*resp.Series, error) {
+	seriesS, err := model.NewSeriesModel(svc.db).GetAll()
+	if err != nil {
+		return nil, err
+	}
+
+	bookResponses := make([]*resp.SeriesItem, 0)
 	for _, series := range seriesS {
 		bookResp := toSeriesResponse(series)
 		bookResponses = append(bookResponses, bookResp)
 	}
 
-	return bookResponses, toSeriesSum(seriesS), nil
+	return &resp.Series{
+		Item: bookResponses,
+		Sum:  toSeriesSum(seriesS),
+	}, nil
 }
 
-func toSeriesResponse(s *model.Series) *resp.SeriesResp {
+func toSeriesResponse(s *model.Series) *resp.SeriesItem {
 	var finishMark string
 	switch s.Finish {
 	case model.BookFinish:
@@ -50,7 +75,7 @@ func toSeriesResponse(s *model.Series) *resp.SeriesResp {
 		finishMark = "Abandon"
 	}
 
-	return &resp.SeriesResp{
+	return &resp.SeriesItem{
 		Name:          s.Name,
 		Category:      s.Category,
 		Season:        fmt.Sprintf("第%v季", s.Season),
@@ -65,7 +90,7 @@ func toSeriesResponse(s *model.Series) *resp.SeriesResp {
 
 }
 
-func toSeriesSum(seriesS model.SeriesS) *resp.SeriesSumResp {
+func toSeriesSum(seriesS model.SeriesS) *resp.SeriesSum {
 	var (
 		finishNum         int
 		durationFinishSum float64
@@ -87,7 +112,7 @@ func toSeriesSum(seriesS model.SeriesS) *resp.SeriesSumResp {
 		rateAvg     = rateSum / finishNum
 	)
 
-	return &resp.SeriesSumResp{
+	return &resp.SeriesSum{
 		SeriesNumber: len(seriesS),
 		DurationAvg:  convert.FloatTo(durationAvg).Decimal(2),
 		RateAvg:      rateAvg,

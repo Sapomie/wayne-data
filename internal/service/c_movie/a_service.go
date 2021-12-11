@@ -3,6 +3,7 @@ package c_movie
 import (
 	"context"
 	"github.com/Sapomie/wayne-data/internal/model"
+	"github.com/Sapomie/wayne-data/internal/model/cons"
 	"github.com/Sapomie/wayne-data/internal/model/resp"
 	"github.com/Sapomie/wayne-data/pkg/mtime"
 	"github.com/garyburd/redigo/redis"
@@ -24,28 +25,52 @@ func NewMovieService(c context.Context, db *gorm.DB, cache *redis.Pool) MovieSer
 	}
 }
 
-func (svc MovieService) ListMovies() ([]*resp.MovieResp, *resp.MovieSum, error) {
-	movies, err := model.NewMovieModel(svc.db).GetAll()
+func (svc MovieService) ListMovies() (*resp.Movie, error) {
+	movies := new(resp.Movie)
+	key := cons.RedisKeyMovie
+	exists, err := svc.cache.Get(key, &movies)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
+	}
+	if !exists {
+		movies, err = svc.GetMovieFromDB()
+		if err != nil {
+			return nil, err
+		}
+		err = svc.cache.Set(key, movies, 0)
+		if err != nil {
+			return nil, err
+		}
 	}
 
-	movieResponses := make([]*resp.MovieResp, 0)
+	return movies, nil
+}
+
+func (svc MovieService) GetMovieFromDB() (*resp.Movie, error) {
+	movies, err := model.NewMovieModel(svc.db).GetAll()
+	if err != nil {
+		return nil, err
+	}
+
+	movieResponses := make([]*resp.MovieItem, 0)
 	for _, movie := range movies {
 		movieResp := toMovieResponse(movie)
 		movieResponses = append(movieResponses, movieResp)
 	}
 
-	return movieResponses, toMovieSum(movies), nil
+	return &resp.Movie{
+		Items: movieResponses,
+		Sum:   toMovieSum(movies),
+	}, nil
 }
 
-func toMovieResponse(m *model.Movie) *resp.MovieResp {
+func toMovieResponse(m *model.Movie) *resp.MovieItem {
 	place := ""
 	if m.Place == 2 {
 		place = "Cinema"
 	}
 
-	return &resp.MovieResp{
+	return &resp.MovieItem{
 		Date:   time.Unix(m.StartTime, 0).Format(mtime.TimeTemplate4),
 		Name:   m.Name,
 		NameEn: m.EnName,

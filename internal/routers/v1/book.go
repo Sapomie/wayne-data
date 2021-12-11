@@ -12,7 +12,7 @@ func ListBooks(c *gin.Context) {
 	response := app.NewResponse(c)
 
 	svc := c_book.NewBookService(c, global.DBEngine, global.CacheEngine)
-	books, sum, err := svc.ListBooks()
+	resp, err := svc.ListBooks()
 	if err != nil {
 		global.Logger.Errorf(c, "svc.NewBookService err: %v", err)
 		response.ToErrorResponse(errcode.ErrorGetBook)
@@ -20,7 +20,7 @@ func ListBooks(c *gin.Context) {
 	}
 
 	response.ToResponseHtml("book.html", gin.H{
-		"resp": books,
-		"sum":  sum,
+		"resp": resp.Items,
+		"sum":  resp.Sum,
 	})
 }

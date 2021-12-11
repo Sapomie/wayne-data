@@ -9,15 +9,6 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-const (
-	RedisDayEssKey     = "WayneDataEssDay"
-	RedisTenEssKey     = "WayneDataEssTen"
-	RedisMonthEssKey   = "WayneDataEssMonth"
-	RedisQuarterEssKey = "WayneDataEssQuarter"
-	RedisHalfEssKey    = "WayneDataEssHalf"
-	RedisYearEssKey    = "WayneDataEssYear"
-)
-
 type EssentialService struct {
 	ctx   context.Context
 	cache *model.Cache
@@ -33,32 +24,16 @@ func NewEssentialService(c context.Context, db *gorm.DB, cache *redis.Pool) Esse
 }
 
 func (svc *EssentialService) GetEssentialList(typ mtime.TimeType) (Essentials, int, error) {
+
+	key := getEssentialRedisKey(typ)
+
 	var ess Essentials
-
-	var key string
-	switch typ {
-	case mtime.TypeDay:
-		key = RedisDayEssKey
-	case mtime.TypeTen:
-		key = RedisTenEssKey
-	case mtime.TypeMonth:
-		key = RedisMonthEssKey
-	case mtime.TypeQuarter:
-		key = RedisQuarterEssKey
-	case mtime.TypeHalf:
-		key = RedisHalfEssKey
-	case mtime.TypeYear:
-		key = RedisYearEssKey
-	}
-
 	exists, err := svc.cache.Get(key, &ess)
 	if err != nil {
 		return nil, 0, err
 	}
 	if !exists {
-		start, _ := mtime.NewTimeZone(mtime.TypeYear, 2021, 1).BeginAndEnd()
-		events, _, err := model.NewEventModel(svc.db).GetAll()
-		ess, err = MakeEssentials(events, start, cons.Newest, typ)
+		ess, err = svc.getEssentialsFromDB(typ)
 		if err != nil {
 			return nil, 0, err
 		}
@@ -70,4 +45,33 @@ func (svc *EssentialService) GetEssentialList(typ mtime.TimeType) (Essentials, i
 
 	ess.Response()
 	return ess, len(ess), nil
+}
+
+func getEssentialRedisKey(typ mtime.TimeType) string {
+	var key string
+	switch typ {
+	case mtime.TypeDay:
+		key = cons.RedisKeyDayEss
+	case mtime.TypeTen:
+		key = cons.RedisKeyTenEss
+	case mtime.TypeMonth:
+		key = cons.RedisKeyMonthEss
+	case mtime.TypeQuarter:
+		key = cons.RedisKeyQuarterEss
+	case mtime.TypeHalf:
+		key = cons.RedisKeyHalfEss
+	case mtime.TypeYear:
+		key = cons.RedisKeyYearEss
+	}
+	return key
+}
+
+func (svc *EssentialService) getEssentialsFromDB(typ mtime.TimeType) (Essentials, error) {
+	start, _ := mtime.NewTimeZone(mtime.TypeYear, 2021, 1).BeginAndEnd()
+	events, _, err := model.NewEventModel(svc.db).GetAll()
+	ess, err := MakeEssentials(events, start, cons.Newest, typ)
+	if err != nil {
+		return nil, err
+	}
+	return ess, nil
 }

@@ -1,6 +1,6 @@
 package resp
 
-type SeriesResp struct {
+type SeriesItem struct {
 	Name          string
 	Category      string
 	Season        string
@@ -13,9 +13,14 @@ type SeriesResp struct {
 	LastTime      string
 }
 
-type SeriesSumResp struct {
+type SeriesSum struct {
 	SeriesNumber int
 	DurationAvg  float64
 	RateAvg      int
 	Finish       int
+}
+
+type Series struct {
+	Item []*SeriesItem
+	Sum  *SeriesSum
 }

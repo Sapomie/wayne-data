@@ -26,13 +26,55 @@ func NewAnaerobicService(c context.Context, db *gorm.DB, cache *redis.Pool) Anae
 	}
 }
 
-func (svc AnaerobicService) ListAnaerobicS() ([]*resp.AnaerobicResp, *resp.AnaerobicSum, error) {
-	anaerobicS, err := model.NewAnaerobicModel(svc.db).GetAll()
+func (svc AnaerobicService) ListAnaerobic() (*resp.Anaerobic, error) {
+	anaerobic := new(resp.Anaerobic)
+	key := cons.RedisKeyAnaerobic
+	exists, err := svc.cache.Get(key, &anaerobic)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
+	}
+	if !exists {
+		anaerobic, err = svc.GetAnaerobicFromDB()
+		if err != nil {
+			return nil, err
+		}
+		err = svc.cache.Set(key, anaerobic, 0)
+		if err != nil {
+			return nil, err
+		}
 	}
 
-	anaerobicResponses := make([]*resp.AnaerobicResp, 0)
+	return anaerobic, nil
+}
+
+func (svc AnaerobicService) ListAnaerobicZone(typ mtime.TimeType) (*resp.AnaerobicZone, error) {
+	anaerobicZone := new(resp.AnaerobicZone)
+	key := getAnaerobicZoneKey(typ)
+	exists, err := svc.cache.Get(key, &anaerobicZone)
+	if err != nil {
+		return nil, err
+	}
+	if !exists {
+		anaerobicZone, err = svc.GerAnaerobicZoneFromDB(typ)
+		if err != nil {
+			return nil, err
+		}
+		err = svc.cache.Set(key, anaerobicZone, 0)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return anaerobicZone, nil
+}
+
+func (svc AnaerobicService) GetAnaerobicFromDB() (*resp.Anaerobic, error) {
+	anaerobicS, err := model.NewAnaerobicModel(svc.db).GetAll()
+	if err != nil {
+		return nil, err
+	}
+
+	anaerobicResponses := make([]*resp.AnaerobicItem, 0)
 	for _, anaerobic := range anaerobicS {
 		anaerobicResp := toAnaerobicResponse(anaerobic)
 		anaerobicResponses = append(anaerobicResponses, anaerobicResp)
@@ -40,13 +82,16 @@ func (svc AnaerobicService) ListAnaerobicS() ([]*resp.AnaerobicResp, *resp.Anaer
 	sum := toAnaerobicSum(anaerobicS)
 	sum.Protein1, err = svc.getProtein(mtime.NewTimeZone(mtime.TypeYear, 2021, 1).BeginAndEnd())
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
-	return anaerobicResponses, sum, nil
+	return &resp.Anaerobic{
+		Items: anaerobicResponses,
+		Sum:   sum,
+	}, nil
 }
 
-func (svc AnaerobicService) ListAnaerobicTimeZone(typ mtime.TimeType) ([]*resp.AnaerobicSum, *resp.AnaerobicSum, error) {
+func (svc AnaerobicService) GerAnaerobicZoneFromDB(typ mtime.TimeType) (*resp.AnaerobicZone, error) {
 
 	numPresent := mtime.NewMTime(cons.Newest).TimeZoneNum(typ)
 	zoneRuns := make([]*resp.AnaerobicSum, 0)
@@ -54,7 +99,7 @@ func (svc AnaerobicService) ListAnaerobicTimeZone(typ mtime.TimeType) ([]*resp.A
 		zone := mtime.NewTimeZone(typ, 2021, i)
 		as, err := model.NewAnaerobicModel(svc.db).Timezone(zone)
 		if err != nil {
-			return nil, nil, err
+			return nil, err
 		}
 		asZone := toAnaerobicSum(as)
 		asZone.Date = zone.DateString()
@@ -65,20 +110,23 @@ func (svc AnaerobicService) ListAnaerobicTimeZone(typ mtime.TimeType) ([]*resp.A
 
 	anaerobicYear, err := model.NewAnaerobicModel(svc.db).GetAll()
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 	sum := toAnaerobicSum(anaerobicYear)
 	sum.Protein1, err = svc.getProtein(mtime.NewTimeZone(mtime.TypeYear, 2021, 1).BeginAndEnd())
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
 
-	return zoneRuns, sum, nil
+	return &resp.AnaerobicZone{
+		Items: zoneRuns,
+		Sum:   sum,
+	}, nil
 }
 
-func toAnaerobicResponse(a *model.Anaerobic) *resp.AnaerobicResp {
+func toAnaerobicResponse(a *model.Anaerobic) *resp.AnaerobicItem {
 
-	return &resp.AnaerobicResp{
+	return &resp.AnaerobicItem{
 		Date:     time.Unix(a.StartTime, 0).Format(mtime.TimeTemplate5),
 		Name:     a.Name,
 		Group:    a.Group,
@@ -145,4 +193,21 @@ func toAnaerobicSum(as model.AnaerobicS) *resp.AnaerobicSum {
 	}
 
 	return resp
+}
+
+func getAnaerobicZoneKey(typ mtime.TimeType) string {
+	str := ""
+	switch typ {
+	case mtime.TypeTen:
+		str = "Ten"
+	case mtime.TypeMonth:
+		str = "Month"
+	case mtime.TypeQuarter:
+		str = "Quarter"
+	case mtime.TypeYear:
+		str = "Year"
+	}
+
+	return cons.RedisKeyAnaerobicZonePrefix + str
+
 }

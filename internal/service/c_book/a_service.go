@@ -3,6 +3,7 @@ package c_book
 import (
 	"context"
 	"github.com/Sapomie/wayne-data/internal/model"
+	"github.com/Sapomie/wayne-data/internal/model/cons"
 	"github.com/Sapomie/wayne-data/internal/model/resp"
 	"github.com/Sapomie/wayne-data/pkg/convert"
 	"github.com/Sapomie/wayne-data/pkg/mtime"
@@ -25,22 +26,46 @@ func NewBookService(c context.Context, db *gorm.DB, cache *redis.Pool) BookServi
 	}
 }
 
-func (svc BookService) ListBooks() ([]*resp.BookResp, *resp.BookSumResp, error) {
-	books, err := model.NewBookModel(svc.db).GetAll()
+func (svc BookService) ListBooks() (*resp.BookResp, error) {
+	resp := new(resp.BookResp)
+	key := cons.RedisKeyBook
+	exists, err := svc.cache.Get(key, &resp)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
+	}
+	if !exists {
+		resp, err = svc.GetBooksFromDB()
+		if err != nil {
+			return nil, err
+		}
+		err = svc.cache.Set(key, resp, 0)
+		if err != nil {
+			return nil, err
+		}
 	}
 
-	bookResponses := make([]*resp.BookResp, 0)
+	return resp, nil
+}
+
+func (svc BookService) GetBooksFromDB() (*resp.BookResp, error) {
+	books, err := model.NewBookModel(svc.db).GetAll()
+	if err != nil {
+		return nil, err
+	}
+
+	bookResponses := make([]*resp.BookItemResp, 0)
 	for _, book := range books {
 		bookResp := toBookResponse(book)
 		bookResponses = append(bookResponses, bookResp)
 	}
 
-	return bookResponses, toBookSum(books), nil
+	return &resp.BookResp{
+		Items: bookResponses,
+		Sum:   toBookSum(books),
+	}, nil
 }
 
-func toBookResponse(b *model.Book) *resp.BookResp {
+func toBookResponse(b *model.Book) *resp.BookItemResp {
 
 	var finishMark string
 	switch b.Finish {
@@ -50,7 +75,7 @@ func toBookResponse(b *model.Book) *resp.BookResp {
 		finishMark = "Abandon"
 	}
 
-	return &resp.BookResp{
+	return &resp.BookItemResp{
 		Name:       b.Name,
 		Category:   b.Category,
 		Author:     b.Author,

@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/Sapomie/wayne-data/global"
 	"github.com/Sapomie/wayne-data/internal/model"
+	"github.com/Sapomie/wayne-data/internal/model/cons"
 	"github.com/Sapomie/wayne-data/internal/model/resp"
 	"github.com/Sapomie/wayne-data/pkg/convert"
 	"github.com/Sapomie/wayne-data/pkg/mtime"
@@ -12,18 +13,41 @@ import (
 )
 
 type EvtFieldService struct {
-	ctx context.Context
-	db  *gorm.DB
+	ctx   context.Context
+	db    *gorm.DB
+	cache *model.Cache
 }
 
 func NewEvtFieldService(c context.Context) EvtFieldService {
 	return EvtFieldService{
-		ctx: c,
-		db:  global.DBEngine,
+		ctx:   c,
+		db:    global.DBEngine,
+		cache: model.NewCache(global.CacheEngine),
 	}
 }
 
 func (svc EvtFieldService) GetFieldList(typ int) (response []*resp.EventFieldResponse, err error) {
+	resp := make([]*resp.EventFieldResponse, 0)
+	key := getEventFieldKey(typ)
+	exists, err := svc.cache.Get(key, &resp)
+	if err != nil {
+		return nil, err
+	}
+	if !exists {
+		resp, err = svc.GetFieldListFromDB(typ)
+		if err != nil {
+			return nil, err
+		}
+		err = svc.cache.Set(key, resp, 0)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return resp, nil
+}
+
+func (svc EvtFieldService) GetFieldListFromDB(typ int) (response []*resp.EventFieldResponse, err error) {
 	var eventFields model.EventFields
 	switch typ {
 	case model.TypeParent:
@@ -65,4 +89,20 @@ func toFieldResponse(field model.EventField) *resp.EventFieldResponse {
 		Longest:   convert.FloatTo(longest).Decimal(1),
 	}
 	return fieldResp
+}
+
+func getEventFieldKey(typ int) string {
+	switch typ {
+	case model.TypeParent:
+		return cons.RedisKeyParent
+	case model.TypeTask:
+		return cons.RedisKeyTask
+	case model.TypeStuff:
+		return cons.RedisKeyStuff
+	case model.TypeTag:
+		return cons.RedisKeyTag
+	case model.TypeProject:
+		return cons.RedisKeyProject
+	}
+	return ""
 }
