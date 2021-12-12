@@ -58,18 +58,33 @@ func (svc SeriesService) makeTvSeriesS() (seriesS model.SeriesS, infos []string,
 	seriesMap := make(map[string]model.Events, 0)
 
 	for _, event := range events {
-		strs := strings.Split(event.Comment, "，")
-		name := strs[0]
-		seriesMap[name] = append(seriesMap[name], event)
+		var name string
+		var season int
+
+		if isSeriesFirstTime(event) {
+			name, _, _, _, season, _, err = seriesInfo(event)
+			if err != nil {
+				return nil, nil, err
+			}
+		} else {
+			strs := strings.Split(event.Comment, "，")
+			name = strs[0]
+			season, err = strconv.Atoi(strs[1])
+			if err != nil {
+				return nil, nil, err
+			}
+		}
+
+		nameSeason := name + "_" + fmt.Sprintf("第%v季", season)
+		seriesMap[nameSeason] = append(seriesMap[nameSeason], event)
 	}
 
-	for name, seriesEvents := range seriesMap {
-		series := &model.Series{Name: name}
+	for nameSeason, seriesEvents := range seriesMap {
+		series := &model.Series{NameSeason: nameSeason}
 		for _, event := range seriesEvents {
-
 			if isSeriesFirstTime(event) {
-				series.NameOrigin, series.Category, series.Year, series.Season, series.EpisodeNumber, err = seriesInfo(event)
-				series.NameSeason = series.Name + "_" + fmt.Sprintf("第%v季", series.Season)
+				series.Name, series.NameOrigin, series.Category, series.Year, series.Season, series.EpisodeNumber, err = seriesInfo(event)
+				series.NameSeason = nameSeason
 				series.FirstTime = event.StartTime
 				if err != nil {
 					infos = append(infos, fmt.Sprintf("make series error,event start time: %v,coment: %v", event.Start(), event.Comment))
@@ -97,24 +112,25 @@ func (svc SeriesService) makeTvSeriesS() (seriesS model.SeriesS, infos []string,
 	return
 }
 
-func seriesInfo(event *model.Event) (originName, category string, year, season, episodeNumber int, err error) {
+func seriesInfo(event *model.Event) (name, originName, category string, year, season, episodeNumber int, err error) {
 	strs := strings.Split(event.Comment, "，")
 	if len(strs) < 7 {
-		return "", "", 0, 0, 0, errors.New("wrong length of series comment")
+		return "", "", "", 0, 0, 0, errors.New("wrong length of series comment")
 	}
+	name = strs[0]
 	category = strs[3]
 	originName = strs[2]
 	season, err = strconv.Atoi(strs[1])
 	if err != nil {
-		return "", "", 0, 0, 0, err
+		return "", "", "", 0, 0, 0, err
 	}
 	year, err = strconv.Atoi(strs[4])
 	if err != nil {
-		return "", "", 0, 0, 0, err
+		return "", "", "", 0, 0, 0, err
 	}
 	episodeNumber, err = strconv.Atoi(strs[5])
 	if err != nil {
-		return "", "", 0, 0, 0, err
+		return "", "", "", 0, 0, 0, err
 	}
 
 	return

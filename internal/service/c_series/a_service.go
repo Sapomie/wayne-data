@@ -107,10 +107,12 @@ func toSeriesSum(seriesS model.SeriesS) *resp.SeriesSum {
 		durationSum += series.Duration
 	}
 
-	var (
+	var durationAvg float64
+	var rateAvg int
+	if finishNum > 0 {
 		durationAvg = durationSum / float64(finishNum)
-		rateAvg     = rateSum / finishNum
-	)
+		rateAvg = rateSum / finishNum
+	}
 
 	return &resp.SeriesSum{
 		SeriesNumber: len(seriesS),
