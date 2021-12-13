@@ -14,7 +14,6 @@ func main() {
 	}
 
 	gin.SetMode(global.ServerSetting.RunMode)
-
 	r := routers.NewRouter()
 	s := &http.Server{
 		Addr:           ":" + global.ServerSetting.HttpPort,

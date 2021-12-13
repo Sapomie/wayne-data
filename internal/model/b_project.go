@@ -98,6 +98,15 @@ func (em *ProjectModel) ByName(name string) (*Project, error) {
 	return project, nil
 }
 
+func (em *ProjectModel) ById(id int) (*Project, error) {
+	project := new(Project)
+	err := em.Base.Where("id = ?", id).Scan(project).Error
+	if err != nil {
+		return nil, err
+	}
+	return project, nil
+}
+
 func (em *ProjectModel) ListProjects(limit, offset int) (Projects, int, error) {
 	var (
 		projects Projects

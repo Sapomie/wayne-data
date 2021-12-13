@@ -3,6 +3,7 @@ package model
 import (
 	"fmt"
 	"github.com/Sapomie/wayne-data/internal/model/cons"
+	"github.com/Sapomie/wayne-data/internal/model/resp"
 	"github.com/Sapomie/wayne-data/pkg/convert"
 	"github.com/Sapomie/wayne-data/pkg/mtime"
 	"github.com/jinzhu/gorm"
@@ -156,15 +157,15 @@ func (em *EventModel) Timezone(zone *mtime.TimeZone) (Events, error) {
 	return events, nil
 }
 
-func (em *EventModel) ListEvents(parentId, taskId, limit, offset int) (Events, int, error) {
+func (em *EventModel) ListEvents(p *resp.DbEventListRequest, limit, offset int) (Events, int, error) {
 	var events Events
 	var count int
-	db := em.Base.DB
-	if parentId > 0 {
-		db = em.Base.Where("parent_id = ?", parentId)
+	db := em.Base.Where("start_time >= ? and end_time <= ?", p.Start.Unix(), p.End.Unix())
+	if p.ParentId > 0 {
+		db = db.Where("parent_id = ?", p.ParentId)
 	}
-	if taskId > 0 {
-		db = em.Base.Where("task_id = ?", taskId)
+	if p.TaskId > 0 {
+		db = db.Where("task_id = ?", p.TaskId)
 	}
 
 	err := db.Count(&count).Error

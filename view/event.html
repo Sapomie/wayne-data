@@ -238,8 +238,13 @@
                                     <thead>
 
                                     <tr>
-                                        <th>StartTime</th>
+                                        <th>Date</th>
+                                        <th>Task</th>
+                                        <th>Duration</th>
                                         <th>Comment</th>
+                                        <th>Project</th>
+                                        <th>Stuff</th>
+                                        <th>Tag</th>
                                     </tr>
 
 
@@ -250,7 +255,12 @@
                                     {{range .events}}
                                         <tr>
                                             <td>{{.Date}}</td>
+                                            <td>{{.Task}}</td>
+                                            <td>{{.Duration}}</td>
                                             <td>{{.Comment}}</td>
+                                            <td>{{.Project}}</td>
+                                            <td>{{.Stuff}}</td>
+                                            <td>{{.Tag}}</td>
 
                                         </tr>
                                     {{end}}
@@ -283,8 +293,6 @@
 </div>
 
 
-
-
 <!-- JAVASCRIPT -->
 <script src="static/js/jquery.min.js"></script>
 <script src="static/js/bootstrap.bundle.min.js"></script>
@@ -292,7 +300,6 @@
 <script src="static/js/simplebar.min.js"></script>
 <script src="static/js/waves.min.js"></script>
 <script src="static/js/jquery.sparkline.min.js"></script>
-
 
 
 <script src="static/js/dashboard.init.js"></script>
