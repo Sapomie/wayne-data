@@ -116,27 +116,23 @@ func columnInfo(events model.Events, dur, durTotal float64) (taskInfo, parentInf
 			projectInfo[project].Done += evt.Duration
 		}
 
-		for _, stuffId := range evt.StuffIds() {
-			if stuffId > 0 {
-				stuff := model.StuffInfoById[stuffId].Name
-				_, ok := stuffInfo[stuff]
-				if !ok {
-					stuffInfo[stuff] = new(FieldInfo)
-					stuffInfo[stuff].TenGoal = model.StuffInfoById[stuffId].TenGoal
-				}
-				stuffInfo[stuff].Done += 1
+		if evt.StuffId > 0 {
+			stuff := model.StuffInfoById[evt.StuffId].Name
+			_, ok := stuffInfo[stuff]
+			if !ok {
+				stuffInfo[stuff] = new(FieldInfo)
+				stuffInfo[stuff].TenGoal = model.StuffInfoById[evt.StuffId].TenGoal
 			}
+			stuffInfo[stuff].Done += 1
 		}
 
-		for _, tagId := range evt.TagIds() {
-			if tagId > 0 {
-				tag := model.TagInfoById[tagId].Name
-				_, ok := tagInfo[tag]
-				if !ok {
-					tagInfo[tag] = new(FieldInfo)
-				}
-				tagInfo[tag].Done += evt.Duration
+		if evt.TagId > 0 {
+			tag := model.TagInfoById[evt.TagId].Name
+			_, ok := tagInfo[tag]
+			if !ok {
+				tagInfo[tag] = new(FieldInfo)
 			}
+			tagInfo[tag].Done += evt.Duration
 		}
 	}
 

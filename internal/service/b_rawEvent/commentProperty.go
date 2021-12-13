@@ -22,7 +22,7 @@ type propertyPair struct {
 }
 
 //从comment中获取自定义property的信息，并且添加到event的property id中
-func (svc RawEventService) processCommentProperty(raw *RawEvent, taskId int) (stuffIds, tagIds, remark string, projectId int, updateInfos []string, err error) {
+func (svc RawEventService) processCommentProperty(raw *RawEvent, taskId int) (remark string, projectId, stuffId, tagId int, updateInfos []string, err error) {
 
 	pairs, remark, err := unpackEventComment(raw.Comment)
 	if err != nil {
@@ -36,29 +36,22 @@ func (svc RawEventService) processCommentProperty(raw *RawEvent, taskId int) (st
 		case Stuff:
 			stuff, addingInfo, err := model.InsertAndGetStuff(svc.db, &model.Stuff{Name: pair.Value})
 			if err != nil {
-				return "", "", "", 0, nil, err
+				return "", 0, 0, 0, nil, err
 			}
 			if addingInfo != "" {
 				updateInfos = append(updateInfos, addingInfo)
 			}
-			if stuffIds == "" {
-				stuffIds = fmt.Sprint(stuff.Id)
-			} else {
-				stuffIds = stuffIds + "," + fmt.Sprint(stuff.Id)
-			}
+			stuffId = stuff.Id
 		case Tag:
 			tag, addingInfo, err := model.InsertAndGetTag(svc.db, pair.Value)
 			if err != nil {
-				return "", "", "", 0, nil, err
+				return "", 0, 0, 0, nil, err
 			}
 			if addingInfo != "" {
 				updateInfos = append(updateInfos, addingInfo)
 			}
-			if tagIds == "" {
-				tagIds = fmt.Sprint(tag.Id)
-			} else {
-				tagIds = tagIds + "," + fmt.Sprint(tag.Id)
-			}
+			tagId = tag.Id
+
 		}
 	}
 
@@ -66,16 +59,12 @@ func (svc RawEventService) processCommentProperty(raw *RawEvent, taskId int) (st
 	if raw.TaskName == cons.Movie {
 		stuff, addingInfo, err := model.InsertAndGetStuff(svc.db, &model.Stuff{Name: cons.StuMovie})
 		if err != nil {
-			return "", "", "", 0, nil, err
+			return "", 0, 0, 0, nil, err
 		}
 		if addingInfo != "" {
 			updateInfos = append(updateInfos, addingInfo)
 		}
-		if stuffIds == "" {
-			stuffIds = fmt.Sprint(stuff.Id)
-		} else {
-			stuffIds = stuffIds + "," + fmt.Sprint(stuff.Id)
-		}
+		stuffId = stuff.Id
 	}
 
 	// project
@@ -83,7 +72,7 @@ func (svc RawEventService) processCommentProperty(raw *RawEvent, taskId int) (st
 		strs := strings.Split(raw.Comment, "，")
 		project, addingInfo, err := model.InsertAndGetProject(svc.db, &model.Project{Name: strs[0], TaskId: taskId})
 		if err != nil {
-			return "", "", "", 0, nil, err
+			return "", 0, 0, 0, nil, err
 		}
 		if addingInfo != "" {
 			updateInfos = append(updateInfos, addingInfo)

@@ -4,10 +4,8 @@ import (
 	"fmt"
 	"github.com/Sapomie/wayne-data/internal/model/cons"
 	"github.com/Sapomie/wayne-data/internal/model/resp"
-	"github.com/Sapomie/wayne-data/pkg/convert"
 	"github.com/Sapomie/wayne-data/pkg/mtime"
 	"github.com/jinzhu/gorm"
-	"strings"
 	"time"
 )
 
@@ -23,8 +21,8 @@ type Event struct {
 	EndTime   int64   `gorm:"not null" json:"end_time"`
 	//自定义属性：通过comment增加
 
-	StuffId   string `json:"stuff_id"`
-	TagId     string `json:"tag_id"`
+	StuffId   int    `json:"stuff_id"`
+	TagId     int    `json:"tag_id"`
 	ProjectId int    `json:"project_id"`
 	Remark    string `json:"remark"` //comment 除去自定义属性的部分
 
@@ -41,22 +39,6 @@ func (e *Event) Start() time.Time {
 
 func (e *Event) End() time.Time {
 	return time.Unix(e.EndTime, 0)
-}
-
-func (e *Event) StuffIds() (stuffIds []int) {
-	ids := strings.Split(e.StuffId, ",")
-	for _, stuffId := range ids {
-		stuffIds = append(stuffIds, convert.StrTo(stuffId).MustInt())
-	}
-	return
-}
-
-func (e *Event) TagIds() (tagIds []int) {
-	ids := strings.Split(e.TagId, ",")
-	for _, tagId := range ids {
-		tagIds = append(tagIds, convert.StrTo(tagId).MustInt())
-	}
-	return
 }
 
 type Events []*Event
@@ -167,12 +149,18 @@ func (em *EventModel) ListEvents(p *resp.DbEventListRequest, limit, offset int) 
 	if p.TaskId > 0 {
 		db = db.Where("task_id = ?", p.TaskId)
 	}
+	if p.StuffId > 0 {
+		db = db.Where("stuff_id = ?", p.StuffId)
+	}
+	if p.TagId > 0 {
+		db = db.Where("tag_id = ?", p.TagId)
+	}
 
 	err := db.Count(&count).Error
 	if err != nil {
 		return nil, 0, err
 	}
-	err = db.Limit(limit).Offset(offset).Scan(&events).Error
+	err = db.Limit(limit).Offset(offset).Order("id desc").Scan(&events).Error
 	if err != nil {
 		return nil, 0, err
 	}

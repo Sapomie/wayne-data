@@ -91,6 +91,15 @@ func (em *StuffModel) ByName(name string) (*Stuff, error) {
 	return stuff, nil
 }
 
+func (em *StuffModel) ById(id int) (*Stuff, error) {
+	stuff := new(Stuff)
+	err := em.Base.Where("id = ?", id).Scan(stuff).Error
+	if err != nil {
+		return nil, err
+	}
+	return stuff, nil
+}
+
 func (em *StuffModel) ListStuffs(limit, offset int) (Stuffs, int, error) {
 	var (
 		stuffs Stuffs

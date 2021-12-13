@@ -106,12 +106,12 @@ func (svc RawEventService) makeEvent(raw *RawEvent) (event *model.Event, info []
 		return nil, nil, err
 	}
 
-	stuffIds, tagIds, remark, projectId, commentPropertyInfo, err := svc.processCommentProperty(raw, task.Id)
+	remark, projectId, stuffId, tagId, updateInfos, err := svc.processCommentProperty(raw, task.Id)
 	if err != nil {
 		return nil, nil, err
 	}
-	if commentPropertyInfo != nil {
-		info = append(info, commentPropertyInfo...)
+	if updateInfos != nil {
+		info = append(info, updateInfos...)
 	}
 
 	event = &model.Event{
@@ -122,8 +122,8 @@ func (svc RawEventService) makeEvent(raw *RawEvent) (event *model.Event, info []
 		Comment:   raw.Comment,
 		StartTime: start.Unix(),
 		EndTime:   end.Unix(),
-		StuffId:   stuffIds,
-		TagId:     tagIds,
+		StuffId:   stuffId,
+		TagId:     tagId,
 		ProjectId: projectId,
 		Remark:    remark,
 	}

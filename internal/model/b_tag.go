@@ -90,6 +90,15 @@ func (em *TagModel) ByName(name string) (*Tag, error) {
 	return tag, nil
 }
 
+func (em *TagModel) ById(id int) (*Tag, error) {
+	tag := new(Tag)
+	err := em.Base.Where("id = ?", id).Scan(tag).Error
+	if err != nil {
+		return nil, err
+	}
+	return tag, nil
+}
+
 func (em *TagModel) ListTags(limit, offset int) (Tags, int, error) {
 	var (
 		tags  Tags
