@@ -107,6 +107,7 @@ func makeDbRequestParam(p *resp.EventListRequest) (*resp.DbEventListRequest, err
 		ProjectId: model.ProjectInfoByName[p.Project].Id,
 		StuffId:   model.StuffInfoByName[p.Stuff].Id,
 		TagId:     model.TagInfoByName[p.Tag].Id,
+		Word:      p.Word,
 		Start:     start,
 		End:       end,
 	}, nil

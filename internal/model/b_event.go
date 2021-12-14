@@ -155,6 +155,9 @@ func (em *EventModel) ListEvents(p *resp.DbEventListRequest, limit, offset int) 
 	if p.TagId > 0 {
 		db = db.Where("tag_id = ?", p.TagId)
 	}
+	if p.Word != "" {
+		db = db.Where("comment like ?", "%"+p.Word+"%")
+	}
 
 	err := db.Count(&count).Error
 	if err != nil {

@@ -8,6 +8,7 @@ type EventListRequest struct {
 	Project string `form:"project"`
 	Stuff   string `form:"stuff"`
 	Tag     string `form:"tag"`
+	Word    string `form:"word" binding:"min=0,max=20"`
 	Date    string `form:"date" binding:"omitempty,min=8,max=8"`
 	Span    int    `form:"span"`
 }
@@ -30,6 +31,7 @@ type DbEventListRequest struct {
 	ProjectId int
 	StuffId   int
 	TagId     int
+	Word      string
 	Start     time.Time
 	End       time.Time
 }
