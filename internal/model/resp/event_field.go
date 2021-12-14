@@ -8,4 +8,6 @@ type EventFieldResponse struct {
 	Times     int64
 	FirstTime string
 	LastTime  string
+
+	LastTimeT int64
 }

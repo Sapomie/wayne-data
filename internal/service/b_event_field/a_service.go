@@ -43,7 +43,10 @@ func (svc EvtFieldService) GetFieldList(typ int) (response []*resp.EventFieldRes
 			return nil, err
 		}
 	}
-
+	//redis 存储的From now勘误
+	for _, r := range resp {
+		r.FromNow = convert.FloatTo(time.Now().Sub(time.Unix(r.LastTimeT, 0)).Hours() / 24).Decimal(1)
+	}
 	return resp, nil
 }
 
@@ -87,6 +90,7 @@ func toFieldResponse(field model.EventField) *resp.EventFieldResponse {
 		LastTime:  time.Unix(last, 0).Format(mtime.TimeTemplate5),
 		FromNow:   convert.FloatTo(fromNow).Decimal(1),
 		Longest:   convert.FloatTo(longest).Decimal(1),
+		LastTimeT: last,
 	}
 	return fieldResp
 }
