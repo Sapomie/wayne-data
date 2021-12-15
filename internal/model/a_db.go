@@ -54,6 +54,7 @@ func NewDBEngine(setting *setting.DatabaseSettingS) (*gorm.DB, error) {
 		new(Anaerobic),
 		new(Abbr),
 		new(PTag),
+		new(OldEvent),
 	)
 
 	return db, nil
