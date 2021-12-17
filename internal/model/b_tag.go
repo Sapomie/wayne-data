@@ -192,7 +192,7 @@ func UpdateTagColumn(db *gorm.DB) (err error) {
 		if err != nil && err != gorm.ErrRecordNotFound {
 			return err
 		}
-		evts, err := NewEventModel(db).ByTagName(cons.Oldest, cons.Newest, tag.Name)
+		evts, err := NewEventModel(db).ByTagName(cons.DbOldest, cons.DbNewest, tag.Name)
 		if err != nil {
 			return err
 		}

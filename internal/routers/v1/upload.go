@@ -3,7 +3,7 @@ package v1
 import (
 	"github.com/Sapomie/wayne-data/global"
 	"github.com/Sapomie/wayne-data/internal/service/a_procession"
-	"github.com/Sapomie/wayne-data/internal/service/b_rawEvent"
+	"github.com/Sapomie/wayne-data/internal/service/b_raw_event"
 	"github.com/Sapomie/wayne-data/pkg/app"
 	"github.com/Sapomie/wayne-data/pkg/errcode"
 	"github.com/gin-gonic/gin"
@@ -32,7 +32,7 @@ func UploadPost(c *gin.Context) {
 		return
 	}
 	//处理文件
-	_, importDataInfos, err := b_rawEvent.NewRawEventService(c, global.DBEngine, global.CacheEngine).ImportCsvData()
+	_, importDataInfos, err := b_raw_event.NewRawEventService(c, global.DBEngine, global.CacheEngine).ImportCsvData()
 	if err != nil {
 		global.Logger.Errorf(c, "svc.NewRawEventService err: %v", err)
 		response.ToErrorResponse(errcode.ErrorImportCsvFile)

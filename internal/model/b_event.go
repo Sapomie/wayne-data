@@ -155,6 +155,9 @@ func (em *EventModel) ListEvents(p *resp.DbEventListRequest, limit, offset int) 
 	if p.TagId > 0 {
 		db = db.Where("tag_id = ?", p.TagId)
 	}
+	if p.ProjectId > 0 {
+		db = db.Where("project_id = ?", p.ProjectId)
+	}
 	if p.Word != "" {
 		db = db.Where("comment like ?", "%"+p.Word+"%")
 	}
@@ -310,7 +313,7 @@ func (em *EventModel) UpdateNewestAndOldest() error {
 		}
 		return err
 	}
-	cons.Newest = time.Unix(newest.StartTime, 0)
+	cons.DbNewest = time.Unix(newest.StartTime, 0)
 
 	oldest, err := em.Oldest()
 	if err != nil {
@@ -319,6 +322,6 @@ func (em *EventModel) UpdateNewestAndOldest() error {
 		}
 		return err
 	}
-	cons.Oldest = time.Unix(oldest.StartTime, 0)
+	cons.DbOldest = time.Unix(oldest.StartTime, 0)
 	return nil
 }

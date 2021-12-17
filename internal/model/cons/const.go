@@ -29,6 +29,8 @@ const (
 
 //数据库中最新event的start time
 var (
-	Newest time.Time
-	Oldest time.Time
+	DbNewest time.Time
+	DbOldest time.Time
+	Oldest   = time.Date(1970, 1, 1, 0, 0, 0, 0, time.Local)
+	Futurest = time.Date(3000, 1, 1, 0, 0, 0, 0, time.Local)
 )

@@ -15,7 +15,7 @@ func GetProgressNow(c *gin.Context) {
 	response := app.NewResponse(c)
 
 	typ := mtime.NewTimeTypeByStr(c.Param("typ"))
-	zone := mtime.NewMTime(cons.Newest).TimeZone(typ)
+	zone := mtime.NewMTime(cons.DbNewest).TimeZone(typ)
 	startTime := time.Date(2021, 1, 1, 0, 0, 0, 0, time.Local)
 
 	svc := b_progress.NewProgressService(c, global.DBEngine, global.CacheEngine)
@@ -34,7 +34,7 @@ func GetMobileProgressNow(c *gin.Context) {
 	response := app.NewResponse(c)
 
 	typ := mtime.NewTimeTypeByStr(c.Param("typ"))
-	zone := mtime.NewMTime(cons.Newest).TimeZone(typ)
+	zone := mtime.NewMTime(cons.DbNewest).TimeZone(typ)
 	startTime := time.Date(2021, 1, 1, 0, 0, 0, 0, time.Local)
 
 	svc := b_progress.NewProgressService(c, global.DBEngine, global.CacheEngine)

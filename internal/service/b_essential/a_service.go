@@ -69,7 +69,7 @@ func getEssentialRedisKey(typ mtime.TimeType) string {
 func (svc *EssentialService) getEssentialsFromDB(typ mtime.TimeType) (Essentials, error) {
 	start, _ := mtime.NewTimeZone(mtime.TypeYear, 2021, 1).BeginAndEnd()
 	events, _, err := model.NewEventModel(svc.db).GetAll()
-	ess, err := MakeEssentials(events, start, cons.Newest, typ)
+	ess, err := MakeEssentials(events, start, cons.DbNewest, typ)
 	if err != nil {
 		return nil, err
 	}

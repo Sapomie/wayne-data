@@ -203,7 +203,7 @@ func UpdateProjectColumn(db *gorm.DB) (err error) {
 		if err != nil && err != gorm.ErrRecordNotFound {
 			return err
 		}
-		evts, err := NewEventModel(db).ByProjectName(cons.Oldest, cons.Newest, project.Name)
+		evts, err := NewEventModel(db).ByProjectName(cons.DbOldest, cons.DbNewest, project.Name)
 		if err != nil {
 			return err
 		}

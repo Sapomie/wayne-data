@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/Sapomie/wayne-data/global"
 	"github.com/Sapomie/wayne-data/internal/routers/v1"
-	"github.com/Sapomie/wayne-data/internal/service/b_rawEvent"
+	"github.com/Sapomie/wayne-data/internal/service/b_raw_event"
 	"github.com/gin-gonic/gin"
 )
 
@@ -16,7 +16,7 @@ func NewRouter() *gin.Engine {
 
 	router.GET("/test", func(c *gin.Context) {
 
-		err := b_rawEvent.NewRawEventService(c, global.DBEngine, global.CacheEngine).ReadDefaultTaskValue()
+		err := b_raw_event.NewRawEventService(c, global.DBEngine, global.CacheEngine).ReadDefaultTaskValue()
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -41,6 +41,7 @@ func NewRouter() *gin.Engine {
 
 		//event
 		apiv1.GET("event", v1.ListEvents)
+		apiv1.GET("oldevent", v1.ListOldEvents)
 		apiv1.GET("field/:typ", v1.ListEventField)
 		apiv1.GET("book", v1.ListBooks)
 		apiv1.GET("series", v1.ListSeriesS)

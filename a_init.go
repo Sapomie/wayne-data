@@ -5,7 +5,7 @@ import (
 	"github.com/Sapomie/wayne-data/global"
 	"github.com/Sapomie/wayne-data/internal/model"
 	"github.com/Sapomie/wayne-data/internal/service/a_procession"
-	"github.com/Sapomie/wayne-data/internal/service/b_rawEvent"
+	"github.com/Sapomie/wayne-data/internal/service/b_raw_event"
 	"github.com/Sapomie/wayne-data/pkg/log"
 	"github.com/Sapomie/wayne-data/pkg/loggerV0"
 	"github.com/Sapomie/wayne-data/pkg/setting"
@@ -51,7 +51,7 @@ func BeforeStarting() error {
 	}
 
 	//task默认值
-	err = b_rawEvent.NewRawEventService(nil, global.DBEngine, global.CacheEngine).ReadDefaultTaskValue()
+	err = b_raw_event.NewRawEventService(nil, global.DBEngine, global.CacheEngine).ReadDefaultTaskValue()
 	if err != nil {
 		return err
 	}

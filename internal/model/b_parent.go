@@ -203,7 +203,7 @@ func UpdateParentColumn(db *gorm.DB) (err error) {
 		if err != nil && err != gorm.ErrRecordNotFound {
 			return err
 		}
-		evts, err := NewEventModel(db).ByParentName(cons.Oldest, cons.Newest, parent.Name)
+		evts, err := NewEventModel(db).ByParentName(cons.DbOldest, cons.DbNewest, parent.Name)
 		if err != nil {
 			return err
 		}

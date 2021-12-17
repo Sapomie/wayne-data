@@ -93,7 +93,7 @@ func (svc AnaerobicService) GetAnaerobicFromDB() (*resp.Anaerobic, error) {
 
 func (svc AnaerobicService) GerAnaerobicZoneFromDB(typ mtime.TimeType) (*resp.AnaerobicZone, error) {
 
-	numPresent := mtime.NewMTime(cons.Newest).TimeZoneNum(typ)
+	numPresent := mtime.NewMTime(cons.DbNewest).TimeZoneNum(typ)
 	zoneRuns := make([]*resp.AnaerobicSum, 0)
 	for i := 1; i <= numPresent; i++ {
 		zone := mtime.NewTimeZone(typ, 2021, i)

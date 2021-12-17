@@ -213,7 +213,7 @@ func UpdateTaskColumn(db *gorm.DB) (err error) {
 		if err != nil && err != gorm.ErrRecordNotFound {
 			return err
 		}
-		evts, err := NewEventModel(db).ByTaskName(cons.Oldest, cons.Newest, task.Name)
+		evts, err := NewEventModel(db).ByTaskName(cons.DbOldest, cons.DbNewest, task.Name)
 		if err != nil {
 			return err
 		}

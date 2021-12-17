@@ -203,7 +203,7 @@ func UpdateStuffColumn(db *gorm.DB) (err error) {
 		if err != nil && err != gorm.ErrRecordNotFound {
 			return err
 		}
-		evts, err := NewEventModel(db).ByStuffName(cons.Oldest, cons.Newest, stuff.Name)
+		evts, err := NewEventModel(db).ByStuffName(cons.DbOldest, cons.DbNewest, stuff.Name)
 		if err != nil {
 			return err
 		}

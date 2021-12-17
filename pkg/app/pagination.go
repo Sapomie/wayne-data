@@ -63,7 +63,7 @@ func GinBeginAndEnd(c *gin.Context) (start, end time.Time) {
 
 func DateStartAndEnd(date string, span int) (start, end time.Time, err error) {
 	start = cons.Oldest
-	end = cons.Newest
+	end = cons.Futurest
 	if len(date) < 8 {
 		//err = errors.New("wrong date format")
 		return

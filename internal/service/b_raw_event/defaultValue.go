@@ -1,4 +1,4 @@
-package b_rawEvent
+package b_raw_event
 
 import (
 	"encoding/json"
