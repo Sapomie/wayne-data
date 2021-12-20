@@ -59,3 +59,13 @@ func NewDBEngine(setting *setting.DatabaseSettingS) (*gorm.DB, error) {
 
 	return db, nil
 }
+
+func CloseDb() error {
+	if global.DBEngine != nil {
+		err := global.DBEngine.Close()
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
