@@ -1,6 +1,9 @@
 package cons
 
-import "time"
+import (
+	"github.com/Sapomie/wayne-data/pkg/mtime"
+	"time"
+)
 
 const (
 	All         = int64(0)
@@ -31,6 +34,6 @@ const (
 var (
 	DbNewest time.Time
 	DbOldest time.Time
-	Oldest   = time.Date(1970, 1, 1, 0, 0, 0, 0, time.Local)
-	Futurest = time.Date(3000, 1, 1, 0, 0, 0, 0, time.Local)
+	Oldest   = time.Date(1970, 1, 1, 0, 0, 0, 0, mtime.CstSh)
+	Futurest = time.Date(3000, 1, 1, 0, 0, 0, 0, mtime.CstSh)
 )

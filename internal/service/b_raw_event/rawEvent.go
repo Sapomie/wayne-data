@@ -155,11 +155,11 @@ func (raw *RawEvent) compactWithOldComment() {
 }
 
 func parseTime(str string) (time.Time, error) {
-	timeParsed, err := time.ParseInLocation(mtime.TimeTemplate1, str, time.Local)
+	timeParsed, err := time.ParseInLocation(mtime.TimeTemplate1, str, mtime.CstSh)
 	if err != nil {
-		timeParsed, err = time.ParseInLocation(mtime.TimeTemplate2, str, time.Local)
+		timeParsed, err = time.ParseInLocation(mtime.TimeTemplate2, str, mtime.CstSh)
 		if err != nil {
-			timeParsed, err = time.ParseInLocation(mtime.TimeTemplate3, str, time.Local)
+			timeParsed, err = time.ParseInLocation(mtime.TimeTemplate3, str, mtime.CstSh)
 			if err != nil {
 				return time.Time{}, err
 			}

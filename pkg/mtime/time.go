@@ -30,6 +30,8 @@ const (
 	TypeYear
 )
 
+
+
 func NewTimeTypeByStr(str string) TimeType {
 	switch str {
 	case "day":
@@ -71,28 +73,30 @@ func NewTimeZone(typ TimeType, year, num int) *TimeZone {
 	}
 }
 
+var CstSh, _ = time.LoadLocation("Asia/Shanghai")
+
 func (tz *TimeZone) BeginAndEnd() (begin, end time.Time) {
 	switch tz.Typ {
 	case TypeDay:
-		begin = time.Date(tz.Year, 1, tz.Num, 0, 0, 0, 0, time.Local)
-		end = time.Date(tz.Year, 1, tz.Num+1, 0, 0, 0, 0, time.Local)
+		begin = time.Date(tz.Year, 1, tz.Num, 0, 0, 0, 0, CstSh)
+		end = time.Date(tz.Year, 1, tz.Num+1, 0, 0, 0, 0, CstSh)
 	case TypeTen:
-		begin = time.Date(tz.Year, 1, 1+(tz.Num-1)*10, 0, 0, 0, 0, time.Local)
-		end = time.Date(tz.Year, 1, 1+tz.Num*10, 0, 0, 0, 0, time.Local)
+		begin = time.Date(tz.Year, 1, 1+(tz.Num-1)*10, 0, 0, 0, 0, CstSh)
+		end = time.Date(tz.Year, 1, 1+tz.Num*10, 0, 0, 0, 0, CstSh)
 	case TypeMonth:
 		month := time.Month(tz.Num)
-		begin = time.Date(tz.Year, month, 1, 0, 0, 0, 0, time.Local)
-		end = time.Date(tz.Year, month+1, 1, 0, 0, 0, 0, time.Local)
+		begin = time.Date(tz.Year, month, 1, 0, 0, 0, 0, CstSh)
+		end = time.Date(tz.Year, month+1, 1, 0, 0, 0, 0, CstSh)
 	case TypeQuarter:
 		startMonth := time.Month((tz.Num-1)*3 + 1)
-		begin = time.Date(tz.Year, startMonth, 1, 0, 0, 0, 0, time.Local)
-		end = time.Date(tz.Year, startMonth+3, 1, 0, 0, 0, 0, time.Local)
+		begin = time.Date(tz.Year, startMonth, 1, 0, 0, 0, 0, CstSh)
+		end = time.Date(tz.Year, startMonth+3, 1, 0, 0, 0, 0, CstSh)
 	case TypeHalf:
-		begin = time.Date(tz.Year, time.Month(1+(tz.Num-1)*6), 1, 0, 0, 0, 0, time.Local)
-		end = time.Date(tz.Year, time.Month(1+tz.Num*6), 1, 0, 0, 0, 0, time.Local)
+		begin = time.Date(tz.Year, time.Month(1+(tz.Num-1)*6), 1, 0, 0, 0, 0, CstSh)
+		end = time.Date(tz.Year, time.Month(1+tz.Num*6), 1, 0, 0, 0, 0, CstSh)
 	case TypeYear:
-		begin = time.Date(tz.Year, 1, 1, 0, 0, 0, 0, time.Local)
-		end = time.Date(tz.Year+1, 1, 1, 0, 0, 0, 0, time.Local)
+		begin = time.Date(tz.Year, 1, 1, 0, 0, 0, 0, CstSh)
+		end = time.Date(tz.Year+1, 1, 1, 0, 0, 0, 0, CstSh)
 	}
 	return
 }

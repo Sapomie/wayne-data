@@ -4,6 +4,7 @@ import (
 	"github.com/Sapomie/wayne-data/global"
 	"github.com/Sapomie/wayne-data/internal/model/cons"
 	"github.com/Sapomie/wayne-data/pkg/convert"
+	"github.com/Sapomie/wayne-data/pkg/mtime"
 	"github.com/gin-gonic/gin"
 	"strconv"
 	"time"
@@ -79,7 +80,7 @@ func DateStartAndEnd(date string, span int) (start, end time.Time, err error) {
 		return
 	}
 
-	start = time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.Local)
-	end = time.Date(year, time.Month(month), day+1+span, 0, 0, 0, 0, time.Local)
+	start = time.Date(year, time.Month(month), day, 0, 0, 0, 0, mtime.CstSh)
+	end = time.Date(year, time.Month(month), day+1+span, 0, 0, 0, 0, mtime.CstSh)
 	return
 }
