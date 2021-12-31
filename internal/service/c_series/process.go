@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/Sapomie/wayne-data/internal/model"
 	"github.com/Sapomie/wayne-data/internal/model/cons"
-	"github.com/Sapomie/wayne-data/pkg/mtime"
 	"strconv"
 	"strings"
 )
@@ -49,8 +48,7 @@ func (svc SeriesService) storeSeriesS(seriesS model.SeriesS) error {
 }
 
 func (svc SeriesService) makeTvSeriesS() (seriesS model.SeriesS, infos []string, err error) {
-	start, end := mtime.NewTimeZone(mtime.TypeYear, 2021, 1).BeginAndEnd()
-	events, err := model.NewEventModel(svc.db).ByTaskName(start, end, cons.AnimationAndEpisode)
+	events, err := model.NewEventModel(svc.db).ByTaskName(cons.DbOldest, cons.DbNewest, cons.AnimationAndEpisode)
 	if err != nil {
 		return nil, nil, err
 	}

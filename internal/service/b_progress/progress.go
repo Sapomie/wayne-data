@@ -6,7 +6,6 @@ import (
 	"github.com/Sapomie/wayne-data/internal/service/b_essential"
 	"github.com/Sapomie/wayne-data/pkg/convert"
 	"strconv"
-	"time"
 )
 
 type Progress struct {
@@ -46,10 +45,7 @@ type goalLeftField struct {
 	Finish      int8
 }
 
-func makeProgress(es *b_essential.Essential, progressStartTime time.Time) *Progress {
-	if es.StartTime.Unix() < progressStartTime.Unix() {
-		es.StartTime = progressStartTime
-	}
+func makeProgress(es *b_essential.Essential) *Progress {
 
 	fullPct := 1.00
 	goalNowPct := es.GoalPercent / 100

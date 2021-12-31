@@ -27,8 +27,7 @@ func (svc RunService) ProcessRun() ([]string, error) {
 
 func (svc RunService) makeRuns() (runs model.Runs, infos []string, err error) {
 
-	start, end := mtime.NewTimeZone(mtime.TypeYear, 2021, 1).BeginAndEnd()
-	events, err := model.NewEventModel(svc.db).ByTaskName(start, end, cons.Running)
+	events, err := model.NewEventModel(svc.db).ByTaskName(cons.DbOldest, cons.DbNewest, cons.Running)
 	if err != nil {
 		return nil, nil, err
 	}

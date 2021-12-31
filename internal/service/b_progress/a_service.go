@@ -9,7 +9,6 @@ import (
 	"github.com/Sapomie/wayne-data/pkg/mtime"
 	"github.com/garyburd/redigo/redis"
 	"github.com/jinzhu/gorm"
-	"time"
 )
 
 type ProgressService struct {
@@ -26,7 +25,7 @@ func NewProgressService(c context.Context, db *gorm.DB, cache *redis.Pool) Progr
 	}
 }
 
-func (svc *ProgressService) GetProgress(zone *mtime.TimeZone, progressStart time.Time) (*Progress, error) {
+func (svc *ProgressService) GetProgress(zone *mtime.TimeZone) (*Progress, error) {
 	progress := new(Progress)
 
 	key := progressKey(zone)
@@ -36,7 +35,7 @@ func (svc *ProgressService) GetProgress(zone *mtime.TimeZone, progressStart time
 	}
 
 	if !exists {
-		progress, err = svc.getProgressFromDB(zone, progressStart)
+		progress, err = svc.getProgressFromDB(zone)
 		if err != nil {
 			return nil, err
 		}
@@ -49,17 +48,17 @@ func (svc *ProgressService) GetProgress(zone *mtime.TimeZone, progressStart time
 	return progress, nil
 }
 
-func (svc *ProgressService) getProgressFromDB(zone *mtime.TimeZone, progressStart time.Time) (*Progress, error) {
+func (svc *ProgressService) getProgressFromDB(zone *mtime.TimeZone) (*Progress, error) {
 	events, err := model.NewEventModel(svc.db).Timezone(zone)
 	if err != nil {
 		return nil, err
 	}
-	es, err := b_essential.MakeEssential(events, progressStart, zone)
+	es, err := b_essential.MakeEssential(events, zone)
 	if err != nil {
 		return nil, err
 	}
-	progress := makeProgress(es, progressStart)
-	progress.GcRunning, err = svc.getYearGcRunning(2021, progressStart)
+	progress := makeProgress(es)
+	progress.GcRunning, err = svc.getYearGcRunning(2022)
 	if err != nil {
 		return nil, err
 	}
@@ -71,13 +70,13 @@ func progressKey(zone *mtime.TimeZone) (key string) {
 	return
 }
 
-func (svc *ProgressService) getYearGcRunning(year int, progressStart time.Time) (*GcRunning, error) {
+func (svc *ProgressService) getYearGcRunning(year int) (*GcRunning, error) {
 	zone := mtime.NewTimeZone(mtime.TypeYear, year, 1)
 	events, err := model.NewEventModel(svc.db).Timezone(zone)
 	if err != nil {
 		return nil, err
 	}
-	es, err := b_essential.MakeEssential(events, progressStart, zone)
+	es, err := b_essential.MakeEssential(events, zone)
 	if err != nil {
 		return nil, err
 	}

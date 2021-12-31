@@ -31,13 +31,14 @@ func UploadPost(c *gin.Context) {
 		response.ToErrorResponse(errcode.ErrorSaveUploadingFile)
 		return
 	}
-	//处理文件
+	//存储Events 文件
 	_, importDataInfos, err := b_raw_event.NewRawEventService(c, global.DBEngine, global.CacheEngine).ImportCsvData()
 	if err != nil {
 		global.Logger.Errorf(c, "svc.NewRawEventService err: %v", err)
 		response.ToErrorResponse(errcode.ErrorImportCsvFile)
 		return
 	}
+	//从event文件中获取信息，处理run,movie,book等信息
 	processInfo, err := a_procession.NewProcessionService(c, global.DBEngine, global.CacheEngine).ProcessAll()
 	if err != nil {
 		global.Logger.Errorf(c, "svc.ProcessAll err: %v", err)

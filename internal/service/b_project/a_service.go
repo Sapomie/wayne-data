@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/Sapomie/wayne-data/internal/model"
 	"github.com/Sapomie/wayne-data/internal/model/cons"
-	"github.com/Sapomie/wayne-data/pkg/mtime"
 	"github.com/garyburd/redigo/redis"
 	"github.com/jinzhu/gorm"
 	"strconv"
@@ -47,8 +46,7 @@ func (svc ProjectService) ProcessProject() ([]string, error) {
 
 func (svc ProjectService) makeProjects() (projects model.Projects, infos []string, err error) {
 
-	start, end := mtime.NewTimeZone(mtime.TypeYear, 2021, 1).BeginAndEnd()
-	events, err := svc.eventDb.ByTaskNames(start, end,
+	events, err := svc.eventDb.ByTaskNames(cons.DbOldest, cons.DbNewest,
 		cons.CodeInput,
 		cons.CodeOutput,
 		cons.EnglishInput,

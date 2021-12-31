@@ -80,7 +80,7 @@ func (svc AnaerobicService) GetAnaerobicFromDB() (*resp.Anaerobic, error) {
 		anaerobicResponses = append(anaerobicResponses, anaerobicResp)
 	}
 	sum := toAnaerobicSum(anaerobicS)
-	sum.Protein1, err = svc.getProtein(mtime.NewTimeZone(mtime.TypeYear, 2021, 1).BeginAndEnd())
+	sum.Protein1, err = svc.getProtein(mtime.NewTimeZone(mtime.TypeYear, 2022, 1).BeginAndEnd())
 	if err != nil {
 		return nil, err
 	}
@@ -96,7 +96,7 @@ func (svc AnaerobicService) GerAnaerobicZoneFromDB(typ mtime.TimeType) (*resp.An
 	numPresent := mtime.NewMTime(cons.DbNewest).TimeZoneNum(typ)
 	zoneRuns := make([]*resp.AnaerobicSum, 0)
 	for i := 1; i <= numPresent; i++ {
-		zone := mtime.NewTimeZone(typ, 2021, i)
+		zone := mtime.NewTimeZone(typ, 2022, i)
 		as, err := model.NewAnaerobicModel(svc.db).Timezone(zone)
 		if err != nil {
 			return nil, err
@@ -113,7 +113,7 @@ func (svc AnaerobicService) GerAnaerobicZoneFromDB(typ mtime.TimeType) (*resp.An
 		return nil, err
 	}
 	sum := toAnaerobicSum(anaerobicYear)
-	sum.Protein1, err = svc.getProtein(mtime.NewTimeZone(mtime.TypeYear, 2021, 1).BeginAndEnd())
+	sum.Protein1, err = svc.getProtein(mtime.NewTimeZone(mtime.TypeYear, 2022, 1).BeginAndEnd())
 	if err != nil {
 		return nil, err
 	}

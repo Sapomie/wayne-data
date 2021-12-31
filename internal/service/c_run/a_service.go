@@ -91,7 +91,7 @@ func (svc RunService) GetRunZoneFromDB(typ mtime.TimeType) (*resp.RunZone, error
 	numPresent := mtime.NewMTime(cons.DbNewest).TimeZoneNum(typ)
 	zoneRuns := make([]*resp.RunSum, 0)
 	for i := 1; i <= numPresent; i++ {
-		zone := mtime.NewTimeZone(typ, 2021, i)
+		zone := mtime.NewTimeZone(typ, 2022, i)
 		runs, err := model.NewRunModel(svc.db).Timezone(zone)
 		if err != nil {
 			return nil, err

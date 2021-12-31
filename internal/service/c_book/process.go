@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/Sapomie/wayne-data/internal/model"
 	"github.com/Sapomie/wayne-data/internal/model/cons"
-	"github.com/Sapomie/wayne-data/pkg/mtime"
 	"strconv"
 	"strings"
 )
@@ -26,8 +25,7 @@ func (svc BookService) ProcessBook() ([]string, error) {
 
 func (svc BookService) makeBooks() (books model.Books, infos []string, err error) {
 
-	start, end := mtime.NewTimeZone(mtime.TypeYear, 2021, 1).BeginAndEnd()
-	events, err := model.NewEventModel(svc.db).ByTaskName(start, end, cons.Nonfiction)
+	events, err := model.NewEventModel(svc.db).ByTaskName(cons.DbOldest, cons.DbNewest, cons.Nonfiction)
 	if err != nil {
 		return nil, nil, err
 	}

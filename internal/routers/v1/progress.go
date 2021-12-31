@@ -8,7 +8,6 @@ import (
 	"github.com/Sapomie/wayne-data/pkg/errcode"
 	"github.com/Sapomie/wayne-data/pkg/mtime"
 	"github.com/gin-gonic/gin"
-	"time"
 )
 
 func GetProgressNow(c *gin.Context) {
@@ -16,10 +15,9 @@ func GetProgressNow(c *gin.Context) {
 
 	typ := mtime.NewTimeTypeByStr(c.Param("typ"))
 	zone := mtime.NewMTime(cons.DbNewest).TimeZone(typ)
-	startTime := time.Date(2021, 1, 1, 0, 0, 0, 0, mtime.CstSh)
 
 	svc := b_progress.NewProgressService(c, global.DBEngine, global.CacheEngine)
-	pro, err := svc.GetProgress(zone, startTime)
+	pro, err := svc.GetProgress(zone)
 	if err != nil {
 		global.Logger.Errorf(c, "svc.GetProgress err: %v", err)
 		response.ToErrorResponse(errcode.ErrorGetProgressFail)
@@ -35,10 +33,9 @@ func GetMobileProgressNow(c *gin.Context) {
 
 	typ := mtime.NewTimeTypeByStr(c.Param("typ"))
 	zone := mtime.NewMTime(cons.DbNewest).TimeZone(typ)
-	startTime := time.Date(2021, 1, 1, 0, 0, 0, 0, mtime.CstSh)
 
 	svc := b_progress.NewProgressService(c, global.DBEngine, global.CacheEngine)
-	pro, err := svc.GetProgress(zone, startTime)
+	pro, err := svc.GetProgress(zone)
 	if err != nil {
 		global.Logger.Errorf(c, "svc.GetProgress err: %v", err)
 		response.ToErrorResponse(errcode.ErrorGetProgressFail)

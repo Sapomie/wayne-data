@@ -18,7 +18,7 @@ func MakeEssentials(events model.Events, start, end time.Time, typ mtime.TimeTyp
 	var essentials Essentials
 	for i := startNumber; i <= endNumber; i++ {
 		zone := mtime.NewTimeZone(typ, year, i)
-		essential, err := MakeEssential(events, start, zone)
+		essential, err := MakeEssential(events, zone)
 		if essential != nil {
 			essential.giveMainColumnMapKey()
 		}
@@ -34,16 +34,11 @@ func MakeEssentials(events model.Events, start, end time.Time, typ mtime.TimeTyp
 }
 
 //start 为progress自定开始日期，默认为初始年第一天
-func MakeEssential(events model.Events, start time.Time, zone *mtime.TimeZone) (ess *Essential, err error) {
+func MakeEssential(events model.Events, zone *mtime.TimeZone) (ess *Essential, err error) {
 	zoneStart, zoneEnd := zone.BeginAndEnd()
 	eventsZone := events.Between(zoneStart, zoneEnd)
 
-	var durTotal float64
-	if start.Unix() > zoneStart.Unix() {
-		durTotal = float64((zoneEnd.Unix() - start.Unix()) / 60 / 60 / 24)
-	} else {
-		durTotal = float64((zoneEnd.Unix() - zoneStart.Unix()) / 60 / 60 / 24)
-	}
+	durTotal := float64((zoneEnd.Unix() - zoneStart.Unix()) / 60 / 60 / 24)
 	dur := eventsZone.Duration() / 24
 
 	taskInfo, parentInfo, stuffInfo, projectInfo, tagInfo := columnInfo(eventsZone, dur, durTotal)

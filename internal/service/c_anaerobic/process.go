@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/Sapomie/wayne-data/internal/model"
 	"github.com/Sapomie/wayne-data/internal/model/cons"
-	"github.com/Sapomie/wayne-data/pkg/mtime"
 	"strconv"
 	"strings"
 )
@@ -25,8 +24,7 @@ func (svc AnaerobicService) ProcessAnaerobic() ([]string, error) {
 
 func (svc AnaerobicService) makeAnaerobicS() (anaerobicS model.AnaerobicS, infos []string, err error) {
 
-	start, end := mtime.NewTimeZone(mtime.TypeYear, 2021, 1).BeginAndEnd()
-	events, err := model.NewEventModel(svc.db).ByTaskName(start, end, cons.Anaerobic)
+	events, err := model.NewEventModel(svc.db).ByTaskName(cons.DbOldest, cons.DbNewest, cons.Anaerobic)
 
 	for _, event := range events {
 		strs := strings.Split(event.Comment, "，")
