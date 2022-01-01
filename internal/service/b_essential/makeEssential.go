@@ -11,23 +11,45 @@ import (
 //events 为数据库里的所有
 func MakeEssentials(events model.Events, start, end time.Time, typ mtime.TimeType) (Essentials, error) {
 	start, end = mtime.TrimTime(start, end)
-	year := start.Year()
-	startNumber := mtime.NewMTime(start).TimeZone(typ).Number()
-	endNumber := mtime.NewMTime(end).TimeZone(typ).Number()
+	startYear := start.Year()
+	endYear := end.Year()
 
 	var essentials Essentials
-	for i := startNumber; i <= endNumber; i++ {
-		zone := mtime.NewTimeZone(typ, year, i)
-		essential, err := MakeEssential(events, zone)
-		if essential != nil {
-			essential.giveMainColumnMapKey()
+	for i := startYear; i <= endYear; i++ {
+		var endNumber int
+		if i == endYear {
+			endNumber = mtime.NewMTime(end).TimeZone(typ).Number()
+		} else {
+			endNumber = mtime.NewMTime(time.Date(startYear, 12, 31, 23, 46, 0, 0, time.Local)).TimeZone(typ).Number()
 		}
-		if err != nil {
-			return nil, err
+		if typ == mtime.TypeYear {
+			zone := mtime.NewTimeZone(typ, i, i-2020)
+			essential, err := MakeEssential(events, zone)
+			if err != nil {
+				return nil, err
+			}
+			if essential != nil {
+				essential.giveMainColumnMapKey()
+			}
+			if essential != nil && essential.Duration > 0 {
+				essentials = append(essentials, essential)
+			}
+		} else {
+			for j := 1; j <= endNumber; j++ {
+				zone := mtime.NewTimeZone(typ, i, j)
+				essential, err := MakeEssential(events, zone)
+				if err != nil {
+					return nil, err
+				}
+				if essential != nil {
+					essential.giveMainColumnMapKey()
+				}
+				if essential != nil && essential.Duration > 0 {
+					essentials = append(essentials, essential)
+				}
+			}
 		}
-		if essential != nil && essential.Duration > 0 {
-			essentials = append(essentials, essential)
-		}
+
 	}
 
 	return essentials, nil

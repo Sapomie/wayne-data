@@ -30,8 +30,6 @@ const (
 	TypeYear
 )
 
-
-
 func NewTimeTypeByStr(str string) TimeType {
 	switch str {
 	case "day":
@@ -177,6 +175,11 @@ func (mt *MTime) Half() int {
 	}
 }
 
+//规定2021num为1，
+func (mt *MTime) Year() int {
+	return mt.Time.Year() - 2020
+}
+
 func (mt *MTime) TimeZoneNum(typ TimeType) int {
 	var num int
 	switch typ {
@@ -191,7 +194,7 @@ func (mt *MTime) TimeZoneNum(typ TimeType) int {
 	case TypeHalf:
 		num = mt.Half()
 	case TypeYear:
-		num = 1
+		num = mt.Year()
 	}
 	return num
 }

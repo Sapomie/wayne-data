@@ -12,7 +12,6 @@ const (
 const (
 	OtherDailyCoefficient = 2.0
 	SelfDailyCoefficient  = 3.0
-	CountGoalBase         = 0.7
 )
 
 const (

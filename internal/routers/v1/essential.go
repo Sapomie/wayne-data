@@ -92,12 +92,7 @@ func ListEssentialsQuarter(c *gin.Context) {
 func ListEssentialsYear(c *gin.Context) {
 	response := app.NewResponse(c)
 	svc := b_essential.NewEssentialService(c, global.DBEngine, global.CacheEngine)
-	essHalf, _, err := svc.GetEssentialList(mtime.TypeHalf)
-	if err != nil {
-		global.Logger.Errorf(c, "svc.GetEssentialList err: %v", err)
-		response.ToErrorResponse(errcode.ErrorGetEssentialListFail)
-		return
-	}
+
 	essYear, _, err := svc.GetEssentialList(mtime.TypeYear)
 	if err != nil {
 		global.Logger.Errorf(c, "svc.GetEssentialList err: %v", err)
@@ -105,10 +100,8 @@ func ListEssentialsYear(c *gin.Context) {
 		return
 	}
 
-	essHalf = append(essHalf, essYear...)
-
 	response.ToResponseHtml("essential.html", gin.H{
-		"resp":      essHalf,
+		"resp":      essYear,
 		"type":      "year",
 		"tableName": "datatableYear",
 	})
